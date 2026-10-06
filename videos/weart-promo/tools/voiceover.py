@@ -15,14 +15,14 @@ from kokoro_onnx import Kokoro
 LINES = {
     "s1": "Paying for every AI separately?",
     "s2": "Meet WeArt Studio. All A.I. in one place.",
-    "s3": "Type your idea, pick a model, and hit generate.",
-    "s4": "Images, video, audio and chat. Every top model.",
-    "s5": "Build whole pipelines on Canvas.",
+    "s3": "Type an idea. Get an image. Turn it into video.",
+    "s4": "Every top model, in one workspace.",
+    "s5": "Build pipelines on Canvas.",
     "s6": "One subscription instead of five.",
     "s7": "WeArt Studio. Start creating now.",
 }
 VOICE = os.environ.get("VOICE", "af_heart")
-SPEED = float(os.environ.get("SPEED", "1.08"))
+SPEED = float(os.environ.get("SPEED", "1.18"))
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, "..", "assets", "audio", "vo")

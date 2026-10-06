@@ -1,13 +1,11 @@
-"""Procedural soundtrack for the WeArt Studio promo (no voiceover).
+"""Procedural soundtrack for the WeArt Studio promo (v2, fast cut).
 
-Dark tech groove at 120 BPM in E minor: half-time kick/snare that opens into
-four-on-the-floor for the pricing beat, 16th-note filtered arp, 808-style sub,
-plus UI sound design (typing, glitch blips, node pops, strike swishes, impact).
+128 BPM electro groove in E minor: teaser hits, four-on-the-floor with offbeat
+bass and 16th arp, a one-beat breath and riser into the end-card drop, plus UI
+sound design (typing, glitch blips, taps, whooshes, impacts). The voiceover clips
+from tools/voiceover.py are placed at VO_AT and the music ducks under them.
 
-Scene timing follows the voiceover: W() maps the original 20 s layout onto the
-narrated timeline (same knots as index.html). Writes music.wav, sfx.wav and
-voice.wav (the per-scene clips from tools/voiceover.py placed on the timeline),
-plus preview-mix.wav.
+Writes music.wav, sfx.wav, voice.wav and preview-mix.wav into assets/audio/.
 Deterministic: fixed RNG seed, no network. Run: python3 tools/soundtrack.py
 """
 
@@ -18,24 +16,16 @@ import soundfile as sf
 from scipy.signal import butter, fftconvolve, lfilter, sosfilt
 
 SR = 44100
-OLD_KNOTS = [0, 3.8, 4.95, 7.0, 9.3, 12.35, 15.3, 18.0, 20.0]
-NEW_KNOTS = [0, 3.0, 6.2, 8.4, 9.9, 13.2, 15.6, 18.4, 21.6]
-VO_AT = {"s1": 0.3, "s2": 3.15, "s3": 6.25, "s4": 10.05, "s5": 13.4, "s6": 15.75, "s7": 18.6}
-
-
-def W(t):
-    return float(np.interp(t, OLD_KNOTS, NEW_KNOTS))
-
-
-DUR = 21.6
+VO_AT = {"s1": 2.0, "s2": 4.3, "s3": 7.1, "s4": 11.3, "s5": 13.65, "s6": 15.25, "s7": 17.25}
+DUR = 19.5
 N = int(SR * DUR)
-BPM = 120
+BPM = 128
 BEAT = 60 / BPM
-DROP = W(18.0)  # end-card hit
+DROP = 17.1  # end-card hit
 BREAK = DROP - 0.5  # kick/bass breath before the drop
 ROLL = DROP - 1.0  # snare roll start
 LAST = DUR - 0.5  # final chord
-FOUR = W(15.5)  # four-on-the-floor from the pricing beat
+TEASER = 1.875  # four teaser hits, then the groove (4 beats)
 rng = np.random.default_rng(7)
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -196,66 +186,52 @@ def build_music():
     arp = np.zeros(N)
     pads = np.zeros(N)
 
+    nbeats = int(DUR / BEAT) + 1
     kicks = []
-    for b in range(int(DUR / BEAT)):
+    for b in range(nbeats):
         t = b * BEAT
-        if BREAK <= t < DROP or t >= LAST:
+        if t >= LAST or BREAK <= t < DROP:
             continue
-        if t >= FOUR:
-            kicks.append(t)
-        else:
-            # half-time: kick on 1 and the "and" of 2 in each 4-beat bar
-            pos = b % 4
-            if pos == 0:
-                kicks.append(t)
-            if pos == 1:
-                kicks.append(t + BEAT / 2)
-            # snare on beat 3 (half-time feel)
-            if pos == 2:
-                add(drums, clap(), t, 0.9)
+        kicks.append(t)
+        if t >= TEASER and b % 2 == 1 and not (ROLL <= t < DROP):
+            add(drums, clap(), t, 0.85)
     for k in kicks:
-        add(drums, kick(), k, 0.95)
-    for b in range(int(DUR / BEAT)):
-        t = b * BEAT
-        if t >= FOUR and b % 2 == 1 and not (ROLL <= t < DROP) and t < LAST:
-            add(drums, clap(), t, 0.8)
+        add(drums, kick(), k, 1.0 if k < TEASER else 0.95)
 
-    # hats: 8ths, with 32nd-note rolls at the end of every 2nd bar
     step = BEAT / 2
     for s_ in range(int(DUR / step)):
         t = s_ * step
-        if BREAK <= t < DROP or t >= LAST:
+        if t < TEASER or t >= LAST or BREAK <= t < DROP:
             continue
-        add(drums, hat(), t, 0.4 if s_ % 2 else 0.25)
-        if s_ % 16 == 14:
-            for r in range(4):
-                add(drums, hat(), t + r * step / 4, 0.18 + 0.06 * r)
-        if t >= FOUR and s_ % 2 == 1:
-            add(drums, hat(open_=True), t, 0.45)
+        if s_ % 2 == 1:
+            add(drums, hat(open_=True), t, 0.5)
+        add(drums, hat(), t + step / 2, 0.3)
+        add(drums, hat(), t, 0.22)
     snare_roll(drums, ROLL, DROP)
 
-    # 808 sub on each bar root
-    for bar in range(int(DUR / (4 * BEAT))):
-        t = bar * 4 * BEAT
-        if t >= LAST:
-            break
-        if t < BREAK:
-            add(bass, sub808(ROOTS[bar % 4] * 2, min(2.0, BREAK - t)), t, 0.9)
+    # offbeat pumping bass from the groove onwards
+    for s_ in range(int(DUR / step)):
+        t = s_ * step
+        if t < TEASER or t >= LAST or BREAK <= t < DROP:
+            continue
+        if s_ % 2 == 1:
+            add(bass, bass_note(ROOTS[bar_of(t)] * 2, step * 0.9), t, 0.9)
+    # teaser: sub drops on each hit
+    for i in range(4):
+        add(bass, sub808(ROOTS[0] * 2, BEAT), i * BEAT, 0.8)
     add(bass, sub808(ROOTS[0] * 2, 2.0), DROP, 0.9)
 
-    # 16th arp, filter opening over the piece
     s16 = BEAT / 4
+    pattern = [0, 1, 2, 1, 0, 2, 1, 2]
     for s_ in range(int(DUR / s16)):
         t = s_ * s16
-        if t >= LAST or BREAK <= t < DROP:
+        if t < TEASER or t >= LAST or BREAK <= t < DROP:
             continue
         tri = TRIADS[bar_of(t)]
-        pattern = [0, 1, 2, 1, 0, 2, 1, 2]
         f = tri[pattern[s_ % 8]] * (2 if s_ % 8 in (2, 5) else 1)
-        cutoff = 900 + 3200 * min(1.0, t / FOUR)
-        add(arp, pluck(f, 0.16, cutoff), t, 0.32)
+        add(arp, pluck(f, 0.14, 1600 + 2600 * min(1.0, t / DROP)), t, 0.3)
 
-    for bar in range(int(DUR / (4 * BEAT))):
+    for bar in range(int(DUR / (4 * BEAT)) + 1):
         t = bar * 4 * BEAT
         if t >= LAST:
             break
@@ -385,33 +361,38 @@ def blip(f):
 
 def build_sfx():
     s = np.zeros(N)
-    for i, at in enumerate((0.25, 0.75, 1.25, 1.75, 2.25)):  # subscription cards slam in
-        add(s, thud(), W(at), 0.8)
-        add(s, swish(), W(at) - 0.08, 0.45)
-    add(s, sweep_noise(0.5, 6000, 200), W(3.3), 0.8)  # cards implode
-    add(s, impact() * 0.6, W(3.8), 0.8)
-    for i, at in enumerate(np.arange(5.2, 6.75, 0.07)):  # typing
-        add(s, key_click(), W(at) + (0.012 if i % 3 == 0 else 0), 0.7)
-    add(s, tap(), W(7.0), 0.9)  # send
-    add(s, whoosh(0.4), W(7.02), 0.6)
-    for i, at in enumerate(np.arange(7.25, 8.2, 0.0625)):  # generation glitch blips
-        add(s, blip(600 + (i * 137) % 900), W(at), 0.6)
-    add(s, shimmer(1.0), W(7.3), 0.6)
-    add(s, pop_ding(), W(8.3), 0.7)  # image revealed
-    for at in (9.5, 10.25, 11.0, 11.75):  # mode switches
-        add(s, tap(), W(at), 0.7)
-        add(s, swish(), W(at) - 0.05, 0.55)
-    add(s, whoosh(0.45), W(12.3), 0.7)  # → canvas
-    for i, at in enumerate((12.9, 13.5, 14.1)):  # node connections
-        add(s, ping(660.0 * (1.26 ** i), 0.4), W(at), 0.5)
-        add(s, tap(), W(at), 0.5)
-    add(s, whoosh(0.45), W(15.3), 0.7)  # → pricing
-    for i, at in enumerate((15.6, 15.68, 15.76, 15.84, 15.92)):  # strike-throughs
-        add(s, swish(), W(at), 0.35)
-    add(s, pop_ding(), W(16.85), 0.8)  # all-in-one card lands
-    add(s, riser(1.0), ROLL, 0.7)
+    for i in range(4):  # teaser flashes
+        add(s, impact() * 0.35, i * BEAT, 0.7)
+        add(s, swish(), max(0.0, i * BEAT - 0.06), 0.5)
+    add(s, whoosh(0.35), 1.6, 0.7)
+    for i in range(5):  # subscription cards
+        add(s, thud(), 2.0 + i * 0.25, 0.8)
+    add(s, sweep_noise(0.4, 6000, 200), 3.85, 0.8)  # implode
+    add(s, impact() * 0.7, 4.2, 0.9)  # brand
+    for i, at in enumerate(np.arange(7.1, 8.05, 0.045)):  # typing
+        add(s, key_click(), at, 0.6)
+    add(s, tap(), 8.1, 0.9)  # generate
+    add(s, whoosh(0.3), 8.1, 0.6)
+    for i, at in enumerate(np.arange(8.2, 8.75, 0.045)):  # glitch blips
+        add(s, blip(600 + (i * 137) % 900), at, 0.55)
+    add(s, pop_ding(), 8.8, 0.7)  # image ready
+    add(s, tap(), 9.3, 0.9)  # animate
+    add(s, whoosh(0.4), 9.35, 0.8)
+    add(s, impact() * 0.5, 9.6, 0.7)  # video starts
+    for at in (11.3, 11.85, 12.4, 12.95):  # tabs
+        add(s, tap(), at, 0.7)
+        add(s, swish(), at - 0.05, 0.55)
+    add(s, whoosh(0.35), 13.4, 0.7)  # canvas
+    for i, at in enumerate((13.8, 14.2, 14.6)):
+        add(s, ping(660.0 * (1.26 ** i), 0.35), at, 0.5)
+        add(s, tap(), at, 0.5)
+    add(s, whoosh(0.35), 15.0, 0.7)  # one plan
+    for i in range(5):
+        add(s, swish(), 15.35 + i * 0.07, 0.35)
+    add(s, pop_ding(), 15.8, 0.7)
+    add(s, riser(1.0), ROLL, 0.75)
     add(s, impact(), DROP, 1.0)
-    add(s, pop_ding(), W(18.8), 0.8)  # CTA
+    add(s, pop_ding(), 17.9, 0.8)  # CTA
     return s / max(1.0, np.max(np.abs(s)) / 0.89)
 
 

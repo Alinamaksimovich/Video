@@ -11,7 +11,6 @@
         src: url("assets/fonts/manrope-lat.woff2") format("woff2");
         font-weight: 200 800;
       }
-
       :root {
         --bg: #07080c;
         --panel: #12151d;
@@ -45,8 +44,10 @@
         font-family: "Manrope", sans-serif;
         color: var(--text);
       }
-
-      /* ambient */
+      #stage {
+        position: absolute;
+        inset: 0;
+      }
       #grid {
         position: absolute;
         inset: -120px;
@@ -73,7 +74,6 @@
         top: -350px;
         background: radial-gradient(circle, rgba(62, 201, 230, 0.28) 0%, rgba(62, 201, 230, 0) 65%);
       }
-
       .scene {
         position: absolute;
         inset: 0;
@@ -82,16 +82,15 @@
       .head {
         position: absolute;
         top: 140px;
-        left: 50px;
-        width: 980px;
+        left: 40px;
+        width: 1000px;
         text-align: center;
         font-family: "Archivo Black", sans-serif;
-        font-size: 116px;
+        font-size: 120px;
         line-height: 1.02;
-        letter-spacing: -0.01em;
         text-transform: uppercase;
       }
-      .head .ln {
+      .ln {
         display: block;
       }
       .yellow {
@@ -100,11 +99,44 @@
       .cyan {
         color: var(--cyan);
       }
-      .mono {
-        font-family: "Space Mono", monospace;
+      .full {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+        opacity: 0;
+      }
+      .full img,
+      .full video {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
       }
 
-      /* ---------- S1 subscriptions ---------- */
+      /* ---------- A · teaser ---------- */
+      .tz-word {
+        position: absolute;
+        left: 0;
+        width: 100%;
+        text-align: center;
+        font-family: "Archivo Black", sans-serif;
+        font-size: 168px;
+        line-height: 1;
+        text-transform: uppercase;
+        color: #fff;
+        text-shadow: 0 10px 60px rgba(0, 0, 0, 0.55);
+        opacity: 0;
+      }
+      #tzw1 {
+        top: 760px;
+      }
+      #tzw2 {
+        top: 860px;
+        color: var(--yellow);
+      }
+
+      /* ---------- B · subscriptions ---------- */
       .sub {
         position: absolute;
         left: 150px;
@@ -134,7 +166,6 @@
         flex: 1;
         font-size: 44px;
         font-weight: 700;
-        letter-spacing: -0.01em;
       }
       .sub .tag {
         padding: 12px 22px;
@@ -160,7 +191,7 @@
         font-size: 64px;
       }
 
-      /* ---------- S2 brand ---------- */
+      /* ---------- C · brand ---------- */
       #brand {
         position: absolute;
         inset: 0;
@@ -168,22 +199,19 @@
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        gap: 40px;
+        gap: 50px;
       }
       #brand-logo {
-        width: 330px;
-        height: 200px;
-        background: url("assets/img/logo.png") center / contain no-repeat;
+        width: 420px;
+        height: 190px;
+        background: url("assets/img/v2/logo.png") center / contain no-repeat;
       }
       #brand-line {
         font-family: "Archivo Black", sans-serif;
-        font-size: 104px;
+        font-size: 112px;
         line-height: 1.02;
         text-align: center;
         text-transform: uppercase;
-      }
-      #brand-line .ln {
-        display: block;
       }
       #ring {
         position: absolute;
@@ -195,14 +223,32 @@
         border: 12px solid var(--cyan);
         opacity: 0;
       }
+      #orbit {
+        position: absolute;
+        left: 540px;
+        top: 960px;
+        width: 0;
+        height: 0;
+      }
+      .orb {
+        position: absolute;
+        padding: 14px 26px;
+        border-radius: 999px;
+        border: 2px solid var(--line);
+        background: rgba(18, 21, 29, 0.92);
+        font-size: 30px;
+        font-weight: 700;
+        white-space: nowrap;
+        opacity: 0;
+      }
 
-      /* ---------- S3 prompt → generation ---------- */
+      /* ---------- D · prompt → image → video ---------- */
       #gen {
         position: absolute;
-        left: 220px;
-        top: 400px;
-        width: 640px;
-        height: 800px;
+        left: 200px;
+        top: 390px;
+        width: 680px;
+        height: 860px;
         border-radius: 40px;
         overflow: hidden;
         background: #0d1017;
@@ -226,7 +272,7 @@
       #tiles i {
         display: block;
         background: #0d1017;
-        border: 1px solid rgba(62, 201, 230, 0.12);
+        border: 1px solid rgba(62, 201, 230, 0.14);
       }
       #gen-scan {
         position: absolute;
@@ -237,35 +283,39 @@
         background: linear-gradient(180deg, rgba(62, 201, 230, 0) 0%, rgba(62, 201, 230, 0.45) 85%, rgba(255, 255, 255, 0.9) 100%);
         opacity: 0;
       }
-      #gen-badge {
+      .badge {
         position: absolute;
         left: 28px;
         bottom: 28px;
         padding: 14px 24px;
         border-radius: 999px;
-        background: rgba(7, 8, 12, 0.75);
-        font-size: 28px;
+        background: rgba(7, 8, 12, 0.78);
+        font-size: 30px;
         font-weight: 700;
         opacity: 0;
       }
-      #gen-badge span {
+      .badge span {
         color: var(--yellow);
       }
-      #progress {
+      #animate-btn {
         position: absolute;
-        top: 1228px;
-        left: 0;
-        width: 100%;
-        text-align: center;
-        font-family: "Space Mono", monospace;
-        font-size: 34px;
-        color: var(--cyan);
+        left: 470px;
+        top: 1120px;
+        width: 380px;
+        height: 100px;
+        border-radius: 999px;
+        background: var(--yellow);
+        color: #0b0c10;
+        display: grid;
+        place-items: center;
+        font-size: 40px;
+        font-weight: 800;
         opacity: 0;
       }
       #prompt {
         position: absolute;
         left: 60px;
-        top: 1320px;
+        top: 1330px;
         width: 960px;
         height: 240px;
         padding: 40px 40px 0;
@@ -303,25 +353,12 @@
         gap: 14px;
         font-size: 30px;
         font-weight: 700;
-        overflow: hidden;
       }
       #chip .dot {
         width: 18px;
         height: 18px;
         border-radius: 50%;
         background: var(--yellow);
-      }
-      #chip-names {
-        position: relative;
-        height: 40px;
-        width: 220px;
-        overflow: hidden;
-      }
-      #chip-names div {
-        position: absolute;
-        left: 0;
-        top: 0;
-        line-height: 40px;
       }
       #send {
         position: absolute;
@@ -337,6 +374,33 @@
       #send svg {
         width: 46px;
         height: 46px;
+      }
+      #vid-label {
+        position: absolute;
+        left: 50px;
+        bottom: 220px;
+        padding: 18px 30px;
+        border-radius: 999px;
+        background: rgba(7, 8, 12, 0.78);
+        font-size: 36px;
+        font-weight: 700;
+        opacity: 0;
+      }
+      #vid-label span {
+        color: var(--yellow);
+      }
+      #vid-head {
+        position: absolute;
+        top: 140px;
+        left: 0;
+        width: 100%;
+        text-align: center;
+        font-family: "Archivo Black", sans-serif;
+        font-size: 120px;
+        text-transform: uppercase;
+        color: var(--yellow);
+        text-shadow: 0 10px 50px rgba(0, 0, 0, 0.6);
+        opacity: 0;
       }
 
       /* ---------- cursor ---------- */
@@ -360,7 +424,7 @@
         opacity: 0;
       }
 
-      /* ---------- S4 every model ---------- */
+      /* ---------- E · every model ---------- */
       #tabs {
         position: absolute;
         left: 90px;
@@ -395,7 +459,7 @@
         left: 90px;
         top: 580px;
         width: 900px;
-        height: 820px;
+        height: 840px;
         opacity: 0;
       }
       #o-img {
@@ -416,38 +480,11 @@
         background: #0d1017;
         border: 2px solid var(--line);
       }
-      .media img {
+      .media video {
         width: 100%;
         height: 100%;
         object-fit: cover;
         display: block;
-      }
-      #play {
-        position: absolute;
-        left: 390px;
-        top: 350px;
-        width: 120px;
-        height: 120px;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.92);
-        display: grid;
-        place-items: center;
-      }
-      #vbar {
-        position: absolute;
-        left: 40px;
-        right: 40px;
-        bottom: 40px;
-        height: 10px;
-        border-radius: 99px;
-        background: rgba(255, 255, 255, 0.25);
-      }
-      #vfill {
-        width: 100%;
-        height: 100%;
-        border-radius: 99px;
-        background: var(--yellow);
-        transform-origin: left center;
       }
       .label {
         position: absolute;
@@ -455,7 +492,7 @@
         top: 30px;
         padding: 14px 24px;
         border-radius: 999px;
-        background: rgba(7, 8, 12, 0.75);
+        background: rgba(7, 8, 12, 0.78);
         font-size: 30px;
         font-weight: 700;
       }
@@ -463,7 +500,7 @@
         position: absolute;
         left: 60px;
         right: 60px;
-        top: 260px;
+        top: 270px;
         height: 300px;
         display: flex;
         align-items: center;
@@ -486,7 +523,7 @@
       }
       #b-user {
         right: 40px;
-        top: 160px;
+        top: 170px;
         background: var(--blue);
         border-bottom-right-radius: 10px;
       }
@@ -499,7 +536,7 @@
       .marquee {
         position: absolute;
         left: 0;
-        top: 1470px;
+        top: 1480px;
         white-space: nowrap;
         display: flex;
         gap: 20px;
@@ -513,10 +550,10 @@
         font-weight: 700;
       }
       #mq2 {
-        top: 1580px;
+        top: 1590px;
       }
 
-      /* ---------- S5 canvas ---------- */
+      /* ---------- F · canvas ---------- */
       #wires {
         position: absolute;
         inset: 0;
@@ -568,7 +605,7 @@
         opacity: 0;
       }
 
-      /* ---------- S6 pricing ---------- */
+      /* ---------- G · one plan ---------- */
       #strikes {
         position: absolute;
         left: 60px;
@@ -599,48 +636,46 @@
         background: var(--red);
         transform-origin: left center;
       }
-      #price {
+      #plan {
         position: absolute;
         left: 160px;
         top: 720px;
         width: 760px;
-        height: 760px;
         padding: 56px;
         border-radius: 48px;
         background: linear-gradient(160deg, #161b26 0%, #0f1219 100%);
         border: 2px solid #2f3646;
         box-shadow: 0 50px 100px rgba(0, 0, 0, 0.6);
       }
-      #price .plan {
+      #plan-logo {
+        width: 200px;
+        height: 92px;
+        margin-bottom: 30px;
+        background: url("assets/img/v2/logo.png") left center / contain no-repeat;
+      }
+      #plan .ttl {
         font-family: "Archivo Black", sans-serif;
         font-size: 48px;
       }
-      #price-logo {
-        width: 200px;
-        height: 120px;
-        margin: 0 0 30px -14px;
-        background: url("assets/img/logo.png") left center / contain no-repeat;
-      }
-      #price ul {
-        margin-top: 44px;
+      #plan ul {
+        margin-top: 40px;
         list-style: none;
         display: flex;
         flex-direction: column;
         gap: 22px;
       }
-      #price li {
+      #plan li {
         font-size: 38px;
         font-weight: 600;
         display: flex;
         gap: 18px;
-        align-items: center;
       }
-      #price li b {
+      #plan li b {
         color: var(--cyan);
       }
       #stamp {
         position: absolute;
-        left: 700px;
+        left: 690px;
         top: 650px;
         padding: 22px 34px;
         border-radius: 22px;
@@ -651,7 +686,7 @@
         opacity: 0;
       }
 
-      /* ---------- S7 end ---------- */
+      /* ---------- H · end ---------- */
       #end {
         position: absolute;
         inset: 0;
@@ -662,9 +697,9 @@
         gap: 30px;
       }
       #end-logo {
-        width: 280px;
-        height: 170px;
-        background: url("assets/img/logo.png") center / contain no-repeat;
+        width: 380px;
+        height: 172px;
+        background: url("assets/img/v2/logo.png") center / contain no-repeat;
         opacity: 0;
       }
       #end-name {
@@ -684,7 +719,7 @@
         padding: 38px 64px;
         border-radius: 999px;
         background: var(--blue);
-        font-size: 46px;
+        font-size: 48px;
         font-weight: 800;
         opacity: 0;
       }
@@ -698,7 +733,7 @@
       #flash {
         position: absolute;
         inset: 0;
-        background: var(--blue);
+        background: #fff;
         opacity: 0;
       }
     </style>
@@ -708,167 +743,176 @@
       id="root"
       data-composition-id="main"
       data-start="0"
-      data-duration="21.6"
+      data-duration="19.5"
       data-width="1080"
       data-height="1920"
     >
-      <!-- music + sfx: tools/soundtrack.py · voice: tools/voiceover.py (Kokoro) placed by soundtrack.py -->
-      <audio id="music" src="assets/audio/music.wav" data-start="0" data-duration="21.6" data-track-index="10" data-volume="0.55"></audio>
-      <audio id="sfx" src="assets/audio/sfx.wav" data-start="0" data-duration="21.6" data-track-index="11" data-volume="0.7"></audio>
-      <audio id="voice" src="assets/audio/voice.wav" data-start="0" data-duration="21.6" data-track-index="12" data-volume="1"></audio>
+      <!-- music + sfx + voice placement: tools/soundtrack.py · voice clips: tools/voiceover.py (Kokoro) -->
+      <audio id="music" src="assets/audio/music.wav" data-start="0" data-duration="19.5" data-track-index="10" data-volume="0.55"></audio>
+      <audio id="sfx" src="assets/audio/sfx.wav" data-start="0" data-duration="19.5" data-track-index="11" data-volume="0.7"></audio>
+      <audio id="voice" src="assets/audio/voice.wav" data-start="0" data-duration="19.5" data-track-index="12" data-volume="1"></audio>
 
-      <div id="grid" data-layout-allow-overflow></div>
-      <div id="glow-blue" class="glow" data-layout-allow-overflow></div>
-      <div id="glow-cyan" class="glow" data-layout-allow-overflow></div>
+      <div id="stage">
+        <div id="grid" data-layout-allow-overflow></div>
+        <div id="glow-blue" class="glow" data-layout-allow-overflow></div>
+        <div id="glow-cyan" class="glow" data-layout-allow-overflow></div>
 
-      <!-- S1 · the problem -->
-      <div class="scene" id="s1">
-        <div class="head"><span class="ln" id="h1a">Paying for</span><span class="ln yellow" id="h1b">every AI?</span></div>
-        <div class="sub" id="c1" style="top: 560px"><div class="ico" style="background: #10a37f">G</div><div class="nm">ChatGPT Plus</div><div class="tag">+1 bill</div></div>
-        <div class="sub" id="c2" style="top: 740px"><div class="ico" style="background: #5b5bd6">M</div><div class="nm">Midjourney</div><div class="tag">+1 bill</div></div>
-        <div class="sub" id="c3" style="top: 920px"><div class="ico" style="background: #1db954">K</div><div class="nm">Kling AI</div><div class="tag">+1 bill</div></div>
-        <div class="sub" id="c4" style="top: 1100px"><div class="ico" style="background: #8b5cf6">11</div><div class="nm">ElevenLabs</div><div class="tag">+1 bill</div></div>
-        <div class="sub" id="c5" style="top: 1280px"><div class="ico" style="background: #e2563a">R</div><div class="nm">Runway</div><div class="tag">+1 bill</div></div>
-        <div id="counter"><b id="cnt">0</b> subscriptions</div>
-      </div>
-
-      <!-- S2 · brand -->
-      <div class="scene" id="s2">
-        <div id="ring"></div>
-        <div id="brand">
-          <div id="brand-logo"></div>
-          <div id="brand-line"><span class="ln" id="b1">All AI.</span><span class="ln cyan" id="b2">One place.</span></div>
+        <!-- A · teaser: four flashes on the beat -->
+        <div class="full" id="tz1" data-layout-allow-overflow><img src="assets/img/v2/car.jpg" alt="" /></div>
+        <div class="full" id="tz2" data-layout-allow-overflow>
+          <video id="tz2v" src="assets/video/crash.mp4" muted playsinline data-start="0.47" data-duration="0.47" data-media-start="1.2" data-track-index="2" style="object-position: 45% 50%"></video>
         </div>
-      </div>
+        <div class="full" id="tz3" data-layout-allow-overflow><img src="assets/img/v2/p1.png" alt="" /></div>
+        <div class="full" id="tz4" data-layout-allow-overflow><img src="assets/img/v2/p2.png" alt="" /></div>
+        <div class="tz-word" id="tzw1">Create</div>
+        <div class="tz-word" id="tzw2">Anything</div>
 
-      <!-- S3 · prompt → generation -->
-      <div class="scene" id="s3">
-        <div class="head" id="h3"><span class="ln" id="h3a">Type it.</span></div>
-        <div class="head yellow" id="h3g" style="opacity: 0"><span class="ln">Generate it.</span></div>
-        <div id="gen">
-          <img src="assets/img/runner.png" alt="" />
-          <div id="tiles"></div>
-          <div id="gen-scan"></div>
-          <div id="gen-badge"><span>●</span> Seedance 2.5 · video</div>
+        <!-- B · the problem -->
+        <div class="scene" id="sB">
+          <div class="head"><span class="ln" id="hBa">Paying for</span><span class="ln yellow" id="hBb">every AI?</span></div>
+          <div class="sub" id="c1" style="top: 560px"><div class="ico" style="background: #10a37f">G</div><div class="nm">ChatGPT Plus</div><div class="tag">+1 bill</div></div>
+          <div class="sub" id="c2" style="top: 740px"><div class="ico" style="background: #5b5bd6">M</div><div class="nm">Midjourney</div><div class="tag">+1 bill</div></div>
+          <div class="sub" id="c3" style="top: 920px"><div class="ico" style="background: #1db954">K</div><div class="nm">Kling AI</div><div class="tag">+1 bill</div></div>
+          <div class="sub" id="c4" style="top: 1100px"><div class="ico" style="background: #8b5cf6">11</div><div class="nm">ElevenLabs</div><div class="tag">+1 bill</div></div>
+          <div class="sub" id="c5" style="top: 1280px"><div class="ico" style="background: #e2563a">R</div><div class="nm">Runway</div><div class="tag">+1 bill</div></div>
+          <div id="counter"><b id="cnt">0</b> subscriptions</div>
         </div>
-        <div id="progress">generating <span id="pct">0</span>%</div>
-        <div id="prompt">
-          <div id="ptext"><span class="ph" id="ph">Write your prompt…</span><span id="typed"></span><span id="caret"></span></div>
-          <div id="chip">
-            <span class="dot"></span>
-            <div id="chip-names"><div id="cn1">GPT-5</div><div id="cn2" style="opacity: 0">Seedance 2.5</div></div>
-          </div>
-          <div id="send">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#07080c" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7" /></svg>
+
+        <!-- C · brand -->
+        <div class="scene" id="sC">
+          <div id="ring"></div>
+          <div id="orbit"></div>
+          <div id="brand">
+            <div id="brand-logo"></div>
+            <div id="brand-line"><span class="ln" id="bl1">All AI.</span><span class="ln cyan" id="bl2">One place.</span></div>
           </div>
         </div>
-      </div>
 
-      <!-- S4 · every model -->
-      <div class="scene" id="s4">
-        <div class="head"><span class="ln">Every model.</span></div>
-        <div id="tabs">
-          <div id="tab-hl"></div>
-          <div class="tab" style="left: 0">Image</div>
-          <div class="tab" style="left: 225px">Video</div>
-          <div class="tab" style="left: 450px">Audio</div>
-          <div class="tab" style="left: 675px">Chat</div>
-        </div>
-        <div class="out" id="o-img">
-          <div id="oi1" style="background-image: url(assets/img/lego.png)"></div>
-          <div id="oi2" style="background-image: url(assets/img/bottle.png)"></div>
-          <div id="oi3" style="background-image: url(assets/img/bird.png)"></div>
-          <div id="oi4" style="background-image: url(assets/img/face.png)"></div>
-        </div>
-        <div class="out" id="o-vid">
-          <div class="media">
-            <img src="assets/img/kart.png" alt="" />
-            <div class="label">Kling 3.0</div>
-            <div id="play"><svg width="48" height="48" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="#07080c" /></svg></div>
-            <div id="vbar"><div id="vfill"></div></div>
+        <!-- D · prompt → image → video -->
+        <div class="scene" id="sD">
+          <div class="head" id="hD1"><span class="ln">Type it.</span></div>
+          <div class="head yellow" id="hD2" style="opacity: 0"><span class="ln">Generate it.</span></div>
+          <div id="gen">
+            <img src="assets/img/v2/car.jpg" alt="" />
+            <div id="tiles"></div>
+            <div id="gen-scan"></div>
+            <div class="badge" id="gen-badge"><span>●</span> GPT Image 2 · image</div>
+          </div>
+          <div id="animate-btn">Animate ▶</div>
+          <div id="prompt">
+            <div id="ptext"><span class="ph" id="ph">Describe your idea…</span><span id="typed"></span><span id="caret"></span></div>
+            <div id="chip"><span class="dot"></span>GPT Image 2</div>
+            <div id="send">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#07080c" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7" /></svg>
+            </div>
           </div>
         </div>
-        <div class="out" id="o-aud">
-          <div class="media" style="background: linear-gradient(160deg, #111827, #0b0e15)">
-            <div class="label">AI Audio · transform music</div>
-            <div id="wave"></div>
+        <div class="full" id="sD-video" data-layout-allow-overflow>
+          <video id="carv" src="assets/video/car.mp4" muted playsinline data-start="9.55" data-duration="1.75" data-media-start="0.2" data-track-index="3" style="object-position: 30% 50%"></video>
+        </div>
+        <div id="vid-head">Animate it.</div>
+        <div id="vid-label"><span>●</span> Seedance 2.5 · video</div>
+
+        <!-- E · every model -->
+        <div class="scene" id="sE">
+          <div class="head"><span class="ln">Every model.</span></div>
+          <div id="tabs">
+            <div id="tab-hl"></div>
+            <div class="tab" style="left: 0">Image</div>
+            <div class="tab" style="left: 225px">Video</div>
+            <div class="tab" style="left: 450px">Audio</div>
+            <div class="tab" style="left: 675px">Chat</div>
           </div>
-        </div>
-        <div class="out" id="o-chat">
-          <div class="media" style="background: #0d1017">
-            <div class="label">GPT-5 chat</div>
-            <div class="bubble" id="b-user">Write a hook for my reel</div>
-            <div class="bubble" id="b-ai">“Stop scrolling — this was made in 10 seconds.”</div>
+          <div class="out" id="o-img">
+            <div id="oi1" style="background-image: url(assets/img/v2/p1.png)"></div>
+            <div id="oi2" style="background-image: url(assets/img/v2/p2.png)"></div>
+            <div id="oi3" style="background-image: url(assets/img/v2/p3.png)"></div>
+            <div id="oi4" style="background-image: url(assets/img/v2/p4.png)"></div>
           </div>
+          <div class="out" id="o-vid">
+            <div class="media">
+              <video id="ev" src="assets/video/montage.mp4" muted playsinline data-start="11.85" data-duration="0.6" data-media-start="2.8" data-track-index="4"></video>
+              <div class="label">Kling 3.0 · video</div>
+            </div>
+          </div>
+          <div class="out" id="o-aud">
+            <div class="media" style="background: linear-gradient(160deg, #111827, #0b0e15)">
+              <div class="label">AI Audio · music</div>
+              <div id="wave"></div>
+            </div>
+          </div>
+          <div class="out" id="o-chat">
+            <div class="media">
+              <div class="label">GPT-5 · chat</div>
+              <div class="bubble" id="b-user">Write a hook for my reel</div>
+              <div class="bubble" id="b-ai">“Stop scrolling — this took 10 seconds.”</div>
+            </div>
+          </div>
+          <div class="marquee" id="mq1"><span>Nano Banana Pro</span><span>GPT Image 2</span><span>Seedance 2.5</span><span>Kling 3.0</span><span>Veo 3.1</span><span>Sora 2</span><span>Midjourney</span><span>Flux 2 Pro</span><span>Nano Banana Pro</span><span>GPT Image 2</span></div>
+          <div class="marquee" id="mq2"><span>Hailuo 02</span><span>Wan 2.2 Turbo</span><span>Qwen Image</span><span>Grok Imagine</span><span>Seedream v3</span><span>GPT Image 1.5</span><span>Kling 2.1</span><span>Hailuo 02</span><span>Wan 2.2 Turbo</span></div>
         </div>
-        <div class="marquee" id="mq1">
-          <span>Nano Banana Pro</span><span>GPT Image 2</span><span>Seedance 2.5</span><span>Kling 3.0</span><span>Veo 3.1</span><span>Sora 2</span><span>Midjourney</span><span>Flux 2 Pro</span><span>Nano Banana Pro</span><span>GPT Image 2</span><span>Seedance 2.5</span>
-        </div>
-        <div class="marquee" id="mq2">
-          <span>Hailuo 02</span><span>Wan 2.2 Turbo</span><span>Qwen Image</span><span>Grok Imagine</span><span>Seedream v3</span><span>GPT Image 1.5</span><span>Kling 2.1</span><span>Hailuo 02</span><span>Wan 2.2 Turbo</span><span>Qwen Image</span>
-        </div>
-      </div>
 
-      <!-- S5 · canvas -->
-      <div class="scene" id="s5">
-        <div class="head"><span class="ln">Build on</span><span class="ln cyan">Canvas.</span></div>
-        <svg id="wires" viewBox="0 0 1080 1920">
-          <path id="w1" d="M480 640 C 640 640, 560 760, 760 760" stroke="#eef33a" stroke-width="6" fill="none" stroke-linecap="round" />
-          <path id="w2" d="M760 1180 C 760 1250, 300 1180, 300 1260" stroke="#eef33a" stroke-width="6" fill="none" stroke-linecap="round" />
-          <path id="w3" d="M520 1440 C 600 1440, 600 1520, 700 1520" stroke="#eef33a" stroke-width="6" fill="none" stroke-linecap="round" />
-        </svg>
-        <div class="node" id="n1" style="left: 60px; top: 540px; width: 420px; height: 200px">
-          <div class="nh"><i style="background: var(--magenta)"></i>Prompt</div>
-          <div class="nb">runner at dawn, cinematic</div>
+        <!-- F · canvas -->
+        <div class="scene" id="sF">
+          <div class="head"><span class="ln">Build on</span><span class="ln cyan">Canvas.</span></div>
+          <svg id="wires" viewBox="0 0 1080 1920">
+            <path id="w1" d="M480 640 C 640 640, 560 760, 760 760" stroke="#eef33a" stroke-width="6" fill="none" stroke-linecap="round" />
+            <path id="w2" d="M760 1180 C 760 1250, 300 1180, 300 1260" stroke="#eef33a" stroke-width="6" fill="none" stroke-linecap="round" />
+            <path id="w3" d="M520 1440 C 600 1440, 600 1520, 700 1520" stroke="#eef33a" stroke-width="6" fill="none" stroke-linecap="round" />
+          </svg>
+          <div class="node" id="n1" style="left: 60px; top: 540px; width: 420px; height: 200px">
+            <div class="nh"><i style="background: var(--magenta)"></i>Prompt</div>
+            <div class="nb">yellow sports car, golden light</div>
+          </div>
+          <div class="node" id="n2" style="left: 560px; top: 760px; width: 420px; height: 420px">
+            <div class="nh"><i style="background: var(--cyan)"></i>Image · GPT Image 2</div>
+            <img src="assets/img/v2/car.jpg" alt="" style="object-position: 50% 62%" />
+          </div>
+          <div class="node" id="n3" style="left: 80px; top: 1260px; width: 440px; height: 360px">
+            <div class="nh"><i style="background: var(--yellow)"></i>Video · Seedance 2.5</div>
+            <img src="assets/img/v2/p3.png" alt="" />
+          </div>
+          <div class="node" id="n4" style="left: 640px; top: 1440px; width: 380px; height: 170px">
+            <div class="nh"><i style="background: var(--blue)"></i>Upscale</div>
+            <div class="nb">4K · ready</div>
+          </div>
+          <div class="pin" id="p1" style="left: 760px; top: 760px"></div>
+          <div class="pin" id="p2" style="left: 300px; top: 1260px"></div>
+          <div class="pin" id="p3" style="left: 700px; top: 1520px"></div>
         </div>
-        <div class="node" id="n2" style="left: 560px; top: 760px; width: 420px; height: 420px">
-          <div class="nh"><i style="background: var(--cyan)"></i>Image · GPT Image 2</div>
-          <img src="assets/img/hoop.png" alt="" />
-        </div>
-        <div class="node" id="n3" style="left: 80px; top: 1260px; width: 440px; height: 360px">
-          <div class="nh"><i style="background: var(--yellow)"></i>Video · Seedance 2.5</div>
-          <img src="assets/img/runner.png" alt="" />
-        </div>
-        <div class="node" id="n4" style="left: 640px; top: 1440px; width: 380px; height: 170px">
-          <div class="nh"><i style="background: var(--blue)"></i>Upscale</div>
-          <div class="nb">4K · ready</div>
-        </div>
-        <div class="pin" id="p1" style="left: 760px; top: 760px"></div>
-        <div class="pin" id="p2" style="left: 300px; top: 1260px"></div>
-        <div class="pin" id="p3" style="left: 700px; top: 1520px"></div>
-      </div>
 
-      <!-- S6 · pricing -->
-      <div class="scene" id="s6">
-        <div class="head"><span class="ln">One plan.</span></div>
-        <div id="strikes">
-          <div class="sp">ChatGPT Plus<i></i></div>
-          <div class="sp">Midjourney<i></i></div>
-          <div class="sp">Kling AI<i></i></div>
-          <div class="sp">ElevenLabs<i></i></div>
-          <div class="sp">Runway<i></i></div>
+        <!-- G · one plan -->
+        <div class="scene" id="sG">
+          <div class="head"><span class="ln">One plan.</span></div>
+          <div id="strikes">
+            <div class="sp">ChatGPT Plus<i></i></div>
+            <div class="sp">Midjourney<i></i></div>
+            <div class="sp">Kling AI<i></i></div>
+            <div class="sp">ElevenLabs<i></i></div>
+            <div class="sp">Runway<i></i></div>
+          </div>
+          <div id="plan">
+            <div id="plan-logo"></div>
+            <div class="ttl">Everything included</div>
+            <ul>
+              <li><b>✓</b> Image · Video · Audio · Chat</li>
+              <li><b>✓</b> GPT, Kling, Veo, Sora &amp; more</li>
+              <li><b>✓</b> Canvas pipelines</li>
+              <li><b>✓</b> One account, one bill</li>
+            </ul>
+          </div>
+          <div id="stamp">ALL IN ONE</div>
         </div>
-        <div id="price">
-          <div id="price-logo"></div>
-          <div class="plan">Everything included</div>
-          <ul>
-            <li><b>✓</b> Image · Video · Audio · Chat</li>
-            <li><b>✓</b> GPT, Kling, Veo, Sora &amp; more</li>
-            <li><b>✓</b> Canvas pipelines</li>
-            <li><b>✓</b> One account, one bill</li>
-          </ul>
-        </div>
-        <div id="stamp">ALL IN ONE</div>
-      </div>
 
-      <!-- S7 · end -->
-      <div class="scene" id="s7">
-        <div id="end">
-          <div id="end-logo"></div>
-          <div id="end-name">WeArt Studio</div>
-          <div id="end-sub">All AI tools. One subscription.</div>
-          <div id="end-cta">Start creating now →</div>
-          <div id="end-url">weartstudio.io</div>
+        <!-- H · end -->
+        <div class="scene" id="sH">
+          <div id="end">
+            <div id="end-logo"></div>
+            <div id="end-name">WeArt Studio</div>
+            <div id="end-sub">All AI tools. One subscription.</div>
+            <div id="end-cta">Start creating now →</div>
+            <div id="end-url">weartstudio.io</div>
+          </div>
         </div>
       </div>
 
@@ -878,208 +922,222 @@
     </div>
 
     <script>
-      const BEAT = 0.5;
+      const BEAT = 60 / 128;
       // fromTo from-values apply only when each tween starts; resting states live in CSS
-      const main = gsap.timeline({ paused: true, defaults: { immediateRender: false } });
+      const tl = gsap.timeline({ paused: true, defaults: { immediateRender: false } });
 
-      // Scenes were laid out on a 20 s grid; W() maps that grid onto the narrated
-      // timeline (same knots as tools/soundtrack.py). Long tweens stretch with it.
-      const OLD_KNOTS = [0, 3.8, 4.95, 7.0, 9.3, 12.35, 15.3, 18.0, 20.0];
-      const NEW_KNOTS = [0, 3.0, 6.2, 8.4, 9.9, 13.2, 15.6, 18.4, 21.6];
-      function W(t) {
-        for (let i = 1; i < OLD_KNOTS.length; i++) {
-          if (t <= OLD_KNOTS[i]) {
-            const f = (t - OLD_KNOTS[i - 1]) / (OLD_KNOTS[i] - OLD_KNOTS[i - 1]);
-            return NEW_KNOTS[i - 1] + f * (NEW_KNOTS[i] - NEW_KNOTS[i - 1]);
-          }
-        }
-        return NEW_KNOTS[NEW_KNOTS.length - 1] + (t - OLD_KNOTS[OLD_KNOTS.length - 1]);
-      }
-      function warp(vars, at) {
-        const d = vars.duration || 0;
-        if (d > 0.6) {
-          const reps = (vars.repeat || 0) + 1;
-          vars = { ...vars, duration: (W(at + d * reps) - W(at)) / reps };
-        }
-        return vars;
-      }
-      const tl = {
-        to: (t, v, at) => main.to(t, warp(v, at), W(at)),
-        fromTo: (t, a, b, at) => main.fromTo(t, a, warp(b, at), W(at)),
-        set: (t, v, at) => main.set(t, v, W(at)),
-      };
-
-      // deterministic pseudo-random (LCG)
       let seed = 42;
       const rnd = () => ((seed = (seed * 1664525 + 1013904223) % 4294967296) / 4294967296);
 
-      // build generated DOM
       const tiles = document.getElementById("tiles");
       for (let i = 0; i < 80; i++) tiles.appendChild(document.createElement("i"));
       const wave = document.getElementById("wave");
       for (let i = 0; i < 36; i++) wave.appendChild(document.createElement("i"));
+      const orbit = document.getElementById("orbit");
+      const ORBS = ["GPT-5", "Kling 3.0", "Veo 3.1", "Sora 2", "Seedance 2.5", "Midjourney", "Flux 2 Pro", "Nano Banana Pro"];
+      ORBS.forEach((name, i) => {
+        const el = document.createElement("div");
+        el.className = "orb";
+        el.id = "orb" + i;
+        el.textContent = name;
+        orbit.appendChild(el);
+      });
 
-      function sceneIn(id, at, from = { y: 60 }) {
-        tl.fromTo(id, { opacity: 0, ...from }, { opacity: 1, y: 0, x: 0, scale: 1, duration: 0.3, ease: "power3.out" }, at);
+      // helpers
+      function shake(at, amt = 18) {
+        tl.fromTo("#stage", { x: -amt, y: amt * 0.6 }, { x: 0, y: 0, duration: 0.3, ease: "elastic.out(1, 0.3)" }, at);
       }
-      function sceneOut(id, at, to = { y: -60 }) {
-        tl.to(id, { opacity: 0, ...to, duration: 0.25, ease: "power2.in" }, at);
+      function flash(at, a = 0.8, color = "#fff") {
+        tl.set("#flash", { backgroundColor: color }, at);
+        tl.fromTo("#flash", { opacity: a }, { opacity: 0, duration: 0.25, ease: "power2.out" }, at);
       }
-      function slam(sel, at) {
-        tl.fromTo(sel, { opacity: 0, scale: 1.6 }, { opacity: 1, scale: 1, duration: 0.3, ease: "expo.out" }, at);
+      function slam(sel, at, s = 1.8) {
+        tl.fromTo(sel, { opacity: 0, scale: s }, { opacity: 1, scale: 1, duration: 0.22, ease: "expo.out" }, at);
       }
-      function cursorTo(x, y, at, dur = 0.45) {
+      function sceneIn(id, at, from = { scale: 1.15 }) {
+        tl.fromTo(id, { opacity: 0, filter: "blur(14px)", ...from }, { opacity: 1, filter: "blur(0px)", x: 0, y: 0, scale: 1, duration: 0.2, ease: "power3.out" }, at);
+      }
+      function sceneOut(id, at, to = { scale: 0.85 }) {
+        tl.to(id, { opacity: 0, filter: "blur(14px)", ...to, duration: 0.18, ease: "power2.in" }, at);
+      }
+      function cursorTo(x, y, at, dur = 0.3) {
         tl.to("#cursor", { x, y, duration: dur, ease: "power3.inOut" }, at);
       }
       function clickAt(x, y, at) {
-        tl.to("#cursor", { scale: 0.8, duration: 0.08, yoyo: true, repeat: 1 }, at);
-        tl.fromTo("#click", { x, y, opacity: 1, scale: 0.3 }, { x, y, opacity: 0, scale: 1.6, duration: 0.45, ease: "power2.out" }, at);
+        tl.to("#cursor", { scale: 0.8, duration: 0.06, yoyo: true, repeat: 1 }, at);
+        tl.fromTo("#click", { x, y, opacity: 1, scale: 0.3 }, { x, y, opacity: 0, scale: 1.6, duration: 0.4, ease: "power2.out" }, at);
       }
 
-      // ambient drift + beat pulse on the glows
-      tl.fromTo("#grid", { y: 0 }, { y: 90, duration: 20, ease: "none" }, 0);
-      tl.fromTo("#glow-blue", { x: 0 }, { x: 400, duration: 20, ease: "sine.inOut" }, 0);
-      tl.fromTo("#glow-cyan", { x: 0 }, { x: -380, duration: 20, ease: "sine.inOut" }, 0);
-      for (let t = 0; t < 17.5; t += 2 * BEAT) {
-        tl.fromTo(".glow", { scale: 1.08 }, { scale: 1, duration: 0.6, ease: "power2.out" }, t);
+      // ambient
+      tl.fromTo("#grid", { y: 0 }, { y: 90, duration: 19.5, ease: "none" }, 0);
+      tl.fromTo("#glow-blue", { x: 0 }, { x: 400, duration: 19.5, ease: "sine.inOut" }, 0);
+      tl.fromTo("#glow-cyan", { x: 0 }, { x: -380, duration: 19.5, ease: "sine.inOut" }, 0);
+      for (let t = 2 * BEAT * 2; t < 16.6; t += BEAT) {
+        tl.fromTo(".glow", { scale: 1.07 }, { scale: 1, duration: 0.35, ease: "power2.out" }, t);
       }
 
-      // ---------- S1 · 0–3.8 · the problem ----------
-      tl.set("#s1", { opacity: 1 }, 0);
-      slam("#h1a", 0.0);
-      slam("#h1b", 0.12);
-      tl.fromTo("#counter", { opacity: 0 }, { opacity: 1, duration: 0.2 }, 0.2);
+      // ---------- A · 0–1.9 teaser ----------
+      ["#tz1", "#tz2", "#tz3", "#tz4"].forEach((id, i) => {
+        const at = i * BEAT;
+        tl.set(id, { opacity: 1 }, at);
+        tl.fromTo(id, { scale: 1.3 }, { scale: 1.04, duration: BEAT, ease: "power3.out" }, at);
+        if (i < 3) tl.set(id, { opacity: 0 }, at + BEAT);
+        flash(at, 0.7);
+        shake(at, 22);
+      });
+      slam("#tzw1", 0.02, 2.4);
+      tl.to("#tzw1", { opacity: 0, duration: 0.1 }, 2 * BEAT - 0.05);
+      slam("#tzw1", 2 * BEAT, 2.4);
+      tl.to("#tzw1", { y: -110, duration: 0.15, ease: "power3.out" }, 2 * BEAT + 0.05);
+      slam("#tzw2", 2 * BEAT + 0.1, 2.4);
+      tl.to(["#tz4", "#tzw1", "#tzw2"], { opacity: 0, scale: 0.8, filter: "blur(16px)", duration: 0.2, ease: "power2.in" }, 1.7);
+
+      // ---------- B · 1.9–4.2 problem ----------
+      tl.set("#sB", { opacity: 1 }, 1.88);
+      slam("#hBa", 1.9);
+      slam("#hBb", 2.0);
+      tl.fromTo("#counter", { opacity: 0 }, { opacity: 1, duration: 0.15 }, 2.0);
       ["#c1", "#c2", "#c3", "#c4", "#c5"].forEach((c, i) => {
-        const at = 0.25 + i * 0.5;
+        const at = 2.0 + i * 0.25;
         const dir = i % 2 ? 1 : -1;
-        tl.fromTo(c, { opacity: 0, x: 700 * dir, rotation: 12 * dir }, { opacity: 1, x: 0, rotation: (i % 2 ? 2 : -2), duration: 0.35, ease: "back.out(1.4)" }, at);
+        tl.fromTo(c, { opacity: 0, x: 700 * dir, rotation: 14 * dir }, { opacity: 1, x: 0, rotation: i % 2 ? 2 : -2, duration: 0.22, ease: "back.out(1.6)" }, at);
         tl.set("#cnt", { textContent: String(i + 1) }, at);
-        tl.fromTo("#cnt", { scale: 1.6 }, { scale: 1, duration: 0.3, ease: "power2.out" }, at);
+        tl.fromTo("#cnt", { scale: 1.7 }, { scale: 1, duration: 0.2, ease: "power2.out" }, at);
+        shake(at, 10);
       });
-      // implode
-      tl.to(["#c1", "#c2", "#c3", "#c4", "#c5"], { x: 0, y: (i) => 920 - (560 + i * 180), scale: 0.1, rotation: 180, opacity: 0, duration: 0.45, ease: "power3.in", stagger: 0.03 }, 3.3);
-      tl.to(["#h1a", "#h1b", "#counter"], { opacity: 0, scale: 0.8, duration: 0.3, ease: "power2.in" }, 3.3);
+      tl.to(["#c1", "#c2", "#c3", "#c4", "#c5"], { x: 0, y: (i) => 920 - (560 + i * 180), scale: 0.1, rotation: 200, opacity: 0, duration: 0.32, ease: "power3.in", stagger: 0.02 }, 3.85);
+      tl.to(["#hBa", "#hBb", "#counter"], { opacity: 0, scale: 0.7, duration: 0.25, ease: "power2.in" }, 3.85);
 
-      // ---------- S2 · 3.8–5.0 · brand ----------
-      tl.set("#s2", { opacity: 1 }, 3.8);
-      tl.fromTo("#flash", { opacity: 0.6 }, { opacity: 0, duration: 0.4 }, 3.8);
-      tl.fromTo("#ring", { opacity: 1, scale: 0.2 }, { opacity: 0, scale: 3, duration: 0.8, ease: "power2.out" }, 3.8);
-      tl.fromTo("#brand-logo", { opacity: 0, scale: 0.3 }, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(2)" }, 3.8);
-      slam("#b1", 3.95);
-      slam("#b2", 4.2);
-      sceneOut("#s2", 4.8, { scale: 1.3 });
+      // ---------- C · 4.2–7.0 brand ----------
+      tl.set("#sC", { opacity: 1 }, 4.2);
+      flash(4.2, 0.85, "#1d8bff");
+      shake(4.2, 26);
+      tl.fromTo("#ring", { opacity: 1, scale: 0.2 }, { opacity: 0, scale: 3.2, duration: 0.7, ease: "power2.out" }, 4.2);
+      tl.fromTo("#brand-logo", { opacity: 0, scale: 0.2, rotation: -20 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.35, ease: "back.out(2.2)" }, 4.2);
+      slam("#bl1", 4.4);
+      slam("#bl2", 4.62);
+      ORBS.forEach((_, i) => {
+        const a0 = (i / ORBS.length) * Math.PI * 2;
+        const R = 470;
+        const pos = { a: a0 };
+        const el = "#orb" + i;
+        tl.fromTo(el, { opacity: 0, scale: 0.3 }, { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(2)" }, 4.75 + i * 0.06);
+        tl.to(pos, {
+          a: a0 + Math.PI * 0.9,
+          duration: 2.1,
+          ease: "none",
+          onUpdate: () => gsap.set(el, { x: Math.cos(pos.a) * R - 100, y: Math.sin(pos.a) * R * 1.25 - 30 }),
+        }, 4.75);
+        gsap.set(el, { x: Math.cos(a0) * R - 100, y: Math.sin(a0) * R * 1.25 - 30 });
+      });
+      sceneOut("#sC", 6.85, { scale: 1.35 });
 
-      // ---------- S3 · 5.0–9.4 · prompt → generation ----------
-      sceneIn("#s3", 4.95);
-      tl.fromTo("#prompt", { y: 300 }, { y: 0, duration: 0.45, ease: "power3.out" }, 4.95);
-      tl.fromTo("#gen", { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.4, ease: "power3.out" }, 5.0);
-      tl.fromTo("#caret", { opacity: 1 }, { opacity: 0, duration: 0.25, repeat: 7, yoyo: true, ease: "steps(1)" }, 5.0);
-      const prompt = "cinematic runner at dawn";
-      tl.set("#ph", { display: "none" }, 5.2);
-      for (let i = 1; i <= prompt.length; i++) {
-        tl.set("#typed", { textContent: prompt.slice(0, i) }, 5.2 + (i - 1) * 0.065);
-      }
-      // model chip flips to Seedance
-      tl.to("#cn1", { y: -40, opacity: 0, duration: 0.2, ease: "power2.in" }, 6.6);
-      tl.fromTo("#cn2", { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.25, ease: "power2.out" }, 6.7);
-      // cursor travels to send
-      tl.fromTo("#cursor", { opacity: 0, x: 700, y: 1800 }, { opacity: 1, duration: 0.2 }, 6.2);
-      cursorTo(930, 1490, 6.4, 0.5);
-      clickAt(910, 1480, 7.0);
-      tl.fromTo("#send", { scale: 0.85 }, { scale: 1, duration: 0.3, ease: "back.out(3)" }, 7.0);
-      tl.to("#cursor", { opacity: 0, duration: 0.2 }, 7.4);
-      // headline swap
-      tl.to("#h3", { opacity: 0, y: -40, duration: 0.2 }, 6.95);
-      tl.fromTo("#h3g", { opacity: 0, scale: 1.5 }, { opacity: 1, scale: 1, duration: 0.3, ease: "expo.out" }, 7.05);
-      // generation: tiles dissolve in seeded order + scan sweep + percentage
-      tl.fromTo("#progress", { opacity: 0 }, { opacity: 1, duration: 0.15 }, 7.15);
+      // ---------- D · 7.0–11.2 prompt → image → video ----------
+      sceneIn("#sD", 6.98, { y: 120 });
+      tl.fromTo("#prompt", { y: 260 }, { y: 0, duration: 0.3, ease: "power3.out" }, 6.98);
+      tl.fromTo("#caret", { opacity: 1 }, { opacity: 0, duration: 0.2, repeat: 5, yoyo: true, ease: "steps(1)" }, 7.0);
+      const prompt = "yellow sports car, golden light";
+      tl.set("#ph", { display: "none" }, 7.1);
+      for (let i = 1; i <= prompt.length; i++) tl.set("#typed", { textContent: prompt.slice(0, i) }, 7.1 + (i - 1) * 0.03);
+      tl.fromTo("#cursor", { opacity: 0, x: 700, y: 1820 }, { opacity: 1, duration: 0.15 }, 7.6);
+      cursorTo(930, 1490, 7.7, 0.35);
+      clickAt(910, 1480, 8.1);
+      tl.fromTo("#send", { scale: 0.8 }, { scale: 1, duration: 0.25, ease: "back.out(3)" }, 8.1);
+      tl.to("#hD1", { opacity: 0, y: -40, duration: 0.12 }, 8.08);
+      slam("#hD2", 8.12, 1.6);
+      shake(8.1, 12);
       const order = [...tiles.children].map((el) => ({ el, k: rnd() }));
-      order.sort((a, b) => a.k - b.k).forEach((o, i) => {
-        tl.to(o.el, { opacity: 0, duration: 0.12, ease: "none" }, 7.25 + (i / 80) * 0.95);
-      });
-      tl.fromTo("#gen-scan", { opacity: 1, y: -140 }, { opacity: 1, y: 800, duration: 0.5, ease: "none", repeat: 1 }, 7.25);
-      tl.to("#gen-scan", { opacity: 0, duration: 0.15 }, 8.25);
-      const pct = { v: 0 };
-      tl.to(pct, { v: 100, duration: 1.0, ease: "power1.inOut", onUpdate: () => (document.getElementById("pct").textContent = Math.round(pct.v)) }, 7.25);
-      tl.fromTo("#gen", { scale: 1.06 }, { scale: 1, duration: 0.35, ease: "back.out(2)" }, 8.3);
-      tl.fromTo("#gen-badge", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.3, ease: "power3.out" }, 8.35);
-      tl.to("#progress", { opacity: 0, duration: 0.2 }, 8.35);
-      tl.fromTo("#gen img", { scale: 1.15 }, { scale: 1, duration: 1.2, ease: "power2.out" }, 8.25);
-      sceneOut("#s3", 9.2, { x: -300 });
+      order.sort((a, b) => a.k - b.k).forEach((o, i) => tl.to(o.el, { opacity: 0, duration: 0.08, ease: "none" }, 8.2 + (i / 80) * 0.55));
+      tl.fromTo("#gen-scan", { opacity: 1, y: -140 }, { opacity: 1, y: 860, duration: 0.3, ease: "none", repeat: 1 }, 8.2);
+      tl.to("#gen-scan", { opacity: 0, duration: 0.1 }, 8.8);
+      tl.fromTo("#gen", { scale: 1.07 }, { scale: 1, duration: 0.3, ease: "back.out(2.5)" }, 8.8);
+      tl.fromTo("#gen-badge", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.2, ease: "power3.out" }, 8.82);
+      tl.fromTo("#animate-btn", { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(2.5)" }, 8.95);
+      cursorTo(680, 1175, 8.95, 0.3);
+      clickAt(660, 1170, 9.3);
+      tl.fromTo("#animate-btn", { scale: 0.88 }, { scale: 1, duration: 0.2, ease: "back.out(3)" }, 9.3);
+      tl.to("#cursor", { opacity: 0, duration: 0.1 }, 9.4);
+      // zoom-through into the video
+      tl.to("#gen", { scale: 2.6, duration: 0.25, ease: "power3.in" }, 9.32);
+      tl.to("#sD", { opacity: 0, duration: 0.15 }, 9.45);
+      tl.fromTo("#sD-video", { opacity: 0, scale: 1.25, filter: "blur(16px)" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.25, ease: "power3.out" }, 9.55);
+      tl.fromTo("#carv", { scale: 1.0 }, { scale: 1.12, duration: 1.75, ease: "none" }, 9.55);
+      flash(9.55, 0.7);
+      shake(9.55, 24);
+      slam("#vid-head", 9.6, 1.8);
+      tl.fromTo("#vid-label", { opacity: 0, x: -40 }, { opacity: 1, x: 0, duration: 0.2, ease: "power3.out" }, 9.75);
+      tl.to(["#sD-video", "#vid-head", "#vid-label"], { opacity: 0, x: -300, filter: "blur(14px)", duration: 0.18, ease: "power2.in" }, 11.05);
 
-      // ---------- S4 · 9.4–12.3 · every model ----------
-      sceneIn("#s4", 9.3, { x: 300 });
-      tl.fromTo("#mq1", { x: 0 }, { x: -900, duration: 3.2, ease: "none" }, 9.3);
-      tl.fromTo("#mq2", { x: -900 }, { x: 0, duration: 3.2, ease: "none" }, 9.3);
-      tl.set("#cursor", { opacity: 1, x: 300, y: 700 }, 9.3);
+      // ---------- E · 11.2–13.6 every model ----------
+      sceneIn("#sE", 11.15, { x: 300 });
+      tl.fromTo("#mq1", { x: 0 }, { x: -900, duration: 2.5, ease: "none" }, 11.15);
+      tl.fromTo("#mq2", { x: -900 }, { x: 0, duration: 2.5, ease: "none" }, 11.15);
+      tl.set("#cursor", { opacity: 1, x: 300, y: 700 }, 11.15);
       const tabX = [8, 233, 458, 683];
       const outs = ["#o-img", "#o-vid", "#o-aud", "#o-chat"];
-      [9.5, 10.25, 11.0, 11.75].forEach((at, i) => {
-        cursorTo(90 + tabX[i] + 106, 480, at - 0.25, 0.25);
+      [11.3, 11.85, 12.4, 12.95].forEach((at, i) => {
+        cursorTo(90 + tabX[i] + 106, 480, at - 0.18, 0.18);
         clickAt(90 + tabX[i] + 106, 465, at);
-        tl.to("#tab-hl", { x: tabX[i] - 8, duration: 0.25, ease: "power3.inOut" }, at);
-        if (i > 0) tl.to(outs[i - 1], { opacity: 0, scale: 0.94, duration: 0.15 }, at);
-        tl.fromTo(outs[i], { opacity: 0, scale: 1.06 }, { opacity: 1, scale: 1, duration: 0.25, ease: "power3.out" }, at + 0.05);
+        tl.to("#tab-hl", { x: tabX[i] - 8, duration: 0.18, ease: "power3.inOut" }, at);
+        if (i > 0) tl.to(outs[i - 1], { opacity: 0, scale: 0.92, duration: 0.1 }, at);
+        tl.fromTo(outs[i], { opacity: 0, scale: 1.1 }, { opacity: 1, scale: 1, duration: 0.2, ease: "power3.out" }, at + 0.03);
+        shake(at, 8);
       });
-      ["#oi1", "#oi2", "#oi3", "#oi4"].forEach((s, i) => {
-        tl.fromTo(s, { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(2)" }, 9.55 + i * 0.08);
-      });
-      tl.fromTo("#vfill", { scaleX: 0 }, { scaleX: 1, duration: 0.75, ease: "none" }, 10.3);
-      tl.fromTo("#o-vid img", { scale: 1 }, { scale: 1.1, duration: 0.75, ease: "none" }, 10.3);
-      [...wave.children].forEach((b, i) => {
+      ["#oi1", "#oi2", "#oi3", "#oi4"].forEach((s, i) => tl.fromTo(s, { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.2, ease: "back.out(2.2)" }, 11.33 + i * 0.06));
+      [...wave.children].forEach((b) => {
         const h = 0.2 + 0.8 * rnd();
-        tl.fromTo(b, { scaleY: 0.1 }, { scaleY: h, duration: 0.12 + 0.1 * rnd(), ease: "sine.inOut", repeat: 5, yoyo: true }, 11.05);
+        tl.fromTo(b, { scaleY: 0.1 }, { scaleY: h, duration: 0.09 + 0.07 * rnd(), ease: "sine.inOut", repeat: 5, yoyo: true }, 12.43);
       });
-      tl.fromTo("#b-user", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.2, ease: "power3.out" }, 11.8);
-      tl.fromTo("#b-ai", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.25, ease: "power3.out" }, 12.0);
-      tl.to("#cursor", { opacity: 0, duration: 0.2 }, 12.0);
-      sceneOut("#s4", 12.2, { scale: 0.9 });
+      tl.fromTo("#b-user", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.15, ease: "power3.out" }, 12.98);
+      tl.fromTo("#b-ai", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.2, ease: "power3.out" }, 13.15);
+      tl.to("#cursor", { opacity: 0, duration: 0.1 }, 13.2);
+      sceneOut("#sE", 13.42, { scale: 0.85 });
 
-      // ---------- S5 · 12.4–15.3 · canvas ----------
-      sceneIn("#s5", 12.35, { scale: 1.1 });
+      // ---------- F · 13.6–15.2 canvas ----------
+      sceneIn("#sF", 13.55, { scale: 1.2 });
       const wires = ["#w1", "#w2", "#w3"].map((id) => document.querySelector(id));
       wires.forEach((w) => {
         const L = w.getTotalLength();
         w.style.strokeDasharray = L;
         w.style.strokeDashoffset = L;
       });
-      tl.fromTo("#n1", { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2)" }, 12.45);
+      tl.fromTo("#n1", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.2, ease: "back.out(2.2)" }, 13.6);
       [
-        ["#w1", "#p1", "#n2", 12.6],
-        ["#w2", "#p2", "#n3", 13.2],
-        ["#w3", "#p3", "#n4", 13.8],
+        ["#w1", "#p1", "#n2", 13.7],
+        ["#w2", "#p2", "#n3", 14.1],
+        ["#w3", "#p3", "#n4", 14.5],
       ].forEach(([w, p, n, at]) => {
         const L = document.querySelector(w).getTotalLength();
-        tl.fromTo(w, { strokeDashoffset: L }, { strokeDashoffset: 0, duration: 0.3, ease: "power2.inOut" }, at);
-        tl.fromTo(p, { opacity: 0, scale: 0 }, { opacity: 1, scale: 1, duration: 0.2, ease: "back.out(3)" }, at + 0.3);
-        tl.fromTo(n, { opacity: 0, scale: 0.7 }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2)" }, at + 0.3);
+        tl.fromTo(w, { strokeDashoffset: L }, { strokeDashoffset: 0, duration: 0.18, ease: "power2.inOut" }, at);
+        tl.fromTo(p, { opacity: 0, scale: 0 }, { opacity: 1, scale: 1, duration: 0.15, ease: "back.out(3)" }, at + 0.1);
+        tl.fromTo(n, { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.2, ease: "back.out(2.2)" }, at + 0.1);
+        shake(at + 0.1, 8);
       });
-      tl.fromTo("#s5", { y: 0 }, { y: -40, duration: 2.6, ease: "sine.inOut" }, 12.6);
-      sceneOut("#s5", 15.15, { x: 300 });
+      tl.fromTo("#sF", { y: 0 }, { y: -50, duration: 1.4, ease: "sine.inOut" }, 13.7);
+      sceneOut("#sF", 15.0, { x: 300 });
 
-      // ---------- S6 · 15.3–18.0 · pricing ----------
-      sceneIn("#s6", 15.3, { x: -300 });
-      document.querySelectorAll(".sp i").forEach((el, i) => {
-        tl.fromTo(el, { scaleX: 0 }, { scaleX: 1, duration: 0.15, ease: "power2.out" }, 15.6 + i * 0.08);
-      });
-      tl.fromTo("#price", { opacity: 0, y: 120, rotation: -3 }, { opacity: 1, y: 0, rotation: 0, duration: 0.45, ease: "back.out(1.6)" }, 15.75);
-      tl.fromTo("#stamp", { opacity: 0, scale: 2.2, rotation: -20 }, { opacity: 1, scale: 1, rotation: 8, duration: 0.3, ease: "expo.out" }, 16.85);
-      tl.fromTo("#price", { scale: 1.04 }, { scale: 1, duration: 0.3, ease: "power2.out" }, 16.85);
-      tl.to("#s6", { opacity: 0, scale: 1.15, duration: 0.4, ease: "power3.in" }, 17.55);
+      // ---------- G · 15.2–17.1 one plan ----------
+      sceneIn("#sG", 15.15, { x: -300 });
+      document.querySelectorAll(".sp i").forEach((el, i) => tl.fromTo(el, { scaleX: 0 }, { scaleX: 1, duration: 0.1, ease: "power2.out" }, 15.35 + i * 0.07));
+      tl.fromTo("#plan", { opacity: 0, y: 140, rotation: -4 }, { opacity: 1, y: 0, rotation: 0, duration: 0.35, ease: "back.out(1.7)" }, 15.55);
+      tl.fromTo("#stamp", { opacity: 0, scale: 2.4, rotation: -25 }, { opacity: 1, scale: 1, rotation: 8, duration: 0.22, ease: "expo.out" }, 15.8);
+      shake(15.8, 14);
+      tl.to("#sG", { opacity: 0, scale: 1.2, filter: "blur(14px)", duration: 0.3, ease: "power3.in" }, 16.7);
 
-      // ---------- S7 · 18–20 · end ----------
-      tl.set("#s7", { opacity: 1 }, 18.0);
-      tl.fromTo("#flash", { opacity: 0.85 }, { opacity: 0, duration: 0.5, ease: "power2.out" }, 18.0);
-      tl.fromTo("#end-logo", { opacity: 0, scale: 0.3 }, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(2)" }, 18.0);
-      tl.fromTo("#end-name", { opacity: 0, scale: 1.8 }, { opacity: 1, scale: 1, duration: 0.4, ease: "expo.out" }, 18.1);
-      tl.fromTo("#end-sub", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.35, ease: "power3.out" }, 18.45);
-      tl.fromTo("#end-cta", { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(2.2)" }, 18.8);
-      tl.fromTo("#end-url", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 19.1);
-      for (let t = 19.5; t <= 19.75; t += BEAT / 2) {
-        tl.fromTo("#end-cta", { scale: 1.05 }, { scale: 1, duration: 0.2, ease: "power2.out" }, t);
+      // ---------- H · 17.1–19.5 end ----------
+      tl.set("#sH", { opacity: 1 }, 17.1);
+      flash(17.1, 0.9, "#1d8bff");
+      shake(17.1, 28);
+      tl.fromTo("#end-logo", { opacity: 0, scale: 0.2 }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(2.2)" }, 17.1);
+      slam("#end-name", 17.2);
+      tl.fromTo("#end-sub", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.25, ease: "power3.out" }, 17.5);
+      tl.fromTo("#end-cta", { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2.4)" }, 17.9);
+      tl.fromTo("#end-url", { opacity: 0 }, { opacity: 1, duration: 0.2 }, 18.1);
+      for (let t = 18.3; t <= 19.2; t += BEAT) {
+        tl.fromTo("#end-cta", { scale: 1.06 }, { scale: 1, duration: 0.25, ease: "power2.out" }, t);
       }
 
-      window.__timelines["main"] = main;
+      window.__timelines["main"] = tl;
     </script>
   </body>
 </html>
