@@ -615,17 +615,11 @@
         font-family: "Archivo Black", sans-serif;
         font-size: 48px;
       }
-      #price .amt {
-        margin-top: 30px;
-        font-family: "Archivo Black", sans-serif;
-        font-size: 170px;
-        line-height: 1;
-        color: var(--yellow);
-      }
-      #price .per {
-        font-size: 40px;
-        color: var(--muted);
-        font-weight: 600;
+      #price-logo {
+        width: 200px;
+        height: 120px;
+        margin: 0 0 30px -14px;
+        background: url("assets/img/logo.png") left center / contain no-repeat;
       }
       #price ul {
         margin-top: 44px;
@@ -714,12 +708,14 @@
       id="root"
       data-composition-id="main"
       data-start="0"
-      data-duration="20"
+      data-duration="21.6"
       data-width="1080"
       data-height="1920"
     >
-      <audio id="music" src="assets/audio/music.wav" data-start="0" data-duration="20" data-track-index="10" data-volume="0.55"></audio>
-      <audio id="sfx" src="assets/audio/sfx.wav" data-start="0" data-duration="20" data-track-index="11" data-volume="0.75"></audio>
+      <!-- music + sfx: tools/soundtrack.py · voice: tools/voiceover.py (Kokoro) placed by soundtrack.py -->
+      <audio id="music" src="assets/audio/music.wav" data-start="0" data-duration="21.6" data-track-index="10" data-volume="0.55"></audio>
+      <audio id="sfx" src="assets/audio/sfx.wav" data-start="0" data-duration="21.6" data-track-index="11" data-volume="0.7"></audio>
+      <audio id="voice" src="assets/audio/voice.wav" data-start="0" data-duration="21.6" data-track-index="12" data-volume="1"></audio>
 
       <div id="grid" data-layout-allow-overflow></div>
       <div id="glow-blue" class="glow" data-layout-allow-overflow></div>
@@ -731,7 +727,7 @@
         <div class="sub" id="c1" style="top: 560px"><div class="ico" style="background: #10a37f">G</div><div class="nm">ChatGPT Plus</div><div class="tag">+1 bill</div></div>
         <div class="sub" id="c2" style="top: 740px"><div class="ico" style="background: #5b5bd6">M</div><div class="nm">Midjourney</div><div class="tag">+1 bill</div></div>
         <div class="sub" id="c3" style="top: 920px"><div class="ico" style="background: #1db954">K</div><div class="nm">Kling AI</div><div class="tag">+1 bill</div></div>
-        <div class="sub" id="c4" style="top: 1100px"><div class="ico" style="background: #222">11</div><div class="nm">ElevenLabs</div><div class="tag">+1 bill</div></div>
+        <div class="sub" id="c4" style="top: 1100px"><div class="ico" style="background: #8b5cf6">11</div><div class="nm">ElevenLabs</div><div class="tag">+1 bill</div></div>
         <div class="sub" id="c5" style="top: 1280px"><div class="ico" style="background: #e2563a">R</div><div class="nm">Runway</div><div class="tag">+1 bill</div></div>
         <div id="counter"><b id="cnt">0</b> subscriptions</div>
       </div>
@@ -853,13 +849,13 @@
           <div class="sp">Runway<i></i></div>
         </div>
         <div id="price">
-          <div class="plan">START</div>
-          <div class="amt">$<span id="amt">0.00</span></div>
-          <div class="per">per month</div>
+          <div id="price-logo"></div>
+          <div class="plan">Everything included</div>
           <ul>
-            <li><b>✓</b> Top image &amp; video models</li>
             <li><b>✓</b> Image · Video · Audio · Chat</li>
+            <li><b>✓</b> GPT, Kling, Veo, Sora &amp; more</li>
             <li><b>✓</b> Canvas pipelines</li>
+            <li><b>✓</b> One account, one bill</li>
           </ul>
         </div>
         <div id="stamp">ALL IN ONE</div>
@@ -871,7 +867,7 @@
           <div id="end-logo"></div>
           <div id="end-name">WeArt Studio</div>
           <div id="end-sub">All AI tools. One subscription.</div>
-          <div id="end-cta">Create your first project</div>
+          <div id="end-cta">Start creating now →</div>
           <div id="end-url">weartstudio.io</div>
         </div>
       </div>
@@ -884,7 +880,34 @@
     <script>
       const BEAT = 0.5;
       // fromTo from-values apply only when each tween starts; resting states live in CSS
-      const tl = gsap.timeline({ paused: true, defaults: { immediateRender: false } });
+      const main = gsap.timeline({ paused: true, defaults: { immediateRender: false } });
+
+      // Scenes were laid out on a 20 s grid; W() maps that grid onto the narrated
+      // timeline (same knots as tools/soundtrack.py). Long tweens stretch with it.
+      const OLD_KNOTS = [0, 3.8, 4.95, 7.0, 9.3, 12.35, 15.3, 18.0, 20.0];
+      const NEW_KNOTS = [0, 3.0, 6.2, 8.4, 9.9, 13.2, 15.6, 18.4, 21.6];
+      function W(t) {
+        for (let i = 1; i < OLD_KNOTS.length; i++) {
+          if (t <= OLD_KNOTS[i]) {
+            const f = (t - OLD_KNOTS[i - 1]) / (OLD_KNOTS[i] - OLD_KNOTS[i - 1]);
+            return NEW_KNOTS[i - 1] + f * (NEW_KNOTS[i] - NEW_KNOTS[i - 1]);
+          }
+        }
+        return NEW_KNOTS[NEW_KNOTS.length - 1] + (t - OLD_KNOTS[OLD_KNOTS.length - 1]);
+      }
+      function warp(vars, at) {
+        const d = vars.duration || 0;
+        if (d > 0.6) {
+          const reps = (vars.repeat || 0) + 1;
+          vars = { ...vars, duration: (W(at + d * reps) - W(at)) / reps };
+        }
+        return vars;
+      }
+      const tl = {
+        to: (t, v, at) => main.to(t, warp(v, at), W(at)),
+        fromTo: (t, a, b, at) => main.fromTo(t, a, warp(b, at), W(at)),
+        set: (t, v, at) => main.set(t, v, W(at)),
+      };
 
       // deterministic pseudo-random (LCG)
       let seed = 42;
@@ -1040,8 +1063,6 @@
         tl.fromTo(el, { scaleX: 0 }, { scaleX: 1, duration: 0.15, ease: "power2.out" }, 15.6 + i * 0.08);
       });
       tl.fromTo("#price", { opacity: 0, y: 120, rotation: -3 }, { opacity: 1, y: 0, rotation: 0, duration: 0.45, ease: "back.out(1.6)" }, 15.75);
-      const amt = { v: 0 };
-      tl.to(amt, { v: 16.99, duration: 0.8, ease: "power2.out", onUpdate: () => (document.getElementById("amt").textContent = amt.v.toFixed(2)) }, 16.0);
       tl.fromTo("#stamp", { opacity: 0, scale: 2.2, rotation: -20 }, { opacity: 1, scale: 1, rotation: 8, duration: 0.3, ease: "expo.out" }, 16.85);
       tl.fromTo("#price", { scale: 1.04 }, { scale: 1, duration: 0.3, ease: "power2.out" }, 16.85);
       tl.to("#s6", { opacity: 0, scale: 1.15, duration: 0.4, ease: "power3.in" }, 17.55);
@@ -1058,7 +1079,7 @@
         tl.fromTo("#end-cta", { scale: 1.05 }, { scale: 1, duration: 0.2, ease: "power2.out" }, t);
       }
 
-      window.__timelines["main"] = tl;
+      window.__timelines["main"] = main;
     </script>
   </body>
 </html>

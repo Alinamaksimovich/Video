@@ -2,9 +2,12 @@
 
 Dark tech groove at 120 BPM in E minor: half-time kick/snare that opens into
 four-on-the-floor for the pricing beat, 16th-note filtered arp, 808-style sub,
-plus UI sound design (typing, glitch blips, node pops, cash register, impact).
+plus UI sound design (typing, glitch blips, node pops, strike swishes, impact).
 
-Writes assets/audio/music.wav and assets/audio/sfx.wav (+ preview-mix.wav).
+Scene timing follows the voiceover: W() maps the original 20 s layout onto the
+narrated timeline (same knots as index.html). Writes music.wav, sfx.wav and
+voice.wav (the per-scene clips from tools/voiceover.py placed on the timeline),
+plus preview-mix.wav.
 Deterministic: fixed RNG seed, no network. Run: python3 tools/soundtrack.py
 """
 
@@ -15,15 +18,24 @@ import soundfile as sf
 from scipy.signal import butter, fftconvolve, lfilter, sosfilt
 
 SR = 44100
-DUR = 20.0
+OLD_KNOTS = [0, 3.8, 4.95, 7.0, 9.3, 12.35, 15.3, 18.0, 20.0]
+NEW_KNOTS = [0, 3.0, 6.2, 8.4, 9.9, 13.2, 15.6, 18.4, 21.6]
+VO_AT = {"s1": 0.3, "s2": 3.15, "s3": 6.25, "s4": 10.05, "s5": 13.4, "s6": 15.75, "s7": 18.6}
+
+
+def W(t):
+    return float(np.interp(t, OLD_KNOTS, NEW_KNOTS))
+
+
+DUR = 21.6
 N = int(SR * DUR)
 BPM = 120
 BEAT = 60 / BPM
-DROP = 18.0  # end-card hit
+DROP = W(18.0)  # end-card hit
 BREAK = DROP - 0.5  # kick/bass breath before the drop
 ROLL = DROP - 1.0  # snare roll start
 LAST = DUR - 0.5  # final chord
-FOUR = 15.5  # four-on-the-floor from the pricing beat
+FOUR = W(15.5)  # four-on-the-floor from the pricing beat
 rng = np.random.default_rng(7)
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -371,56 +383,70 @@ def blip(f):
     return np.sign(np.sin(2 * np.pi * f * t)) * np.exp(-t * 50) * 0.25
 
 
-def cash():
-    s = pop_ding()
-    n = int(0.25 * SR)
-    t = t_axis(n)
-    drawer = bp(rng.standard_normal(n), 400, 2500) * np.exp(-t * 25) * 0.6
-    out = np.zeros(len(s))
-    add(out, drawer, 0)
-    add(out, s, 0.06)
-    add(out, ping(2637.0, 0.5) * 0.4, 0.12)
-    return out
-
-
 def build_sfx():
     s = np.zeros(N)
     for i, at in enumerate((0.25, 0.75, 1.25, 1.75, 2.25)):  # subscription cards slam in
-        add(s, thud(), at, 0.8)
-        add(s, swish(), at - 0.08, 0.45)
-    add(s, sweep_noise(0.5, 6000, 200), 3.3, 0.8)  # cards implode
-    add(s, impact() * 0.6, 3.8, 0.8)
+        add(s, thud(), W(at), 0.8)
+        add(s, swish(), W(at) - 0.08, 0.45)
+    add(s, sweep_noise(0.5, 6000, 200), W(3.3), 0.8)  # cards implode
+    add(s, impact() * 0.6, W(3.8), 0.8)
     for i, at in enumerate(np.arange(5.2, 6.75, 0.07)):  # typing
-        add(s, key_click(), at + (0.012 if i % 3 == 0 else 0), 0.7)
-    add(s, tap(), 7.0, 0.9)  # send
-    add(s, whoosh(0.4), 7.02, 0.6)
+        add(s, key_click(), W(at) + (0.012 if i % 3 == 0 else 0), 0.7)
+    add(s, tap(), W(7.0), 0.9)  # send
+    add(s, whoosh(0.4), W(7.02), 0.6)
     for i, at in enumerate(np.arange(7.25, 8.2, 0.0625)):  # generation glitch blips
-        add(s, blip(600 + (i * 137) % 900), at, 0.6)
-    add(s, shimmer(1.0), 7.3, 0.6)
-    add(s, pop_ding(), 8.3, 0.7)  # image revealed
+        add(s, blip(600 + (i * 137) % 900), W(at), 0.6)
+    add(s, shimmer(1.0), W(7.3), 0.6)
+    add(s, pop_ding(), W(8.3), 0.7)  # image revealed
     for at in (9.5, 10.25, 11.0, 11.75):  # mode switches
-        add(s, tap(), at, 0.7)
-        add(s, swish(), at - 0.05, 0.55)
-    add(s, whoosh(0.45), 12.3, 0.7)  # → canvas
+        add(s, tap(), W(at), 0.7)
+        add(s, swish(), W(at) - 0.05, 0.55)
+    add(s, whoosh(0.45), W(12.3), 0.7)  # → canvas
     for i, at in enumerate((12.9, 13.5, 14.1)):  # node connections
-        add(s, ping(660.0 * (1.26 ** i), 0.4), at, 0.5)
-        add(s, tap(), at, 0.5)
-    add(s, whoosh(0.45), 15.3, 0.7)  # → pricing
-    for at in np.arange(16.0, 16.8, 0.05):  # count-up ticks
-        add(s, key_click(), at, 0.5)
-    add(s, cash(), 16.85, 0.9)
+        add(s, ping(660.0 * (1.26 ** i), 0.4), W(at), 0.5)
+        add(s, tap(), W(at), 0.5)
+    add(s, whoosh(0.45), W(15.3), 0.7)  # → pricing
+    for i, at in enumerate((15.6, 15.68, 15.76, 15.84, 15.92)):  # strike-throughs
+        add(s, swish(), W(at), 0.35)
+    add(s, pop_ding(), W(16.85), 0.8)  # all-in-one card lands
     add(s, riser(1.0), ROLL, 0.7)
     add(s, impact(), DROP, 1.0)
-    add(s, pop_ding(), 18.8, 0.8)  # CTA
+    add(s, pop_ding(), W(18.8), 0.8)  # CTA
     return s / max(1.0, np.max(np.abs(s)) / 0.89)
 
 
+def build_voice():
+    out = np.zeros(N)
+    vo_dir = os.path.join(OUT, "vo")
+    for key, at in VO_AT.items():
+        v, sr = sf.read(os.path.join(vo_dir, f"{key}.wav"), dtype="float32")
+        if sr != SR:
+            from scipy.signal import resample_poly
+
+            v = resample_poly(v, SR // 100, sr // 100)
+        add(out, v, at)
+    return out
+
+
+def duck_env(voice):
+    a = np.abs(voice)
+    win = int(0.05 * SR)
+    env = np.convolve(a, np.ones(win) / win, mode="same")
+    env = env / (env.max() + 1e-9)
+    gate = (env > 0.04).astype(float)
+    k = int(0.2 * SR)
+    gate = np.convolve(gate, np.ones(k) / k, mode="same")
+    return 1 - gate.clip(0, 1) * (1 - 10 ** (-9 / 20))
+
+
 if __name__ == "__main__":
-    music = build_music()
+    voice = build_voice()
+    music = build_music() * duck_env(voice)
     sfx = build_sfx()
     sf.write(os.path.join(OUT, "music.wav"), music.astype(np.float32), SR)
     sf.write(os.path.join(OUT, "sfx.wav"), sfx.astype(np.float32), SR)
-    mix = music * 0.6 + sfx * 0.6
+    sf.write(os.path.join(OUT, "voice.wav"), voice.astype(np.float32), SR)
+    mix = voice + music * 0.45 + sfx * 0.55
     mix = mix / np.max(np.abs(mix)) * 0.95
     sf.write(os.path.join(OUT, "preview-mix.wav"), mix.astype(np.float32), SR)
     print("ok")
