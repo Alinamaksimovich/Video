@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>MIRRO — промо</title>
+    <script src="assets/vendor/gsap.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "Cormorant Garamond";
+        src: url("assets/fonts/cormorant-cyr.woff2") format("woff2");
+        font-weight: 300 700;
+        unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+      }
+      @font-face {
+        font-family: "Cormorant Garamond";
+        src: url("assets/fonts/cormorant-lat.woff2") format("woff2");
+        font-weight: 300 700;
+        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2190-2199, U+2212, U+2215;
+      }
+      @font-face {
+        font-family: "Manrope";
+        src: url("assets/fonts/manrope-cyr.woff2") format("woff2");
+        font-weight: 200 800;
+        unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+      }
+      @font-face {
+        font-family: "Manrope";
+        src: url("assets/fonts/manrope-lat.woff2") format("woff2");
+        font-weight: 200 800;
+        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2190-2199, U+2212, U+2215;
+      }
+
+      :root {
+        --cream: #f7f5f1;
+        --ink: #1e1d1b;
+        --muted: #6f6a63;
+        --lime: #dcf27e;
+        --lavender: #b9a8f0;
+        --lavender-soft: #e6dffb;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: var(--cream);
+      }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: var(--cream);
+        font-family: "Manrope", sans-serif;
+        color: var(--ink);
+      }
+
+      /* soft ambient glows */
+      .glow {
+        position: absolute;
+        border-radius: 50%;
+      }
+      #glow-lav {
+        width: 1100px;
+        height: 1100px;
+        left: -380px;
+        top: 560px;
+        background: radial-gradient(circle, rgba(185, 168, 240, 0.42) 0%, rgba(185, 168, 240, 0) 65%);
+      }
+      #glow-lime {
+        width: 1000px;
+        height: 1000px;
+        left: 420px;
+        top: -260px;
+        background: radial-gradient(circle, rgba(220, 242, 126, 0.5) 0%, rgba(220, 242, 126, 0) 65%);
+      }
+
+      /* header: eyebrow + captions */
+      #eyebrow {
+        position: absolute;
+        top: 96px;
+        left: 0;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+      }
+      .pill {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        padding: 14px 28px;
+        border-radius: 999px;
+        background: #ffffff;
+        border: 1.5px solid #ece8e1;
+        font-size: 26px;
+        font-weight: 600;
+        letter-spacing: 0.22em;
+        color: var(--ink);
+      }
+      .pill .dot {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: var(--lime);
+        box-shadow: 0 0 0 4px rgba(220, 242, 126, 0.35);
+      }
+      .caption {
+        position: absolute;
+        top: 196px;
+        left: 70px;
+        width: 940px;
+        text-align: center;
+        font-family: "Cormorant Garamond", serif;
+        font-weight: 500;
+        font-size: 86px;
+        line-height: 1.04;
+        letter-spacing: -0.015em;
+        text-wrap: balance;
+        opacity: 0;
+      }
+      .caption .w {
+        display: inline-block;
+      }
+
+      /* phone */
+      #phone {
+        position: absolute;
+        left: 180px;
+        top: 520px;
+        width: 720px;
+        height: 1311px;
+        padding: 14px;
+        border-radius: 72px;
+        background: #121212;
+        box-shadow:
+          0 50px 90px rgba(70, 50, 30, 0.2),
+          0 12px 30px rgba(70, 50, 30, 0.12);
+        opacity: 0;
+      }
+      #screen {
+        position: relative;
+        width: 692px;
+        height: 1283px;
+        border-radius: 58px;
+        overflow: hidden;
+        background: var(--cream);
+      }
+      .layer {
+        position: absolute;
+        inset: 0;
+        overflow: hidden;
+      }
+      .layer img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      #layer3 {
+        opacity: 0;
+      }
+      #shade1 {
+        position: absolute;
+        inset: 0;
+        background: #000;
+        opacity: 0;
+      }
+
+      /* AI scan on the processing card (screen px) */
+      #scan {
+        position: absolute;
+        left: 167px;
+        top: 274px;
+        width: 359px;
+        height: 360px;
+        border-radius: 34px;
+        overflow: hidden;
+        opacity: 0;
+      }
+      #scan-trail {
+        position: absolute;
+        left: 0;
+        top: -120px;
+        width: 100%;
+        height: 120px;
+        background: linear-gradient(180deg, rgba(185, 168, 240, 0) 0%, rgba(185, 168, 240, 0.32) 100%);
+      }
+      #scan-line {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 4px;
+        background: var(--lavender);
+        box-shadow:
+          0 0 18px 6px rgba(185, 168, 240, 0.7),
+          0 0 40px 14px rgba(185, 168, 240, 0.35);
+      }
+      #scan-ring {
+        position: absolute;
+        left: 160px;
+        top: 261px;
+        width: 373px;
+        height: 386px;
+        border-radius: 40px;
+        border: 3px solid var(--lavender);
+        opacity: 0;
+      }
+
+      /* end card */
+      #end {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 34px;
+      }
+      #logo {
+        font-family: "Cormorant Garamond", serif;
+        font-weight: 600;
+        font-size: 220px;
+        line-height: 1;
+        letter-spacing: 0.06em;
+        display: flex;
+      }
+      #logo .l {
+        display: inline-block;
+        opacity: 0;
+      }
+      #tagline {
+        font-size: 44px;
+        font-weight: 500;
+        color: var(--muted);
+        letter-spacing: -0.01em;
+        opacity: 0;
+      }
+      #cta {
+        margin-top: 46px;
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        padding: 34px 64px;
+        border-radius: 999px;
+        background: var(--lime);
+        font-size: 42px;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        opacity: 0;
+      }
+      #cta-arrow {
+        display: inline-block;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="15"
+      data-width="1080"
+      data-height="1920"
+    >
+      <div id="glow-lav" class="glow"></div>
+      <div id="glow-lime" class="glow"></div>
+
+      <div id="eyebrow"><div class="pill" id="pill"><span class="dot"></span>MIRRO</div></div>
+
+      <div class="caption" id="cap1">Весь гардероб — в телефоне</div>
+      <div class="caption" id="cap2">AI оцифрует твою одежду за секунды</div>
+      <div class="caption" id="cap3">Примеряй образы на себе</div>
+      <div class="caption" id="cap4">Меняй образы за секунды</div>
+
+      <div id="phone">
+        <div id="screen">
+          <div class="layer" id="layer1" data-layout-allow-overflow>
+            <img id="img1" src="assets/screens/wardrobe.png" alt="" />
+            <div id="shade1"></div>
+          </div>
+          <div class="layer" id="layer2" data-layout-allow-overflow>
+            <img id="img2" src="assets/screens/processing.png" alt="" />
+            <div id="scan-ring"></div>
+            <div id="scan" data-layout-allow-overflow>
+              <div id="scan-trail"></div>
+              <div id="scan-line"></div>
+            </div>
+          </div>
+          <div class="layer" id="layer3" data-layout-allow-overflow>
+            <img id="img3" src="assets/screens/tryon-1.png" alt="" />
+          </div>
+          <div class="layer" id="layer4" data-layout-allow-overflow>
+            <img id="img4" src="assets/screens/tryon-2.png" alt="" />
+          </div>
+        </div>
+      </div>
+
+      <div id="end">
+        <div id="logo"><span class="l">M</span><span class="l">I</span><span class="l">R</span><span class="l">R</span><span class="l">O</span></div>
+        <div id="tagline">твой онлайн-гардероб</div>
+        <div id="cta">Попробуй бесплатно <span id="cta-arrow">→</span></div>
+      </div>
+    </div>
+
+    <script>
+      // split captions into word spans for a soft staggered entrance
+      document.querySelectorAll(".caption").forEach((el) => {
+        el.innerHTML = el.textContent
+          .split(" ")
+          .map((w) => '<span class="w">' + w + "</span>")
+          .join(" ");
+      });
+
+      const tl = gsap.timeline({ paused: true });
+
+
+      // ambient glow drift
+      tl.fromTo("#glow-lav", { x: 0, y: 0 }, { x: 120, y: -160, duration: 15, ease: "sine.inOut" }, 0);
+      tl.fromTo("#glow-lime", { x: 0, y: 0 }, { x: -140, y: 120, duration: 15, ease: "sine.inOut" }, 0);
+
+      // caption helper: words rise in, block fades out
+      function captionIn(id, at) {
+        tl.set(id, { opacity: 1 }, at);
+        tl.fromTo(
+          id + " .w",
+          { opacity: 0, y: 36 },
+          { opacity: 1, y: 0, duration: 0.7, ease: "power3.out", stagger: 0.06 },
+          at
+        );
+      }
+      function captionOut(id, at) {
+        tl.to(id, { opacity: 0, y: -24, duration: 0.35, ease: "power2.in" }, at);
+      }
+
+      // ---------- FRAME 1 · Гардероб (0–3s) ----------
+      tl.fromTo("#pill", { opacity: 0, y: 16 }, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, 0.15);
+      tl.fromTo(
+        "#phone",
+        { opacity: 0, y: 140, scale: 0.95 },
+        { opacity: 1, y: 0, scale: 1, duration: 1.1, ease: "power3.out" },
+        0
+      );
+      captionIn("#cap1", 0.35);
+      tl.fromTo(
+        "#img1",
+        { scale: 1 },
+        { scale: 1.14, duration: 3.4, ease: "sine.inOut", transformOrigin: "50% 58%" },
+        0
+      );
+
+      // transition → Обработка: slide
+      captionOut("#cap1", 2.75);
+      tl.fromTo("#layer2", { xPercent: 100 }, { xPercent: 0, duration: 0.7, ease: "power3.inOut" }, 2.85);
+      tl.to("#layer1", { xPercent: -28, duration: 0.7, ease: "power3.inOut" }, 2.85);
+      tl.to("#shade1", { opacity: 0.18, duration: 0.7, ease: "power2.inOut" }, 2.85);
+
+      // ---------- FRAME 2 · AI processing (3–6s) ----------
+      captionIn("#cap2", 3.1);
+      tl.fromTo("#img2", { scale: 1 }, { scale: 1.05, duration: 3.3, ease: "sine.inOut", transformOrigin: "50% 30%" }, 2.85);
+      tl.to("#scan", { opacity: 1, duration: 0.3 }, 3.45);
+      tl.fromTo("#scan-line", { y: 0 }, { y: 356, duration: 1.05, ease: "sine.inOut", repeat: 1, yoyo: true }, 3.5);
+      tl.fromTo("#scan-trail", { y: 0 }, { y: 356, duration: 1.05, ease: "sine.inOut", repeat: 1, yoyo: true }, 3.5);
+      tl.fromTo("#scan-ring", { opacity: 0, scale: 0.97 }, { opacity: 0.9, scale: 1, duration: 0.6, ease: "power2.out" }, 3.6);
+      tl.to("#scan-ring", { opacity: 0.35, duration: 0.5, ease: "sine.inOut", repeat: 3, yoyo: true }, 4.2);
+      tl.to(["#scan", "#scan-ring"], { opacity: 0, duration: 0.3 }, 5.65);
+
+      // transition → Примерка 1: soft dissolve reveal
+      captionOut("#cap2", 5.75);
+      tl.fromTo("#layer3", { opacity: 0 }, { opacity: 1, duration: 0.55, ease: "power2.inOut" }, 5.85);
+
+      // ---------- FRAME 3 · Try-on look 1 (6–10s) ----------
+      captionIn("#cap3", 6.15);
+      tl.fromTo(
+        "#img3",
+        { scale: 1.12 },
+        { scale: 1.0, duration: 0.9, ease: "power3.out", transformOrigin: "50% 38%" },
+        5.8
+      );
+      tl.to(
+        "#img3",
+        { scale: 1.1, duration: 3.3, ease: "sine.inOut", transformOrigin: "50% 38%" },
+        6.7
+      );
+
+      // transition → Примерка 2: quick swipe
+      captionOut("#cap3", 9.7);
+      tl.fromTo("#layer4", { xPercent: 100 }, { xPercent: 0, duration: 0.55, ease: "expo.inOut" }, 9.8);
+      tl.to("#layer3", { xPercent: -100, duration: 0.55, ease: "expo.inOut" }, 9.8);
+      tl.to("#phone", { scale: 0.975, duration: 0.28, ease: "power2.out" }, 9.8);
+      tl.to("#phone", { scale: 1, duration: 0.4, ease: "power2.out" }, 10.08);
+
+      // ---------- FRAME 4 · Try-on look 2 (10–13s) ----------
+      captionIn("#cap4", 10.05);
+      tl.fromTo(
+        "#img4",
+        { scale: 1.0 },
+        { scale: 1.08, duration: 3.0, ease: "sine.inOut", transformOrigin: "50% 38%" },
+        9.8
+      );
+
+      // ---------- END · MIRRO (13–15s) ----------
+      captionOut("#cap4", 12.65);
+      tl.to("#pill", { opacity: 0, y: -12, duration: 0.4, ease: "power2.in" }, 12.65);
+      tl.to("#phone", { opacity: 0, y: 90, scale: 0.92, duration: 0.75, ease: "power2.inOut" }, 12.7);
+      tl.fromTo(
+        "#logo .l",
+        { opacity: 0, y: 40 },
+        { opacity: 1, y: 0, duration: 0.8, ease: "power3.out", stagger: 0.07 },
+        13.15
+      );
+      tl.fromTo("#tagline", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.7, ease: "power2.out" }, 13.5);
+      tl.fromTo("#cta", { opacity: 0, y: 24, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.7, ease: "power3.out" }, 13.75);
+      tl.fromTo("#cta-arrow", { x: 0 }, { x: 10, duration: 0.45, ease: "sine.inOut", repeat: 1, yoyo: true }, 14.35);
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
