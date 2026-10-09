@@ -250,7 +250,6 @@
       <video id="v2" src="assets/video/ugc2.mp4" muted playsinline data-start="10.4" data-duration="6.08" data-track-index="2"></video>
     </div>
 
-    <div id="hook"><span>This creator doesn't exist</span></div>
 
     <!-- creator captions (clip 1 at 0 s, clip 2 at 10.4 s) -->
     <div class="cap" id="k1" data-span="0.15,1.85">Get ready to be <span class="y">shocked.</span></div>
@@ -295,8 +294,6 @@
 
   // ---------- clip 1 (0–7.07) ----------
   tl.fromTo("#v1", { scale: 1.0 }, { scale: 1.08, duration: 7.07, ease: "none" }, 0);
-  tl.fromTo("#hook", { opacity: 0, y: -40, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.3, ease: "back.out(2)" }, 0.1);
-  tl.to("#hook", { opacity: 0, duration: 0.15 }, 6.95);
 
   // captions pop in and out with the speech
   document.querySelectorAll(".cap").forEach((el) => {
