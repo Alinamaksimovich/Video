@@ -1,0 +1,349 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=1080, height=1920" />
+<title>WeArt — UGC ad (variant C)</title>
+<script src="assets/vendor/gsap.min.js"></script>
+<style>
+  @font-face {
+    font-family: "Manrope";
+    src: url("assets/fonts/manrope-lat.woff2") format("woff2");
+    font-weight: 200 800;
+  }
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  html,
+  body {
+    width: 1080px;
+    height: 1920px;
+    overflow: hidden;
+    background: #07080c;
+  }
+  #root {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #07080c;
+    font-family: "Manrope", sans-serif;
+    color: #fff;
+  }
+  #stage {
+    position: absolute;
+    inset: 0;
+  }
+  .full {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+  .full video,
+  .full img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  #wrap2,
+  #freeze {
+    opacity: 0;
+  }
+  #freeze-dim {
+    position: absolute;
+    inset: 0;
+    background: rgba(7, 8, 12, 0.55);
+  }
+
+  /* hook + captions */
+  #hook {
+    position: absolute;
+    top: 260px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    opacity: 0;
+  }
+  #hook span {
+    padding: 22px 34px;
+    border-radius: 22px;
+    background: #ffffff;
+    color: #0b0c10;
+    font-family: "Archivo Black", sans-serif;
+    font-size: 74px;
+    line-height: 1.05;
+    text-align: center;
+  }
+  .cap {
+    position: absolute;
+    left: 60px;
+    top: 1250px;
+    width: 960px;
+    text-align: center;
+    font-family: "Archivo Black", sans-serif;
+    font-size: 66px;
+    line-height: 1.12;
+    color: #fff;
+    text-shadow:
+      0 0 2px #000,
+      0 4px 0 #000,
+      0 0 22px rgba(0, 0, 0, 0.85);
+    text-wrap: balance;
+    opacity: 0;
+  }
+  .cap .y {
+    color: #eef33a;
+  }
+
+  /* stamps */
+  .stamp {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    opacity: 0;
+  }
+  .stamp span {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    padding: 20px 40px;
+    border: 8px solid #ff4d5e;
+    border-radius: 24px;
+    background: rgba(7, 8, 12, 0.7);
+    color: #fff;
+    font-family: "Archivo Black", sans-serif;
+    font-size: 78px;
+    letter-spacing: 0.01em;
+  }
+  .stamp b {
+    color: #ff4d5e;
+    font-weight: 400;
+  }
+  #st1 {
+    top: 560px;
+  }
+  #st2 {
+    top: 760px;
+  }
+  #st3 {
+    top: 960px;
+  }
+  #clicks {
+    position: absolute;
+    top: 1220px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    font-family: "Archivo Black", sans-serif;
+    font-size: 104px;
+    color: #eef33a;
+    text-shadow: 0 6px 30px rgba(0, 0, 0, 0.7);
+    opacity: 0;
+  }
+  #gen-btn {
+    position: absolute;
+    left: 340px;
+    top: 1400px;
+    width: 400px;
+    height: 112px;
+    border-radius: 999px;
+    background: #1d8bff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 44px;
+    font-weight: 800;
+    opacity: 0;
+  }
+  #cursor {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 80px;
+    height: 80px;
+    opacity: 0;
+  }
+  #click {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 150px;
+    height: 150px;
+    margin: -75px 0 0 -75px;
+    border-radius: 50%;
+    border: 6px solid #eef33a;
+    opacity: 0;
+  }
+
+  /* end card */
+  #end {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(90% 55% at 50% 50%, #12305a 0%, #07080c 70%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 36px;
+    opacity: 0;
+  }
+  #end-logo {
+    width: 380px;
+    height: 172px;
+    background: url("assets/img/logo.png") center / contain no-repeat;
+  }
+  #end-line {
+    font-family: "Archivo Black", sans-serif;
+    font-size: 118px;
+    line-height: 1.02;
+    text-align: center;
+    text-transform: uppercase;
+  }
+  #end-line .y {
+    color: #eef33a;
+  }
+  #end-cta {
+    margin-top: 30px;
+    padding: 38px 66px;
+    border-radius: 999px;
+    background: #1d8bff;
+    font-size: 50px;
+    font-weight: 800;
+  }
+  #end-url {
+    font-family: "Space Mono", monospace;
+    font-size: 38px;
+    color: #3ec9e6;
+  }
+  #flash {
+    position: absolute;
+    inset: 0;
+    background: #fff;
+    opacity: 0;
+  }
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-start="0" data-duration="20.5" data-width="1080" data-height="1920">
+  <!-- audio: tools/soundtrack.py (music, sfx, creator dialog placement) + tools/voiceover.py (male VO) -->
+  <audio id="music" src="assets/audio/music.wav" data-start="0" data-duration="20.5" data-track-index="10" data-volume="0.35"></audio>
+  <audio id="sfx" src="assets/audio/sfx.wav" data-start="0" data-duration="20.5" data-track-index="11" data-volume="0.6"></audio>
+  <audio id="dialog" src="assets/audio/dialog.wav" data-start="0" data-duration="20.5" data-track-index="12" data-volume="1"></audio>
+  <audio id="voice" src="assets/audio/voice.wav" data-start="0" data-duration="20.5" data-track-index="13" data-volume="1"></audio>
+
+  <div id="stage">
+    <div class="full" id="wrap1" data-layout-allow-overflow>
+      <video id="v1" src="assets/video/ugc1.mp4" muted playsinline data-start="0" data-duration="7.07" data-track-index="1"></video>
+    </div>
+    <div class="full" id="freeze" data-layout-allow-overflow>
+      <img id="freeze-img" src="assets/img/freeze.jpg" alt="" />
+      <div id="freeze-dim"></div>
+    </div>
+    <div class="full" id="wrap2" data-layout-allow-overflow>
+      <video id="v2" src="assets/video/ugc2.mp4" muted playsinline data-start="10.4" data-duration="6.08" data-track-index="2"></video>
+    </div>
+
+    <div id="hook"><span>This creator doesn't exist</span></div>
+
+    <!-- creator captions (clip 1 at 0 s, clip 2 at 10.4 s) -->
+    <div class="cap" id="k1" data-span="0.15,1.85">Get ready to be <span class="y">shocked.</span></div>
+    <div class="cap" id="k2" data-span="1.9,3.2">There's one thing about me</div>
+    <div class="cap" id="k3" data-span="3.2,4.5">that would really surprise you</div>
+    <div class="cap" id="k4" data-span="4.6,5.45">and it's that…</div>
+    <div class="cap" id="k5" data-span="5.5,7.07">I'm not even <span class="y">real.</span></div>
+    <div class="cap" id="k6" data-span="10.85,11.7">No switching tabs.</div>
+    <div class="cap" id="k7" data-span="11.75,12.75">No five subscriptions.</div>
+    <div class="cap" id="k8" data-span="12.85,14.3">Everything on <span class="y">one board.</span></div>
+    <div class="cap" id="k9" data-span="14.65,16.48">So you still think I'm <span class="y">real?</span></div>
+
+    <div class="stamp" id="st1"><span><b>✕</b> NO ACTOR</span></div>
+    <div class="stamp" id="st2"><span><b>✕</b> NO CAMERA</span></div>
+    <div class="stamp" id="st3"><span><b>✕</b> NO STUDIO</span></div>
+    <div id="clicks">Just 2 clicks</div>
+    <div id="gen-btn">Generate</div>
+
+    <div id="end">
+      <div id="end-logo"></div>
+      <div id="end-line">UGC ads<br /><span class="y">in 2 clicks</span></div>
+      <div id="end-cta">Start creating →</div>
+      <div id="end-url">weartstudio.io</div>
+    </div>
+  </div>
+
+  <div id="flash"></div>
+  <svg id="cursor" viewBox="0 0 24 24"><path d="M4 2l16 9-7 2-3 7z" fill="#fff" stroke="#07080c" stroke-width="1.5" stroke-linejoin="round" /></svg>
+  <div id="click"></div>
+</div>
+
+<script>
+  // fromTo from-values apply only when each tween starts; resting states live in CSS
+  const tl = gsap.timeline({ paused: true, defaults: { immediateRender: false } });
+
+  function shake(at, amt = 18) {
+    tl.fromTo("#stage", { x: -amt, y: amt * 0.6 }, { x: 0, y: 0, duration: 0.3, ease: "elastic.out(1, 0.3)" }, at);
+  }
+  function flash(at, a = 0.8) {
+    tl.fromTo("#flash", { opacity: a }, { opacity: 0, duration: 0.25, ease: "power2.out" }, at);
+  }
+
+  // ---------- clip 1 (0–7.07) ----------
+  tl.fromTo("#v1", { scale: 1.0 }, { scale: 1.08, duration: 7.07, ease: "none" }, 0);
+  tl.fromTo("#hook", { opacity: 0, y: -40, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.3, ease: "back.out(2)" }, 0.1);
+  tl.to("#hook", { opacity: 0, duration: 0.15 }, 6.95);
+
+  // captions pop in and out with the speech
+  document.querySelectorAll(".cap").forEach((el) => {
+    const [a, b] = el.dataset.span.split(",").map(Number);
+    tl.fromTo(el, { opacity: 0, scale: 0.8, y: 20 }, { opacity: 1, scale: 1, y: 0, duration: 0.14, ease: "back.out(2.5)" }, a);
+    tl.to(el, { opacity: 0, duration: 0.08 }, b - 0.06);
+  });
+
+  // ---------- freeze + stamps (7.07–10.4) ----------
+  tl.set("#wrap1", { opacity: 0 }, 7.07);
+  tl.set("#freeze", { opacity: 1 }, 7.07);
+  tl.fromTo("#freeze-img", { scale: 1.08, filter: "saturate(1) brightness(1)" }, { scale: 1.2, filter: "saturate(0.35) brightness(0.8)", duration: 3.33, ease: "power1.out" }, 7.07);
+  flash(7.07, 0.6);
+  shake(7.07, 20);
+  [["#st1", 7.25, -4], ["#st2", 7.95, 3], ["#st3", 8.5, -2]].forEach(([id, at, rot]) => {
+    tl.fromTo(id, { opacity: 0, scale: 2.2, rotation: rot * 4 }, { opacity: 1, scale: 1, rotation: rot, duration: 0.18, ease: "expo.out" }, at);
+    shake(at, 16);
+  });
+  tl.fromTo("#clicks", { opacity: 0, scale: 1.8 }, { opacity: 1, scale: 1, duration: 0.2, ease: "expo.out" }, 8.9);
+  tl.fromTo("#gen-btn", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.2, ease: "power3.out" }, 8.95);
+  tl.fromTo("#cursor", { opacity: 0, x: 860, y: 1800 }, { opacity: 1, x: 600, y: 1470, duration: 0.25, ease: "power3.out" }, 8.95);
+  [9.2, 9.45].forEach((at) => {
+    tl.fromTo("#cursor", { scale: 0.8 }, { scale: 1, duration: 0.12 }, at);
+    tl.fromTo("#click", { x: 580, y: 1456, opacity: 1, scale: 0.3 }, { x: 580, y: 1456, opacity: 0, scale: 1.7, duration: 0.35, ease: "power2.out" }, at);
+    tl.fromTo("#gen-btn", { scale: 0.9 }, { scale: 1, duration: 0.18, ease: "back.out(3)" }, at);
+  });
+  tl.to(["#st1", "#st2", "#st3", "#clicks", "#gen-btn", "#cursor"], { opacity: 0, duration: 0.15 }, 10.2);
+
+  // ---------- clip 2 (10.4–16.48) ----------
+  tl.fromTo("#wrap2", { opacity: 0, scale: 1.25, filter: "blur(14px)" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.25, ease: "power3.out" }, 10.4);
+  tl.set("#freeze", { opacity: 0 }, 10.65);
+  tl.fromTo("#v2", { scale: 1.0 }, { scale: 1.08, duration: 6.08, ease: "none" }, 10.4);
+  flash(10.4, 0.5);
+
+  // ---------- end card (16.5–20.5) ----------
+  tl.fromTo("#end", { opacity: 0 }, { opacity: 1, duration: 0.12 }, 16.48);
+  flash(16.5, 0.9);
+  shake(16.5, 26);
+  tl.fromTo("#end-logo", { opacity: 0, scale: 0.3 }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(2.2)" }, 16.5);
+  tl.fromTo("#end-line", { opacity: 0, scale: 1.7 }, { opacity: 1, scale: 1, duration: 0.3, ease: "expo.out" }, 16.65);
+  tl.fromTo("#end-cta", { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(2.4)" }, 17.4);
+  tl.fromTo("#end-url", { opacity: 0 }, { opacity: 1, duration: 0.25 }, 17.7);
+  for (let t = 18.2; t <= 20.0; t += 0.469) {
+    tl.fromTo("#end-cta", { scale: 1.06 }, { scale: 1, duration: 0.3, ease: "power2.out" }, t);
+  }
+
+  window.__timelines["main"] = tl;
+</script>
+</body>
+</html>
