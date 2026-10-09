@@ -17,7 +17,7 @@ LINES = {
     "s2": "Meet WeArt Studio. All A.I. in one place.",
     "s3": "Type an idea. Get an image. Turn it into video.",
     "s4": "Every top model, in one workspace.",
-    "s5": "Build pipelines on Canvas.",
+    "s5": "Our board makes content creation easy.",
     "s6": "One subscription instead of five.",
     "s7": "WeArt Studio. Start creating now.",
 }

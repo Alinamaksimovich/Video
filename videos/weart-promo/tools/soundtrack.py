@@ -16,7 +16,7 @@ import soundfile as sf
 from scipy.signal import butter, fftconvolve, lfilter, sosfilt
 
 SR = 44100
-VO_AT = {"s1": 2.0, "s2": 4.3, "s3": 7.1, "s4": 11.3, "s5": 13.65, "s6": 15.25, "s7": 17.25}
+VO_AT = {"s1": 2.0, "s2": 4.3, "s3": 7.1, "s4": 11.3, "s5": 13.5, "s6": 15.45, "s7": 17.25}
 DUR = 19.5
 N = int(SR * DUR)
 BPM = 128
