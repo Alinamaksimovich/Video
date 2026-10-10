@@ -1,6 +1,6 @@
 """Procedural soundtrack for the WeArt Studio promo (v2, fast cut).
 
-128 BPM electro groove in E minor: teaser hits, four-on-the-floor with offbeat
+~100 BPM electro groove in E minor: teaser hits, four-on-the-floor with offbeat
 bass and 16th arp, a one-beat breath and riser into the end-card drop, plus UI
 sound design (typing, glitch blips, taps, whooshes, impacts). The voiceover clips
 from tools/voiceover.py are placed at VO_AT and the music ducks under them.
@@ -16,16 +16,23 @@ import soundfile as sf
 from scipy.signal import butter, fftconvolve, lfilter, sosfilt
 
 SR = 44100
-VO_AT = {"s1": 2.0, "s2": 4.3, "s3": 7.1, "s4": 11.3, "s5": 13.5, "s6": 15.45, "s7": 17.25}
-DUR = 19.5
+K = 25 / 19.5  # v3: the 19.5 s cut slowed to 25 s; all cue times below are v2 times * K
+
+
+def T(sec):
+    return sec * K
+
+
+VO_AT = {k: T(v) for k, v in {"s1": 2.0, "s2": 4.3, "s3": 7.1, "s4": 11.3, "s5": 13.5, "s6": 15.45, "s7": 17.25}.items()}
+DUR = T(19.5)
 N = int(SR * DUR)
-BPM = 128
+BPM = 128 / K
 BEAT = 60 / BPM
-DROP = 17.1  # end-card hit
-BREAK = DROP - 0.5  # kick/bass breath before the drop
-ROLL = DROP - 1.0  # snare roll start
+DROP = T(17.1)  # end-card hit
+BREAK = DROP - BEAT  # kick/bass breath before the drop
+ROLL = DROP - 2 * BEAT  # snare roll start
 LAST = DUR - 0.5  # final chord
-TEASER = 1.875  # four teaser hits, then the groove (4 beats)
+TEASER = 4 * BEAT  # four teaser hits, then the groove (4 beats)
 rng = np.random.default_rng(7)
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -364,35 +371,35 @@ def build_sfx():
     for i in range(4):  # teaser flashes
         add(s, impact() * 0.35, i * BEAT, 0.7)
         add(s, swish(), max(0.0, i * BEAT - 0.06), 0.5)
-    add(s, whoosh(0.35), 1.6, 0.7)
+    add(s, whoosh(0.35), T(1.6), 0.7)
     for i in range(5):  # subscription cards
-        add(s, thud(), 2.0 + i * 0.25, 0.8)
-    add(s, sweep_noise(0.4, 6000, 200), 3.85, 0.8)  # implode
-    add(s, impact() * 0.7, 4.2, 0.9)  # brand
-    for i, at in enumerate(np.arange(7.1, 8.05, 0.045)):  # typing
+        add(s, thud(), T(2.0 + i * 0.25), 0.8)
+    add(s, sweep_noise(0.4, 6000, 200), T(3.85), 0.8)  # implode
+    add(s, impact() * 0.7, T(4.2), 0.9)  # brand
+    for i, at in enumerate(np.arange(T(7.1), T(8.05), T(0.045))):  # typing
         add(s, key_click(), at, 0.6)
-    add(s, tap(), 8.1, 0.9)  # generate
-    add(s, whoosh(0.3), 8.1, 0.6)
-    for i, at in enumerate(np.arange(8.2, 8.75, 0.045)):  # glitch blips
+    add(s, tap(), T(8.1), 0.9)  # generate
+    add(s, whoosh(0.3), T(8.1), 0.6)
+    for i, at in enumerate(np.arange(T(8.2), T(8.75), T(0.045))):  # glitch blips
         add(s, blip(600 + (i * 137) % 900), at, 0.55)
-    add(s, pop_ding(), 8.8, 0.7)  # image ready
-    add(s, tap(), 9.3, 0.9)  # animate
-    add(s, whoosh(0.4), 9.35, 0.8)
-    add(s, impact() * 0.5, 9.6, 0.7)  # video starts
-    for at in (11.3, 11.85, 12.4, 12.95):  # tabs
+    add(s, pop_ding(), T(8.8), 0.7)  # image ready
+    add(s, tap(), T(9.3), 0.9)  # animate
+    add(s, whoosh(0.4), T(9.35), 0.8)
+    add(s, impact() * 0.5, T(9.6), 0.7)  # video starts
+    for at in (T(11.3), T(11.85), T(12.4), T(12.95)):  # tabs
         add(s, tap(), at, 0.7)
         add(s, swish(), at - 0.05, 0.55)
-    add(s, whoosh(0.35), 13.4, 0.7)  # canvas
-    for i, at in enumerate((13.8, 14.2, 14.6)):
+    add(s, whoosh(0.35), T(13.4), 0.7)  # canvas
+    for i, at in enumerate((T(13.8), T(14.2), T(14.6))):
         add(s, ping(660.0 * (1.26 ** i), 0.35), at, 0.5)
         add(s, tap(), at, 0.5)
-    add(s, whoosh(0.35), 15.0, 0.7)  # one plan
+    add(s, whoosh(0.35), T(15.0), 0.7)  # one plan
     for i in range(5):
-        add(s, swish(), 15.35 + i * 0.07, 0.35)
-    add(s, pop_ding(), 15.8, 0.7)
-    add(s, riser(1.0), ROLL, 0.75)
+        add(s, swish(), T(15.35 + i * 0.07), 0.35)
+    add(s, pop_ding(), T(15.8), 0.7)
+    add(s, riser(DROP - ROLL), ROLL, 0.75)
     add(s, impact(), DROP, 1.0)
-    add(s, pop_ding(), 17.9, 0.8)  # CTA
+    add(s, pop_ding(), T(17.9), 0.8)  # CTA
     return s / max(1.0, np.max(np.abs(s)) / 0.89)
 
 

@@ -22,7 +22,7 @@ LINES = {
     "s7": "WeArt Studio. Start creating now.",
 }
 VOICE = os.environ.get("VOICE", "af_heart")
-SPEED = float(os.environ.get("SPEED", "1.18"))
+SPEED = float(os.environ.get("SPEED", "1.05"))
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, "..", "assets", "audio", "vo")
