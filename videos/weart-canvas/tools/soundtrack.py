@@ -70,10 +70,19 @@ def speech_gate(voice):
 
 
 if __name__ == "__main__":
-    v = load(os.path.join(OUT, "voice-raw.wav"))
-    v = v * (10 ** (-1 / 20) / np.abs(v).max())  # her recording untouched: gain only
+    # voice = new intro take (0 - 3.425 s) + the original recording from 3.64 s on.
+    # Her recordings are untouched: only gain (the intro take is quieter, +5 dB matches its speech
+    # level to the main take) and a 30 ms fade-in where the original starts.
+    orig = load(os.path.join(OUT, "voice-raw.wav"))
+    g = 10 ** (-1 / 20) / np.abs(orig).max()  # main take: peak at -1 dBFS
+    intro = load(os.path.join(OUT, "voice-intro-raw.wav")) * g * 10 ** (5.0 / 20)
     voice = np.zeros(N)
-    voice[: min(N, len(v))] = v[:N]
+    cut = int(3.64 * SR)
+    tail = orig[cut:N] * g
+    voice[cut : cut + len(tail)] = tail
+    voice[cut : cut + int(0.03 * SR)] *= np.linspace(0, 1, int(0.03 * SR))
+    n_in = min(len(intro), cut)
+    voice[:n_in] += intro[:n_in]
     gate = speech_gate(voice)
     speech = rms_db(voice[gate > 0.5])
 

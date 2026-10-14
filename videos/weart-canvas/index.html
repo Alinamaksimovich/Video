@@ -78,6 +78,13 @@
         transform-origin: 50% 0%;
       }
       /* the 16:9 clip at full height (3413x1920), centred: the 9:16 window is its middle */
+      #intro {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1080px;
+        height: 1920px;
+      }
       #me {
         position: absolute;
         left: -1166.5px;
@@ -554,6 +561,8 @@
       <div id="top">
         <div id="meWrap"><div id="meKick"><div id="meFit">
           <video id="me" class="clip" src="assets/video/me.mp4" muted playsinline data-start="0" data-duration="15.04" data-track-index="1"></video>
+          <!-- new intro take (3.64 s, her first phrase): full screen, hands over to the main clip right before the fly-up -->
+          <video id="intro" class="clip" src="assets/video/intro.mp4" muted playsinline data-start="0" data-duration="3.64" data-track-index="2"></video>
         </div></div></div>
       </div>
 
@@ -633,7 +642,7 @@
     <script>
       // word timings: from the voice track (silence gaps + per-phrase transcription)
       const WORDS = [
-        ["Wait", 0.49, 0.78], ["did", 1.28, 1.48], ["you", 1.48, 1.72], ["really", 1.79, 1.98], ["think", 2.15, 2.36], ["I'm", 2.36, 2.5], ["real", 2.5, 2.64],
+        ["Wait", 0.36, 0.58], ["did", 1.24, 1.5], ["you", 1.5, 1.75], ["really", 1.84, 2.03], ["think", 2.49, 2.7], ["I'm", 2.7, 2.85], ["real", 2.85, 3.05],
         ["I", 3.82, 3.92], ["was", 3.92, 4.06], ["made", 4.06, 4.3], ["in", 4.3, 4.42], ["a", 4.42, 4.5], ["few", 4.5, 4.72], ["clicks", 4.72, 5.0],
         ["Here's", 5.25, 5.42], ["the", 5.42, 5.52], ["trick", 5.52, 5.72], ["Canvas", 6.02, 6.5],
         ["One", 6.68, 6.85], ["big", 6.85, 7.05], ["board", 7.05, 7.36], ["for", 7.41, 7.53], ["creators", 7.53, 7.98],
@@ -677,9 +686,9 @@
 
       // ---------- hook (0 – 3.82): her, full screen, slow push-in ----------
       tl.set("#bot", { y: 960 }, 0);
-      tl.fromTo("#meWrap", { scale: 1.0 }, { scale: 1.1, duration: T_FLY, ease: "none" }, 0);
-      tl.fromTo("#meKick", { scale: 1.06 }, { scale: 1.0, duration: 0.5, ease: "power2.out" }, 0.49);
-      tl.fromTo("#meKick", { scale: 1.05 }, { scale: 1.0, duration: 0.5, ease: "power2.out" }, 2.5);
+      tl.fromTo("#meWrap", { scale: 1.0 }, { scale: 1.05, duration: T_FLY, ease: "none" }, 0);
+      tl.fromTo("#meKick", { scale: 1.06 }, { scale: 1.0, duration: 0.5, ease: "power2.out" }, 0.36);
+      tl.fromTo("#meKick", { scale: 1.05 }, { scale: 1.0, duration: 0.5, ease: "power2.out" }, 2.85);
 
       // ---------- the fly-up (3.82): video goes to the top half, canvas rises ----------
       tl.to("#top", { clipPath: "inset(0px 0px 960px 0px)", duration: 0.55, ease: "power4.inOut" }, T_FLY - 0.06);
