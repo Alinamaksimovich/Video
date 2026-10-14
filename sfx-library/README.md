@@ -19,6 +19,8 @@ its own `assets/sfx/` (HyperFrames serves files from the project folder).
 | SJC_BLEEP_Cute_Double_Bleep_01.wav | 0.38 s | friendly "done": subscribed, task complete, like |
 | SJC_BLEEP_Data_Notification_01.wav | 0.35 s | data/message arrives: chat reply, storyboard ready, AI result |
 | SJC_CLICK_Woodblock_01.wav | 0.20 s | woody tick on the beat: word-by-word captions, list items, tempo accents |
+| SJC_CLICK_Tonal_Click_Double_01.wav | 0.34 s | two-note tonal click: confirm, toggle on, button press |
+| SJC_CLICK_Tonal_Click_Run_Up_01.wav | 0.52 s | rising tonal click: progress up, level up, "next" |
 
 ## foley/
 | File | Length | Use for |
@@ -28,3 +30,14 @@ its own `assets/sfx/` (HyperFrames serves files from the project folder).
 ## ui-pack/ — cut from the "небанальные звуки" pack demos (44.1 kHz stereo)
 appear_1-4, click_1-2, select, select_2, loading, ticks, typing, notification,
 sms, whoosh_shine, trtrtr_1-2, intro_whoosh
+
+## hover/ — cursor hover ticks (48 kHz stereo, 0.08 s)
+| File | Use for |
+|---|---|
+| SJC_HOVER_Hover_01.wav | cursor moves over a button/card; two variants alternate so it doesn't repeat |
+| SJC_HOVER_Hover_04.wav | second hover variant |
+
+## impacts/
+| File | Length | Use for |
+|---|---|---|
+| SJC_IMPACT_Liquid_Impact_01.wav | 1.40 s | soft liquid thud: logo lands, big card drops, reveal beat (gentler than a hard boom) |
