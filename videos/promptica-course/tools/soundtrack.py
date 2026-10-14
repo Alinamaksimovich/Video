@@ -1,9 +1,9 @@
-"""Audio for the PROMPTICA course reel: her voice up front, the client's track
+"""Audio for the PROMPTICA course reel: her voice up front, an original phonk bed
 under it, a few hand-picked SFX from her packs.
 
-- music: assets/audio/track-src.wav (~83.5 BPM). Bars 1-4 play as-is, then the
-  bar at 8.65 s repeats so the bed runs to the end with the beat grid intact.
-- voice: assets/audio/voice-clean.wav normalised to sit ~18 dB over the music.
+- voice: assets/audio/voice-raw.wav exactly as recorded (no EQ, denoise or
+  compression), only a clean gain so its peaks sit at -1 dBFS.
+- music: assets/audio/phonk.wav from tools/phonk.py, ~16 dB under her speech.
 - sfx: assets/sfx/*.wav (cut from her sound-pack demos), quiet, key moments only.
 Writes music.wav, sfx.wav, voice.wav, preview-mix.wav. Run: python3 tools/soundtrack.py
 """
@@ -16,7 +16,7 @@ import soundfile as sf
 SR = 44100
 DUR = 16.5
 N = int(SR * DUR)
-BEAT0, BEAT = 1.46, 0.7186  # first downbeat + beat length of the track
+BEAT0, BEAT = 1.46, 0.7186  # visual beat grid (tools/phonk.py is written on it)
 QUIET = (10.15, 11.45)  # "сделай тише": the bed really drops
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -44,29 +44,19 @@ def add(buf, sig, at, gain=1.0):
 
 
 def build_music():
-    src = load(os.path.join(OUT, "track-src.wav"))
-    splice = BEAT0 + 14 * BEAT  # 11.52: start of the last full bar we keep
-    loop_from = BEAT0 + 10 * BEAT  # 8.65: same bar phase
-    xf = int(0.03 * SR)
-    a = src[: int(splice * SR) + xf]
-    b = src[int(loop_from * SR) :]
-    ramp = np.linspace(0, 1, xf)
-    out = np.concatenate([a[:-xf], a[-xf:] * (1 - ramp) + b[:xf] * ramp, b[xf:]])
-    out = np.pad(out, (0, max(0, N - len(out))))[:N]
-    t = np.arange(N) / SR
-    out *= np.clip((DUR - t) / 0.8, 0, 1)  # fade at the end
-    return out
+    out = load(os.path.join(OUT, "phonk.wav"))
+    return np.pad(out, (0, max(0, N - len(out))))[:N]
 
 
-def limit(x, ceil=0.89, hold=0.01, release=0.08):
-    """Peak limiter: gain never lets a sample cross `ceil`, recovers smoothly."""
-    from scipy.ndimage import minimum_filter1d
-    from scipy.signal import lfilter
+def raw_voice():
+    """Her recording untouched: resample 48k -> 44.1k and one gain stage, nothing else."""
+    from scipy.signal import resample_poly
 
-    need = minimum_filter1d(np.minimum(1.0, ceil / (np.abs(x) + 1e-9)), int(hold * SR))
-    a = np.exp(-1 / (release * SR))
-    smooth = lfilter([1 - a], [1, -a], need - 1) + 1  # one-pole release toward 1
-    return x * np.minimum(need, smooth)
+    v, sr = sf.read(os.path.join(OUT, "voice-raw.wav"), dtype="float64")
+    if v.ndim == 2:
+        v = v.mean(1)
+    v = resample_poly(v, 147, 160) if sr == 48000 else v
+    return v * (10 ** (-1 / 20) / np.abs(v).max())
 
 
 def speech_gate(voice):
@@ -95,14 +85,12 @@ SFX_CUES = [  # (file, time, gain dB)
 
 if __name__ == "__main__":
     voice = np.zeros(N)
-    add(voice, load(os.path.join(OUT, "voice-clean.wav")), 0.0)
+    add(voice, raw_voice(), 0.0)
     gate = speech_gate(voice)
-    voiced = voice[gate > 0.5]
-    voice *= 10 ** ((-18.0 - rms_db(voiced)) / 20)  # speech RMS -> -18 dBFS
-    voice = limit(voice)
+    speech = rms_db(voice[gate > 0.5])
 
     music = build_music()
-    music *= 10 ** ((-30.0 - rms_db(music)) / 20)  # bed at -30 dBFS RMS: 12 dB under speech
+    music *= 10 ** ((speech - 12.0 - rms_db(music)) / 20)  # bed 12 dB under her speech
     t = np.arange(N) / SR
     duck = 1 - gate * (1 - 10 ** (-6 / 20))  # another 6 dB down while she talks
     q0, q1 = QUIET
@@ -112,12 +100,12 @@ if __name__ == "__main__":
     sfx = np.zeros(N)
     for name, at, g in SFX_CUES:
         s = load(os.path.join(SFX, name + ".wav"))
-        s *= 10 ** ((-24.0 - rms_db(s[np.abs(s) > 0.02])) / 20)  # each hit ~6 dB under speech
+        s *= 10 ** ((speech - 8.0 - rms_db(s[np.abs(s) > 0.02])) / 20)  # each hit ~8 dB under speech
         add(sfx, s, at, 10 ** (g / 20))
 
     for name, x in (("voice", voice), ("music", music), ("sfx", sfx)):
         sf.write(os.path.join(OUT, name + ".wav"), x.astype(np.float32), SR)
-    sfx = limit(sfx, 0.5)
+    sfx /= max(1.0, np.abs(sfx).max() / 0.5)
     mix = voice + music + sfx
     sf.write(os.path.join(OUT, "preview-mix.wav"), (mix / max(1.0, np.abs(mix).max() / 0.95)).astype(np.float32), SR)
     print("speech", round(rms_db(voice[gate > 0.5]), 1), "music under speech", round(rms_db(music[gate > 0.5]), 1),
