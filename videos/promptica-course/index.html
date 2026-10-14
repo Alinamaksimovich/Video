@@ -1,0 +1,1237 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>AI-монтажёр — курс PROMPTICA</title>
+    <script src="assets/vendor/gsap.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "Roboto Flex";
+        src: url("assets/fonts/rf-cyr.woff2") format("woff2");
+        font-weight: 100 1000;
+        font-stretch: 25% 151%;
+        unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+      }
+      @font-face {
+        font-family: "Roboto Flex";
+        src: url("assets/fonts/rf-lat.woff2") format("woff2");
+        font-weight: 100 1000;
+        font-stretch: 25% 151%;
+      }
+      :root {
+        --red: #b1202d;
+        --red-dark: #7c1520;
+        --ink: #111111;
+        --graphite: #1b1c1c;
+        --line: #2c2d2e;
+        --cream: #fefdf9;
+        --muted: #8d8d8d;
+        --red-hi: #e8505d; /* small red text on dark */
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: var(--ink);
+      }
+      #root {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: var(--ink);
+        font-family: "Roboto Flex", system-ui, sans-serif;
+        color: var(--cream);
+      }
+      .x {
+        font-stretch: 140%;
+        font-weight: 1000;
+        letter-spacing: -0.01em;
+        text-transform: uppercase;
+      }
+      .mono {
+        font-family: ui-monospace, "DejaVu Sans Mono", monospace;
+        font-size: 24px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+      .layer {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1080px;
+        height: 1920px;
+      }
+
+      /* ---------- top half: me ---------- */
+      #top {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1080px;
+        height: 960px;
+        overflow: hidden;
+      }
+      #meWrap {
+        position: absolute;
+        inset: 0;
+        transform-origin: 50% 40%;
+      }
+      #me {
+        width: 1080px;
+        height: 960px;
+        object-fit: cover;
+        display: block;
+      }
+      #seam {
+        position: absolute;
+        left: 0;
+        top: 954px;
+        width: 1080px;
+        height: 12px;
+        background: var(--red);
+        transform-origin: 0 50%;
+      }
+
+      /* ---------- bottom half: graphics ---------- */
+      #bot {
+        position: absolute;
+        left: 0;
+        top: 960px;
+        width: 1080px;
+        height: 960px;
+        overflow: hidden;
+        background: radial-gradient(70% 60% at 50% 55%, #2a1013 0%, var(--ink) 75%);
+      }
+      #bgrid {
+        position: absolute;
+        left: -60px;
+        top: -60px;
+        width: 1200px;
+        height: 1080px;
+        background-image: linear-gradient(rgba(255, 255, 255, 0.05) 2px, transparent 2px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.05) 2px, transparent 2px);
+        background-size: 60px 60px;
+      }
+      .scene {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+      }
+      .tag {
+        position: absolute;
+        left: 60px;
+        top: 70px;
+        color: var(--red-hi);
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .tag i {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: var(--red);
+      }
+
+      /* S1 timer */
+      #timer {
+        position: absolute;
+        left: 0;
+        width: 1080px;
+        top: 250px;
+        text-align: center;
+        font-size: 250px;
+        line-height: 1;
+        font-variant-numeric: tabular-nums;
+      }
+      #tbar {
+        position: absolute;
+        left: 140px;
+        top: 560px;
+        width: 800px;
+        height: 22px;
+        border-radius: 11px;
+        background: #2a2a2a;
+        overflow: hidden;
+      }
+      #tfill {
+        width: 100%;
+        height: 100%;
+        background: var(--red);
+        transform-origin: 0 50%;
+        transform: scaleX(0);
+      }
+      #tlabel {
+        position: absolute;
+        left: 0;
+        width: 1080px;
+        top: 620px;
+        text-align: center;
+        color: var(--muted);
+      }
+
+      /* S2 chat + storyboard */
+      #chat {
+        position: absolute;
+        left: 60px;
+        top: 130px;
+        width: 960px;
+        height: 760px;
+        border-radius: 36px;
+        background: #191919;
+        border: 2px solid var(--line);
+        box-shadow: 0 40px 80px rgba(0, 0, 0, 0.5);
+        overflow: hidden;
+      }
+      #chat-h {
+        height: 76px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 0 30px;
+        border-bottom: 2px solid var(--line);
+        font-size: 28px;
+        font-weight: 700;
+      }
+      #chat-h b {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: var(--red);
+      }
+      #chat-h span {
+        margin-left: auto;
+        color: var(--muted);
+        font-weight: 500;
+        font-size: 22px;
+      }
+      #ask {
+        position: absolute;
+        right: 30px;
+        top: 106px;
+        max-width: 720px;
+        padding: 22px 30px;
+        border-radius: 28px 28px 6px 28px;
+        background: var(--red);
+        font-size: 32px;
+        font-weight: 650;
+        line-height: 1.25;
+        min-height: 84px;
+        min-width: 120px;
+      }
+      #reply {
+        position: absolute;
+        left: 30px;
+        top: 236px;
+        font-size: 30px;
+        font-weight: 600;
+        color: #d6d6d6;
+        opacity: 0;
+      }
+      #reply b {
+        color: var(--red);
+      }
+      #cards {
+        position: absolute;
+        left: 30px;
+        top: 300px;
+        width: 900px;
+        display: flex;
+        gap: 20px;
+      }
+      .card {
+        width: 210px;
+        border-radius: 22px;
+        overflow: hidden;
+        background: #232323;
+        border: 2px solid var(--line);
+        opacity: 0;
+      }
+      .card img {
+        width: 210px;
+        height: 250px;
+        object-fit: cover;
+        display: block;
+      }
+      .card div {
+        padding: 14px 16px 18px;
+      }
+      .card .tc {
+        display: block;
+        font-family: ui-monospace, "DejaVu Sans Mono", monospace;
+        font-size: 26px;
+        font-weight: 700;
+        color: var(--cream);
+      }
+      .card .ds {
+        display: block;
+        margin-top: 6px;
+        font-size: 24px;
+        color: var(--muted);
+        font-weight: 600;
+      }
+
+      /* S3 tools */
+      #wires {
+        position: absolute;
+        inset: 0;
+      }
+      #wires path {
+        fill: none;
+        stroke: var(--red);
+        stroke-width: 6;
+        stroke-linecap: round;
+      }
+      #hub {
+        position: absolute;
+        left: 400px;
+        top: 360px;
+        width: 280px;
+        height: 280px;
+        border-radius: 50%;
+        background: var(--cream);
+        color: var(--ink);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        font-size: 50px;
+        font-weight: 900;
+        box-shadow: 0 0 0 16px rgba(177, 32, 45, 0.25), 0 0 120px rgba(177, 32, 45, 0.6);
+      }
+      #hub small {
+        font-size: 22px;
+        font-weight: 600;
+        color: var(--red);
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+      .tool {
+        position: absolute;
+        width: 250px;
+        height: 96px;
+        margin: -48px 0 0 -125px;
+        border-radius: 48px;
+        background: #1e1e1e;
+        border: 3px solid var(--line);
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 0 26px;
+        font-size: 32px;
+        font-weight: 750;
+        opacity: 0;
+      }
+      .tool svg {
+        width: 40px;
+        height: 40px;
+        flex-shrink: 0;
+        stroke: var(--cream);
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+
+      /* S4 preview side elements */
+      #mic {
+        position: absolute;
+        left: 850px;
+        top: 400px;
+        width: 160px;
+        height: 160px;
+        border-radius: 50%;
+        background: var(--red);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      #mic svg {
+        width: 72px;
+        height: 72px;
+        stroke: #fff;
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+      }
+      .ring {
+        position: absolute;
+        left: 850px;
+        top: 400px;
+        width: 160px;
+        height: 160px;
+        border-radius: 50%;
+        border: 4px solid var(--red);
+        opacity: 0;
+      }
+      #micl {
+        position: absolute;
+        left: 790px;
+        top: 600px;
+        width: 280px;
+        text-align: center;
+        color: var(--cream);
+      }
+      #pvl {
+        position: absolute;
+        left: 40px;
+        top: 400px;
+        width: 220px;
+        color: var(--muted);
+        line-height: 1.6;
+      }
+      #pvl b {
+        display: block;
+        color: var(--red-hi);
+        font-size: 44px;
+        letter-spacing: 0;
+      }
+
+      /* S5 course */
+      #c-tag {
+        position: absolute;
+        left: 0;
+        width: 1080px;
+        top: 150px;
+        text-align: center;
+        color: var(--red-hi);
+        font-size: 30px;
+      }
+      #c-title {
+        position: absolute;
+        left: 0;
+        width: 1080px;
+        top: 236px;
+        text-align: center;
+        white-space: nowrap;
+        font-size: 104px;
+        line-height: 1;
+      }
+      #c-under {
+        position: absolute;
+        left: 120px;
+        top: 372px;
+        width: 840px;
+        height: 14px;
+        background: var(--red);
+        transform-origin: 0 50%;
+        transform: scaleX(0);
+      }
+      #c-sub {
+        position: absolute;
+        left: 90px;
+        width: 900px;
+        top: 430px;
+        text-align: center;
+        font-size: 44px;
+        font-weight: 600;
+        line-height: 1.25;
+        color: #e8e6df;
+      }
+      #chips {
+        position: absolute;
+        left: 60px;
+        width: 960px;
+        top: 620px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 18px;
+      }
+      .chip {
+        padding: 18px 30px;
+        border-radius: 40px;
+        border: 3px solid var(--red);
+        font-size: 32px;
+        font-weight: 750;
+        opacity: 0;
+      }
+
+      /* S6 subscribe */
+      #s-title {
+        position: absolute;
+        left: 0;
+        width: 1080px;
+        top: 160px;
+        text-align: center;
+        font-size: 72px;
+      }
+      #btn {
+        position: absolute;
+        left: 190px;
+        top: 360px;
+        width: 700px;
+        height: 170px;
+        border-radius: 85px;
+        background: var(--red);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 26px;
+        font-size: 56px;
+        box-shadow: 0 30px 80px rgba(177, 32, 45, 0.55);
+      }
+      #btn svg {
+        width: 64px;
+        height: 64px;
+        stroke: #fff;
+        fill: none;
+        stroke-width: 2.2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        transform-origin: 50% 10%;
+      }
+      #btn-done {
+        position: absolute;
+        left: 190px;
+        top: 360px;
+        width: 700px;
+        height: 170px;
+        border-radius: 85px;
+        background: var(--cream);
+        color: var(--ink);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 52px;
+        opacity: 0;
+      }
+      #s-note {
+        position: absolute;
+        left: 0;
+        width: 1080px;
+        top: 600px;
+        text-align: center;
+        font-size: 40px;
+        font-weight: 600;
+        color: #d9d6cf;
+      }
+      #cursor {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 90px;
+        height: 90px;
+        opacity: 0;
+      }
+      #click {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 160px;
+        height: 160px;
+        margin: -80px 0 0 -80px;
+        border-radius: 50%;
+        border: 6px solid #fff;
+        opacity: 0;
+      }
+
+      /* ---------- the PROMPTICA example (9:16, shown at half size, then full) ---------- */
+      #promo {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: var(--red);
+        border-radius: 56px;
+        opacity: 0;
+        transform-origin: 50% 50%;
+      }
+      .pv {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+      }
+      .pv video,
+      .pv img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      #p-logo {
+        position: absolute;
+        left: 110px;
+        top: 760px;
+        width: 860px;
+      }
+      .pw {
+        position: absolute;
+        left: 0;
+        width: 1080px;
+        top: 1380px;
+        text-align: center;
+        opacity: 0;
+      }
+      .pw span {
+        display: inline-block;
+        padding: 14px 40px 18px;
+        background: var(--red);
+        font-size: 120px;
+        line-height: 1;
+      }
+      #collage {
+        position: absolute;
+        inset: 0;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
+        gap: 12px;
+        background: var(--cream);
+        opacity: 0;
+      }
+      #collage img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      #col-logo {
+        position: absolute;
+        left: 90px;
+        top: 1540px;
+        width: 900px;
+        height: 290px;
+        border-radius: 36px;
+        background: var(--cream);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+      }
+      #col-logo img {
+        width: 760px;
+      }
+      #dim {
+        position: absolute;
+        inset: 0;
+        background: #000;
+        opacity: 0;
+      }
+
+      /* ---------- voice-command overlay (full screen) ---------- */
+      #avatar {
+        position: absolute;
+        left: 10px;
+        top: 1300px;
+        width: 640px;
+        transform-origin: 50% 100%;
+        opacity: 0;
+        filter: drop-shadow(0 30px 40px rgba(0, 0, 0, 0.55));
+      }
+      .bub {
+        position: absolute;
+        left: 330px;
+        top: 1140px;
+        padding: 28px 40px;
+        border-radius: 46px 46px 46px 8px;
+        background: var(--cream);
+        color: var(--ink);
+        font-size: 52px;
+        transform-origin: 0 100%;
+        opacity: 0;
+        white-space: nowrap;
+      }
+      .hud {
+        position: absolute;
+        left: 90px;
+        width: 900px;
+        border-radius: 40px;
+        background: rgba(17, 17, 17, 0.82);
+        border: 2px solid rgba(255, 255, 255, 0.14);
+        padding: 36px 44px;
+        opacity: 0;
+      }
+      #hud-vol {
+        top: 300px;
+      }
+      #hud-cut {
+        top: 560px;
+      }
+      .hud-row {
+        display: flex;
+        align-items: center;
+        gap: 28px;
+      }
+      .hud-row svg {
+        width: 64px;
+        height: 64px;
+        stroke: var(--cream);
+        fill: none;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        flex-shrink: 0;
+      }
+      .track {
+        position: relative;
+        flex-grow: 1;
+        height: 28px;
+        border-radius: 14px;
+        background: #3a3a3a;
+        overflow: hidden;
+      }
+      #vol-fill {
+        width: 100%;
+        height: 100%;
+        background: var(--cream);
+        transform-origin: 0 50%;
+      }
+      .hud-num {
+        width: 150px;
+        text-align: right;
+        font-size: 48px;
+        font-weight: 900;
+        font-variant-numeric: tabular-nums;
+      }
+      #clipbar {
+        position: relative;
+        flex-grow: 1;
+        height: 90px;
+        border-radius: 16px;
+        background: #2a2a2a;
+      }
+      #clip {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 90px;
+        border-radius: 16px;
+        background: repeating-linear-gradient(90deg, var(--red) 0 92px, var(--red-dark) 92px 96px);
+        transform-origin: 0 50%;
+      }
+
+      /* ---------- hook + end (full screen) ---------- */
+      .door {
+        position: absolute;
+        left: 0;
+        width: 1080px;
+        height: 960px;
+        background: var(--red);
+        overflow: hidden;
+      }
+      #doorT {
+        top: 0;
+      }
+      #doorB {
+        top: 960px;
+      }
+      .hlogo {
+        position: absolute;
+        left: 140px;
+        top: 420px;
+        width: 800px;
+      }
+      #hk-big {
+        position: absolute;
+        left: 0;
+        width: 1080px;
+        top: 260px;
+        text-align: center;
+        font-size: 300px;
+        line-height: 0.9;
+        color: var(--cream);
+      }
+      #hk-big small {
+        display: block;
+        font-size: 104px;
+      }
+      #end {
+        background: var(--red);
+        opacity: 0;
+      }
+      #e-av {
+        position: absolute;
+        left: 230px;
+        top: 230px;
+        width: 620px;
+        filter: drop-shadow(0 30px 40px rgba(0, 0, 0, 0.35));
+      }
+      #e-kicker {
+        position: absolute;
+        left: 0;
+        width: 1080px;
+        top: 900px;
+        text-align: center;
+        color: var(--cream);
+        font-size: 30px;
+      }
+      #e-title {
+        position: absolute;
+        left: 0;
+        width: 1080px;
+        top: 975px;
+        text-align: center;
+        white-space: nowrap;
+        font-size: 112px;
+        line-height: 1;
+      }
+      #e-sub {
+        position: absolute;
+        left: 90px;
+        width: 900px;
+        top: 1130px;
+        text-align: center;
+        font-size: 48px;
+        font-weight: 650;
+        line-height: 1.25;
+      }
+      #e-cta {
+        position: absolute;
+        left: 240px;
+        top: 1330px;
+        width: 600px;
+        height: 120px;
+        border-radius: 60px;
+        background: var(--cream);
+        color: var(--red);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 44px;
+      }
+      #e-logo {
+        position: absolute;
+        left: 290px;
+        top: 1640px;
+        width: 500px;
+      }
+
+      /* ---------- captions (on the seam) ---------- */
+      #caps {
+        position: absolute;
+        left: 40px;
+        width: 1000px;
+        top: 960px;
+        height: 0;
+      }
+      .cg {
+        position: absolute;
+        left: 0;
+        width: 1000px;
+        bottom: -70px;
+        text-align: center;
+        font-size: 74px;
+        line-height: 1.12;
+        opacity: 0;
+      }
+      .cw {
+        display: inline-block;
+        padding: 2px 14px 8px;
+        margin: 0 -2px;
+        border-radius: 14px;
+        color: #fff;
+        -webkit-text-stroke: 10px #111;
+        paint-order: stroke fill;
+        text-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+      }
+      .cw.hot {
+        color: #ffd9dc;
+      }
+      #flash {
+        position: absolute;
+        inset: 0;
+        background: #fff;
+        opacity: 0;
+        pointer-events: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="17.5" data-width="1080" data-height="1920">
+      <!-- audio: tools/soundtrack.py builds music.wav + sfx.wav + voice.wav (her recording, cleaned) -->
+      <audio id="music" src="assets/audio/music.wav" data-start="0" data-duration="17.5" data-track-index="10" data-volume="0.5"></audio>
+      <audio id="sfx" src="assets/audio/sfx.wav" data-start="0" data-duration="17.5" data-track-index="11" data-volume="0.7"></audio>
+      <audio id="voice" src="assets/audio/voice.wav" data-start="0" data-duration="17.5" data-track-index="12" data-volume="1"></audio>
+
+      <!-- top half: the talking head -->
+      <div id="top">
+        <div id="meWrap">
+          <video id="me" class="clip" src="assets/video/me-top.mp4" muted playsinline data-start="0" data-duration="16.9" data-track-index="1"></video>
+        </div>
+      </div>
+
+      <!-- bottom half -->
+      <div id="bot">
+        <div id="bgrid" data-layout-allow-overflow></div>
+
+        <div class="scene" id="s1">
+          <div class="tag mono"><i></i>REC · время монтажа</div>
+          <div id="timer" class="x">00:00</div>
+          <div id="tbar"><div id="tfill"></div></div>
+          <div id="tlabel" class="mono">от идеи до готового ролика</div>
+        </div>
+
+        <div class="scene" id="s2">
+          <div id="chat">
+            <div id="chat-h"><b></b>Claude<span>новый чат</span></div>
+            <div id="ask"><span id="typed"></span></div>
+            <div id="reply">Готово! <b>Раскадровка по секундам:</b></div>
+            <div id="cards">
+              <div class="card" id="k1"><img src="assets/img/media-belarus5.jpg" alt="" /><div><span class="tc">0:00</span><span class="ds">Хук</span></div></div>
+              <div class="card" id="k2"><img src="assets/img/work-0147.jpg" alt="" /><div><span class="tc">0:03</span><span class="ds">Логотип</span></div></div>
+              <div class="card" id="k3"><img src="assets/img/iki.jpg" alt="" /><div><span class="tc">0:06</span><span class="ds">Работы</span></div></div>
+              <div class="card" id="k4"><img src="assets/img/post-02.jpg" alt="" /><div><span class="tc">0:10</span><span class="ds">Призыв</span></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="scene" id="s3">
+          <div class="tag mono"><i></i>инструменты</div>
+          <svg id="wires" viewBox="0 0 1080 960">
+            <path id="w0" d="M 200 230 C 320 260, 380 360, 470 420" />
+            <path id="w1" d="M 880 230 C 760 260, 700 360, 610 420" />
+            <path id="w2" d="M 170 560 C 280 540, 340 520, 400 505" />
+            <path id="w3" d="M 910 560 C 800 540, 740 520, 680 505" />
+            <path id="w4" d="M 540 830 C 540 760, 540 700, 540 640" />
+          </svg>
+          <div id="hub">Claude<small>ваш монтажёр</small></div>
+          <div class="tool" id="t0" style="left: 200px; top: 230px"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3" /><path d="M10 9l5 3-5 3z" /></svg>Видео</div>
+          <div class="tool" id="t1" style="left: 880px; top: 230px"><svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13" /><circle cx="6" cy="18" r="3" /><circle cx="18" cy="16" r="3" /></svg>Музыка</div>
+          <div class="tool" id="t2" style="left: 170px; top: 560px"><svg viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z" /><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3" /></svg>Голос</div>
+          <div class="tool" id="t3" style="left: 910px; top: 560px"><svg viewBox="0 0 24 24"><circle cx="13.5" cy="6.5" r="2.5" /><path d="M3 21l6-6M14 14l-4-4 7-7 4 4z" /></svg>Дизайн</div>
+          <div class="tool" id="t4" style="left: 540px; top: 830px"><svg viewBox="0 0 24 24"><path d="M5 12h3l3-8 2 16 3-8h3" /></svg>Моушн</div>
+        </div>
+
+        <div class="scene" id="s4">
+          <div id="pvl" class="mono"><b>9:16</b>превью<br />promptica<br />15 сек</div>
+          <div class="ring" id="r1"></div>
+          <div class="ring" id="r2"></div>
+          <div id="mic"><svg viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z" /><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3" /></svg></div>
+          <div id="micl" class="mono">правки<br />голосом</div>
+        </div>
+
+        <div class="scene" id="s5">
+          <div id="c-tag" class="mono">новый курс · promptica</div>
+          <div id="c-title" class="x">AI-монтажёр</div>
+          <div id="c-under"></div>
+          <div id="c-sub">делай видео, которые продают,<br />вместе с Claude</div>
+          <div id="chips">
+            <div class="chip" id="ch0">Раскадровка</div>
+            <div class="chip" id="ch1">Моушн-дизайн</div>
+            <div class="chip" id="ch2">Музыка и звук</div>
+            <div class="chip" id="ch3">Правки голосом</div>
+          </div>
+        </div>
+
+        <div class="scene" id="s6">
+          <div id="s-title" class="x">AI-монтажёр</div>
+          <div id="btn" class="x"><svg id="bell" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.7 21a2 2 0 0 1-3.4 0" /></svg>Подписаться</div>
+          <div id="btn-done" class="x">Вы подписаны ✓</div>
+          <div id="s-note">не пропусти старт курса</div>
+          <svg id="cursor" viewBox="0 0 24 24"><path d="M4 2l16 9-7 2-3 7z" fill="#fff" stroke="#111" stroke-width="1.4" stroke-linejoin="round" /></svg>
+          <div id="click"></div>
+        </div>
+      </div>
+
+      <div id="seam"></div>
+
+      <!-- the PROMPTICA example: built at 9:16, shown at half size in the bottom, then full screen -->
+      <div id="promo">
+        <div class="pv" id="pv0"><img id="p-logo" src="assets/img/logo-white.png" alt="promptica" /></div>
+        <div class="pv" id="pv1"><video id="pvv1" class="clip" src="assets/video/mosaic-v1.mp4" muted playsinline data-start="7.7" data-duration="0.4" data-media-start="1.2" data-track-index="3"></video></div>
+        <div class="pv" id="pv2"><video id="pvv2" class="clip" src="assets/video/mosaic-v4.mp4" muted playsinline data-start="8.05" data-duration="0.4" data-media-start="1.0" data-track-index="4"></video></div>
+        <div class="pv" id="pv3"><video id="pvv3" class="clip" src="assets/video/work-v2.mp4" muted playsinline data-start="8.4" data-duration="0.4" data-media-start="1.0" data-track-index="3"></video></div>
+        <div class="pv" id="pv4"><video id="pvv4" class="clip" src="assets/video/mosaic-v2.mp4" muted playsinline data-start="8.75" data-duration="0.45" data-media-start="1.0" data-track-index="4"></video></div>
+        <div class="pv" id="pv5"><video id="pvv5" class="clip" src="assets/video/work-v6.mp4" muted playsinline data-start="9.15" data-duration="0.45" data-media-start="0.8" data-track-index="3"></video></div>
+        <div id="collage">
+          <img src="assets/img/media-belarus5.jpg" alt="" />
+          <img src="assets/img/work-0286.jpg" alt="" />
+          <img src="assets/img/iki.jpg" alt="" />
+          <img src="assets/img/post-02.jpg" alt="" />
+        </div>
+        <div id="col-logo"><img src="assets/img/logo-red.png" alt="promptica digital agency" /></div>
+        <div class="pw x" id="pw1"><span>Дизайн</span></div>
+        <div class="pw x" id="pw2"><span>Видео</span></div>
+        <div class="pw x" id="pw3"><span>Реклама</span></div>
+        <div class="pw x" id="pw4"><span>SMM</span></div>
+        <div class="pw x" id="pw5"><span>Контент</span></div>
+        <div id="dim"></div>
+      </div>
+
+      <!-- voice commands, full screen -->
+      <div class="layer" id="vc" data-layout-allow-overflow>
+        <div class="hud" id="hud-vol">
+          <div class="hud-row">
+            <svg viewBox="0 0 24 24"><path d="M11 5L6 9H2v6h4l5 4z" /><path d="M15.5 8.5a5 5 0 0 1 0 7" /></svg>
+            <div class="track"><div id="vol-fill"></div></div>
+            <div class="hud-num" id="vol-num">100%</div>
+          </div>
+        </div>
+        <div class="hud" id="hud-cut">
+          <div class="hud-row">
+            <svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="3" /><circle cx="6" cy="18" r="3" /><path d="M20 4L8.1 15.9M14.5 14.5L20 20M8.1 8.1L12 12" /></svg>
+            <div id="clipbar"><div id="clip"></div></div>
+            <div class="hud-num" id="cut-num">0:15</div>
+          </div>
+        </div>
+        <img id="avatar" src="assets/img/avatar.png" alt="" />
+        <div class="bub x" id="bub1">Сделай тише</div>
+        <div class="bub x" id="bub2">Сделай короче</div>
+      </div>
+
+      <!-- hook: red doors that open onto the split -->
+      <div class="door" id="doorT">
+        <div id="hk-big" class="x">10<small>минут</small></div>
+      </div>
+      <div class="door" id="doorB">
+        <img class="hlogo" id="hlogo" src="assets/img/logo-white.png" alt="promptica" style="top: 330px" />
+      </div>
+
+      <!-- end card -->
+      <div class="layer" id="end">
+        <img id="e-av" src="assets/img/avatar.png" alt="" />
+        <div id="e-kicker" class="mono">новый курс</div>
+        <div id="e-title" class="x">AI-монтажёр</div>
+        <div id="e-sub">делай видео, которые продают,<br />вместе с Claude</div>
+        <div id="e-cta" class="x">Подписывайся</div>
+        <img id="e-logo" src="assets/img/logo-white.png" alt="promptica digital agency" />
+      </div>
+
+      <div id="caps"></div>
+      <div id="flash"></div>
+    </div>
+
+    <script>
+      // word timings: tools/captions.py (script text + voice energy)
+      const WORDS = [{"w": "Этот", "s": 0.06, "e": 0.3}, {"w": "ролик", "s": 0.3, "e": 0.55}, {"w": "я", "s": 0.55, "e": 0.67}, {"w": "собрала", "s": 0.67, "e": 1.04}, {"w": "за", "s": 1.04, "e": 1.16}, {"w": "10", "s": 1.16, "e": 1.53}, {"w": "минут.", "s": 1.53, "e": 1.82}, {"w": "Claude", "s": 2.07, "e": 2.46}, {"w": "мне", "s": 2.46, "e": 2.58}, {"w": "дал", "s": 2.58, "e": 2.7}, {"w": "полную", "s": 2.83, "e": 3.18}, {"w": "раскадровку", "s": 3.18, "e": 3.84}, {"w": "по", "s": 3.91, "e": 4.03}, {"w": "секундам.", "s": 4.03, "e": 4.46}, {"w": "Далее", "s": 4.77, "e": 5.1}, {"w": "всё,", "s": 5.1, "e": 5.22}, {"w": "что", "s": 5.21, "e": 5.33}, {"w": "нужно,", "s": 5.32, "e": 5.58}, {"w": "это", "s": 5.58, "e": 5.81}, {"w": "просто", "s": 5.81, "e": 6.12}, {"w": "подключить", "s": 6.12, "e": 6.66}, {"w": "нужные", "s": 6.66, "e": 7.09}, {"w": "инструменты", "s": 7.09, "e": 7.56}, {"w": "и", "s": 7.56, "e": 7.68}, {"w": "делать", "s": 7.67, "e": 7.96}, {"w": "все", "s": 7.96, "e": 8.08}, {"w": "правки", "s": 8.08, "e": 8.35}, {"w": "голосом.", "s": 8.35, "e": 8.75}, {"w": "Сделай", "s": 9.86, "e": 10.19}, {"w": "тише,", "s": 10.19, "e": 10.49}, {"w": "сделай", "s": 10.49, "e": 10.81}, {"w": "короче.", "s": 10.81, "e": 11.27}, {"w": "Как", "s": 11.87, "e": 12.04}, {"w": "сделать", "s": 12.04, "e": 12.39}, {"w": "так", "s": 12.39, "e": 12.64}, {"w": "же", "s": 12.64, "e": 12.82}, {"w": "мы", "s": 13.18, "e": 13.3}, {"w": "расскажем", "s": 13.27, "e": 13.59}, {"w": "в", "s": 13.59, "e": 13.71}, {"w": "своём", "s": 13.69, "e": 13.89}, {"w": "курсе.", "s": 13.89, "e": 14.16}, {"w": "Подписывайся,", "s": 14.16, "e": 14.88}, {"w": "чтобы", "s": 14.88, "e": 15.1}, {"w": "не", "s": 15.1, "e": 15.22}, {"w": "пропустить.", "s": 15.2, "e": 15.58}];
+      const HOT = ["10", "минут", "раскадровку", "секундам", "инструменты", "голосом", "тише", "короче", "курсе", "подписывайся"];
+
+      const RED = "#b1202d";
+      const tl = gsap.timeline({ paused: true, defaults: { immediateRender: false } });
+
+      function flash(at, a = 0.7, color = "#fff") {
+        tl.set("#flash", { backgroundColor: color }, at);
+        tl.fromTo("#flash", { opacity: a }, { opacity: 0, duration: 0.22, ease: "power2.out" }, at);
+      }
+      function shake(sel, at, amt = 16) {
+        tl.fromTo(sel, { x: -amt, y: amt * 0.5 }, { x: 0, y: 0, duration: 0.3, ease: "elastic.out(1, 0.35)" }, at);
+      }
+      function punch(at, s = 1.08, dur = 0.5) {
+        tl.fromTo("#meWrap", { scale: s }, { scale: 1, duration: dur, ease: "power3.out" }, at);
+      }
+      function sceneIn(id, at, from = { y: 80 }) {
+        tl.fromTo(id, { opacity: 0, filter: "blur(12px)", ...from }, { opacity: 1, filter: "blur(0px)", x: 0, y: 0, scale: 1, duration: 0.25, ease: "power3.out" }, at);
+      }
+      function sceneOut(id, at, to = { y: -80 }) {
+        tl.to(id, { opacity: 0, filter: "blur(12px)", ...to, duration: 0.2, ease: "power2.in" }, at);
+      }
+
+      // ---------- captions ----------
+      const caps = document.getElementById("caps");
+      const groups = [];
+      let cur = [];
+      WORDS.forEach((w, i) => {
+        cur.push(i);
+        const chars = cur.reduce((n, j) => n + WORDS[j].w.length + 1, 0);
+        const next = WORDS[i + 1];
+        const endPunct = /[.,—]$/.test(w.w);
+        const gap = next ? next.s - w.e : 9;
+        if (!next || endPunct || cur.length >= 3 || chars > 15 || gap > 0.3) {
+          groups.push(cur);
+          cur = [];
+        }
+      });
+      groups.forEach((g, gi) => {
+        const el = document.createElement("div");
+        el.className = "cg x";
+        const spans = g.map((i) => {
+          const s = document.createElement("span");
+          const clean = WORDS[i].w.replace(/[.,]/g, "");
+          s.className = "cw" + (HOT.includes(clean.toLowerCase()) ? " hot" : "");
+          s.textContent = clean;
+          el.appendChild(s);
+          el.appendChild(document.createTextNode(" "));
+          return s;
+        });
+        caps.appendChild(el);
+        const start = WORDS[g[0]].s;
+        const nextG = groups[gi + 1];
+        const end = Math.min(nextG ? WORDS[nextG[0]].s : 99, WORDS[g[g.length - 1]].e + 0.35);
+        tl.set(el, { opacity: 1 }, start);
+        tl.fromTo(el, { scale: 0.82, y: 20 }, { scale: 1, y: 0, duration: 0.18, ease: "back.out(2.5)" }, start);
+        tl.set(el, { opacity: 0 }, end);
+        g.forEach((i, k) => {
+          const s = spans[k];
+          const off = k + 1 < g.length ? WORDS[g[k + 1]].s : end;
+          tl.set(s, { backgroundColor: RED, color: "#ffffff", webkitTextStroke: "0px #111" }, WORDS[i].s);
+          tl.fromTo(s, { scale: 1.15 }, { scale: 1, duration: 0.15, ease: "power2.out" }, WORDS[i].s);
+          tl.set(s, { backgroundColor: "rgba(0,0,0,0)", color: s.classList.contains("hot") ? "#ffd9dc" : "#ffffff", webkitTextStroke: "10px #111" }, off);
+        });
+      });
+
+      // ---------- ambient ----------
+      tl.fromTo("#bgrid", { x: 0, y: 0 }, { x: 60, y: 60, duration: 17.5, ease: "none" }, 0);
+
+      // ---------- HOOK 0–0.75: red doors ----------
+      tl.fromTo("#hk-big", { scale: 2.2, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.25, ease: "expo.out" }, 0.02);
+      tl.fromTo("#hlogo", { scale: 1.8, opacity: 0, rotation: -6 }, { scale: 1, opacity: 1, rotation: 0, duration: 0.3, ease: "back.out(2)" }, 0.08);
+      [0.16, 0.3, 0.44].forEach((t, i) => {
+        tl.fromTo("#hlogo", { x: i % 2 ? 26 : -26, skewX: i % 2 ? -14 : 14 }, { x: 0, skewX: 0, duration: 0.08, ease: "steps(2)" }, t);
+        tl.fromTo("#hk-big", { x: i % 2 ? -18 : 18 }, { x: 0, duration: 0.08, ease: "steps(2)" }, t + 0.03);
+      });
+      flash(0.02, 0.9);
+      tl.to("#doorT", { y: -960, duration: 0.32, ease: "power4.in" }, 0.6);
+      tl.to("#doorB", { y: 960, duration: 0.32, ease: "power4.in" }, 0.6);
+      tl.fromTo("#seam", { scaleX: 0 }, { scaleX: 1, duration: 0.3, ease: "power3.out" }, 0.82);
+      punch(0.88, 1.18, 0.6);
+
+      // ---------- S1 timer 0.8–1.95 ----------
+      sceneIn("#s1", 0.82, { y: 0, scale: 1.1 });
+      tl.fromTo("#tfill", { scaleX: 0 }, { scaleX: 1, duration: 0.75, ease: "power2.in" }, 0.85);
+      for (let k = 0; k <= 20; k++) {
+        const secs = Math.round((k / 20) ** 2 * 600);
+        const txt = String(Math.floor(secs / 60)).padStart(2, "0") + ":" + String(secs % 60).padStart(2, "0");
+        tl.set("#timer", { textContent: txt }, 0.85 + k * 0.0375);
+      }
+      tl.set("#timer", { color: RED }, 1.6);
+      tl.fromTo("#timer", { scale: 1.25 }, { scale: 1, duration: 0.3, ease: "back.out(3)" }, 1.6);
+      shake("#s1", 1.6, 20);
+      punch(1.16, 1.07);
+      sceneOut("#s1", 1.9, { y: -120 });
+
+      // ---------- S2 chat 2.0–4.6 ----------
+      sceneIn("#s2", 1.98, { y: 160 });
+      const ask = "Собери промо PROMPTICA · 9:16 · 15 сек";
+      for (let i = 1; i <= ask.length; i++) tl.set("#typed", { textContent: ask.slice(0, i) }, 2.1 + i * 0.019);
+      tl.fromTo("#reply", { opacity: 0, x: -30 }, { opacity: 1, x: 0, duration: 0.2, ease: "power3.out" }, 2.95);
+      ["#k1", "#k2", "#k3", "#k4"].forEach((k, i) => {
+        tl.fromTo(k, { opacity: 0, y: 140, rotation: i % 2 ? 8 : -8 }, { opacity: 1, y: 0, rotation: 0, duration: 0.3, ease: "back.out(1.8)" }, 3.15 + i * 0.12);
+      });
+      tl.to(".card .tc", { color: RED, duration: 0.01 }, 4.03);
+      tl.fromTo(".card", { scale: 1.08 }, { scale: 1, duration: 0.25, ease: "power2.out", stagger: 0.05 }, 4.03);
+      punch(3.18, 1.06);
+      sceneOut("#s2", 4.55, { x: -200, y: 0 });
+
+      // ---------- S3 tools 4.7–7.3 ----------
+      sceneIn("#s3", 4.68, { scale: 0.85, y: 0 });
+      tl.fromTo("#hub", { scale: 0.3 }, { scale: 1, duration: 0.35, ease: "back.out(2)" }, 4.72);
+      [0, 1, 2, 3, 4].forEach((i) => {
+        tl.fromTo("#t" + i, { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.25, ease: "back.out(2.2)" }, 5.0 + i * 0.1);
+        const w = document.getElementById("w" + i);
+        const L = w.getTotalLength();
+        w.style.strokeDasharray = L;
+        w.style.strokeDashoffset = L;
+        const at = 6.12 + i * 0.16;
+        tl.fromTo(w, { strokeDashoffset: L }, { strokeDashoffset: 0, duration: 0.2, ease: "power2.inOut" }, at);
+        tl.to("#t" + i, { borderColor: RED, backgroundColor: "#3a1418", duration: 0.12 }, at + 0.18);
+        tl.fromTo("#hub", { scale: 1.08 }, { scale: 1, duration: 0.2, ease: "power2.out" }, at + 0.2);
+      });
+      punch(6.12, 1.06);
+      tl.to(".tool", { scale: 1.1, duration: 0.12, yoyo: true, repeat: 1, ease: "power2.out" }, 7.09);
+      sceneOut("#s3", 7.2, { scale: 1.2, y: 0 });
+
+      // ---------- S4 preview 7.3–8.75 (promo at half size) ----------
+      sceneIn("#s4", 7.28, { y: 0 });
+      gsap.set("#promo", { y: 480, scale: 0.5 });
+      tl.fromTo("#promo", { opacity: 0, scale: 0.3 }, { opacity: 1, scale: 0.5, duration: 0.3, ease: "back.out(1.8)" }, 7.28);
+      [7.6, 8.08, 8.35].forEach((t) => {
+        tl.fromTo(["#r1"], { opacity: 0.9, scale: 1 }, { opacity: 0, scale: 1.9, duration: 0.5, ease: "power2.out" }, t);
+        tl.fromTo(["#r2"], { opacity: 0.6, scale: 1 }, { opacity: 0, scale: 2.4, duration: 0.6, ease: "power2.out" }, t + 0.08);
+        tl.fromTo("#mic", { scale: 1.15 }, { scale: 1, duration: 0.2, ease: "power2.out" }, t);
+      });
+      punch(8.35, 1.06);
+
+      // promo internals (its own little film)
+      tl.set("#pv0", { opacity: 1 }, 7.3);
+      tl.fromTo("#p-logo", { scale: 1.6, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.25, ease: "expo.out" }, 7.32);
+      const cuts = [
+        ["#pv1", "#pw1", 7.7],
+        ["#pv2", "#pw2", 8.05],
+        ["#pv3", "#pw3", 8.4],
+        ["#pv4", "#pw4", 8.75],
+        ["#pv5", "#pw5", 9.15],
+      ];
+      cuts.forEach(([pv, pw, at], i) => {
+        tl.set(pv, { opacity: 1 }, at);
+        tl.fromTo(pv, { scale: 1.18 }, { scale: 1, duration: 0.4, ease: "power3.out" }, at);
+        tl.set(pw, { opacity: 1 }, at);
+        tl.fromTo(pw, { scale: 1.8, y: 40 }, { scale: 1, y: 0, duration: 0.18, ease: "expo.out" }, at);
+        const end = i + 1 < cuts.length ? cuts[i + 1][2] : 9.55;
+        tl.set(pw, { opacity: 0 }, end);
+        tl.set(pv, { opacity: 0 }, end);
+        if (i === 0) tl.set("#pv0", { opacity: 0 }, at);
+      });
+      tl.set("#collage", { opacity: 1 }, 9.55);
+      tl.fromTo("#collage img", { scale: 1.3, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: "power3.out", stagger: 0.05 }, 9.55);
+      tl.fromTo("#col-logo", { opacity: 0, y: 120 }, { opacity: 1, y: 0, duration: 0.3, ease: "back.out(1.8)" }, 9.62);
+      flash(9.55, 0.6);
+
+      // expand to full screen on the pause after "голосом"
+      tl.to("#promo", { y: 0, scale: 1, borderRadius: 0, duration: 0.35, ease: "power4.inOut" }, 8.62);
+      tl.to("#s4", { opacity: 0, duration: 0.15 }, 8.62);
+      flash(8.95, 0.5, RED);
+
+      // ---------- VOICE COMMANDS 9.8–11.35 (full screen, avatar) ----------
+      tl.to("#dim", { opacity: 0.45, duration: 0.25 }, 9.8);
+      tl.fromTo("#avatar", { opacity: 0, y: 500, rotation: -6 }, { opacity: 1, y: 0, rotation: 0, duration: 0.35, ease: "back.out(1.6)" }, 9.72);
+      [9.9, 10.2, 10.5, 10.85].forEach((t) => tl.fromTo("#avatar", { scaleY: 1.04, scaleX: 0.98 }, { scaleY: 1, scaleX: 1, duration: 0.18, ease: "power2.out" }, t));
+      tl.fromTo("#bub1", { opacity: 0, scale: 0.3 }, { opacity: 1, scale: 1, duration: 0.22, ease: "back.out(2.5)" }, 9.88);
+      tl.fromTo("#hud-vol", { opacity: 0, y: -60 }, { opacity: 1, y: 0, duration: 0.22, ease: "power3.out" }, 9.95);
+      tl.fromTo("#vol-fill", { scaleX: 1 }, { scaleX: 0.25, duration: 0.3, ease: "power2.inOut" }, 10.2);
+      ["90%", "70%", "50%", "35%", "25%"].forEach((v, i) => tl.set("#vol-num", { textContent: v }, 10.2 + i * 0.06));
+      tl.to("#bub1", { opacity: 0, scale: 0.8, duration: 0.12 }, 10.45);
+      tl.fromTo("#bub2", { opacity: 0, scale: 0.3 }, { opacity: 1, scale: 1, duration: 0.22, ease: "back.out(2.5)" }, 10.49);
+      tl.fromTo("#hud-cut", { opacity: 0, y: -60 }, { opacity: 1, y: 0, duration: 0.22, ease: "power3.out" }, 10.55);
+      tl.fromTo("#clip", { scaleX: 1 }, { scaleX: 0.52, duration: 0.25, ease: "expo.inOut" }, 10.85);
+      ["0:13", "0:11", "0:09", "0:08"].forEach((v, i) => tl.set("#cut-num", { textContent: v }, 10.88 + i * 0.05));
+      shake("#hud-cut", 11.08, 14);
+      // back to the split
+      tl.to(["#vc"], { opacity: 0, duration: 0.2, ease: "power2.in" }, 11.3);
+      tl.to("#promo", { opacity: 0, scale: 0.9, filter: "blur(16px)", duration: 0.25, ease: "power2.in" }, 11.3);
+      flash(11.45, 0.6);
+      punch(11.45, 1.15, 0.6);
+
+      // ---------- S5 course 11.45–13.15 ----------
+      sceneIn("#s5", 11.45, { y: 120 });
+      tl.fromTo("#c-title", { scale: 1.6, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: "expo.out" }, 11.5);
+      tl.fromTo("#c-under", { scaleX: 0 }, { scaleX: 1, duration: 0.3, ease: "power3.out" }, 11.7);
+      tl.fromTo("#c-sub", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.25, ease: "power3.out" }, 11.85);
+      ["#ch0", "#ch1", "#ch2", "#ch3"].forEach((c, i) => tl.fromTo(c, { opacity: 0, scale: 0.5 }, { opacity: 1, scale: 1, duration: 0.22, ease: "back.out(2.4)" }, 12.15 + i * 0.12));
+      tl.to("#c-title", { color: "#ff6b77", duration: 0.1, yoyo: true, repeat: 1 }, 13.89);
+      sceneOut("#s5", 14.0, { y: -140 });
+
+      // ---------- S6 subscribe 14.05–15.6 ----------
+      sceneIn("#s6", 14.05, { y: 140 });
+      tl.fromTo("#btn", { scale: 0.5 }, { scale: 1, duration: 0.3, ease: "back.out(2)" }, 14.1);
+      tl.fromTo("#cursor", { opacity: 0, x: 900, y: 860 }, { opacity: 1, duration: 0.1 }, 14.15);
+      tl.to("#cursor", { x: 600, y: 470, duration: 0.3, ease: "power3.inOut" }, 14.2);
+      tl.to("#cursor", { scale: 0.8, duration: 0.06, yoyo: true, repeat: 1 }, 14.52);
+      tl.fromTo("#click", { x: 610, y: 470, opacity: 1, scale: 0.3 }, { x: 610, y: 470, opacity: 0, scale: 1.6, duration: 0.4, ease: "power2.out" }, 14.52);
+      tl.fromTo("#btn", { scale: 0.92 }, { scale: 1, duration: 0.2, ease: "back.out(3)" }, 14.52);
+      tl.fromTo("#bell", { rotation: -20 }, { rotation: 0, duration: 0.5, ease: "elastic.out(1.4, 0.2)" }, 14.3);
+      tl.set("#btn", { opacity: 0 }, 14.62);
+      tl.set("#btn-done", { opacity: 1 }, 14.62);
+      tl.fromTo("#btn-done", { scale: 1.12 }, { scale: 1, duration: 0.25, ease: "back.out(3)" }, 14.62);
+      tl.to("#cursor", { opacity: 0, x: 760, y: 640, duration: 0.3 }, 14.9);
+      punch(14.16, 1.07);
+
+      // ---------- END CARD 15.6–17.5 ----------
+      tl.set("#end", { opacity: 1 }, 15.62);
+      tl.set("#s6", { opacity: 0 }, 15.98);
+      tl.fromTo("#end", { clipPath: "circle(0% at 50% 50%)" }, { clipPath: "circle(75% at 50% 50%)", duration: 0.35, ease: "power3.inOut" }, 15.62);
+      tl.fromTo("#e-av", { opacity: 0, y: 260, scale: 0.7 }, { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: "back.out(1.6)" }, 15.75);
+      tl.fromTo("#e-kicker", { opacity: 0 }, { opacity: 1, duration: 0.2 }, 15.95);
+      tl.fromTo("#e-title", { opacity: 0, scale: 1.6 }, { opacity: 1, scale: 1, duration: 0.3, ease: "expo.out" }, 15.95);
+      tl.fromTo("#e-sub", { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.25, ease: "power3.out" }, 16.2);
+      tl.fromTo("#e-cta", { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2.4)" }, 16.4);
+      tl.fromTo("#e-logo", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.3, ease: "power3.out" }, 16.55);
+      [16.85, 17.15].forEach((t) => tl.fromTo("#e-cta", { scale: 1.06 }, { scale: 1, duration: 0.25, ease: "power2.out" }, t));
+      tl.fromTo("#e-av", { y: 0 }, { y: -18, duration: 1.2, ease: "sine.inOut" }, 16.25);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
