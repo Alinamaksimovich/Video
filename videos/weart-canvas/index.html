@@ -1,0 +1,820 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>WeArt Studio — made in a few clicks</title>
+    <script src="assets/vendor/gsap.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "Manrope";
+        src: url("assets/fonts/manrope-lat.woff2") format("woff2");
+        font-weight: 200 800;
+      }
+      :root {
+        --bg: #07080c;
+        --panel: #12151d;
+        --line: #262b38;
+        --text: #f4f6fb;
+        --muted: #8a90a0;
+        --blue: #1d8bff;
+        --cyan: #3ec9e6;
+        --yellow: #eef33a;
+        --magenta: #e23ad6;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: var(--bg);
+      }
+      #root {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: var(--bg);
+        font-family: "Manrope", system-ui, sans-serif;
+        color: var(--text);
+      }
+      .big {
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: -0.02em;
+      }
+      .mono {
+        font-family: ui-monospace, "DejaVu Sans Mono", monospace;
+        font-size: 26px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      /* ---------- her ---------- */
+      #top {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #000;
+        clip-path: inset(0px 0px 0px 0px);
+      }
+      #meWrap,
+      #meKick {
+        position: absolute;
+        inset: 0;
+        transform-origin: 50% 40%;
+      }
+      #meFit {
+        position: absolute;
+        inset: 0;
+        transform-origin: 50% 0%;
+      }
+      /* the 16:9 clip at full height (3413x1920), centred: the 9:16 window is its middle */
+      #me {
+        position: absolute;
+        left: -1166.5px;
+        top: 0;
+        width: 3413px;
+        height: 1920px;
+      }
+      #seam {
+        position: absolute;
+        left: 0;
+        top: 954px;
+        width: 1080px;
+        height: 12px;
+        background: linear-gradient(90deg, var(--blue), var(--cyan));
+        opacity: 0;
+      }
+
+      /* captions: one word, on her half */
+      #cap {
+        position: absolute;
+        left: 40px;
+        width: 1000px;
+        top: 1420px;
+        height: 160px;
+      }
+      .cw {
+        position: absolute;
+        left: 0;
+        width: 1000px;
+        top: 0;
+        text-align: center;
+        font-size: 116px;
+        line-height: 1.2;
+        opacity: 0;
+      }
+      .cw span {
+        display: inline-block;
+        padding: 0 28px 10px;
+        border-radius: 24px;
+        color: #fff;
+        -webkit-text-stroke: 12px #0a0a0a;
+        paint-order: stroke fill;
+        text-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      }
+      .cw.hot span {
+        background: var(--blue);
+        -webkit-text-stroke: 0;
+        text-shadow: none;
+      }
+
+      /* ---------- canvas (bottom half) ---------- */
+      #bot {
+        position: absolute;
+        left: 0;
+        top: 960px;
+        width: 1080px;
+        height: 960px;
+        overflow: hidden;
+        background: radial-gradient(80% 60% at 50% 40%, #0f1730 0%, var(--bg) 75%);
+      }
+      .dots {
+        position: absolute;
+        left: -60px;
+        top: -60px;
+        width: 1200px;
+        height: 1080px;
+        background-image: radial-gradient(rgba(255, 255, 255, 0.16) 2px, transparent 2px);
+        background-size: 48px 48px;
+      }
+      .scene {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+      }
+
+      /* S1 · a few clicks */
+      .h1 {
+        position: absolute;
+        left: 70px;
+        font-size: 168px;
+        line-height: 1;
+        opacity: 0;
+        white-space: nowrap;
+      }
+      #s1a {
+        top: 40px;
+      }
+      #s1b {
+        top: 235px;
+      }
+      #s1c {
+        top: 430px;
+        color: var(--yellow);
+      }
+      .dot {
+        position: absolute;
+        top: 690px;
+        width: 150px;
+        height: 150px;
+        margin-left: -75px;
+        border-radius: 50%;
+        border: 5px solid #3a4052;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 64px;
+        font-weight: 800;
+        color: var(--muted);
+        background: rgba(18, 21, 29, 0.7);
+      }
+      .rip {
+        position: absolute;
+        top: 690px;
+        width: 150px;
+        height: 150px;
+        margin-left: -75px;
+        border-radius: 50%;
+        border: 6px solid var(--blue);
+        opacity: 0;
+      }
+
+      /* S2 · the trick / CANVAS */
+      #trick {
+        position: absolute;
+        left: 70px;
+        top: 150px;
+        font-size: 46px;
+        color: var(--muted);
+      }
+      #trick span {
+        display: inline-block;
+        opacity: 0;
+        margin-right: 18px;
+      }
+      #cv {
+        position: absolute;
+        left: 0;
+        width: 1080px;
+        top: 310px;
+        text-align: center;
+        font-size: 218px;
+        line-height: 1;
+        opacity: 0;
+      }
+      #sel {
+        position: absolute;
+        left: 50px;
+        top: 285px;
+        width: 980px;
+        height: 270px;
+        border: 4px solid var(--blue);
+        opacity: 0;
+      }
+      #sel i {
+        position: absolute;
+        width: 26px;
+        height: 26px;
+        background: #fff;
+        border: 4px solid var(--blue);
+      }
+      #sel i:nth-child(1) {
+        left: -15px;
+        top: -15px;
+      }
+      #sel i:nth-child(2) {
+        right: -15px;
+        top: -15px;
+      }
+      #sel i:nth-child(3) {
+        left: -15px;
+        bottom: -15px;
+      }
+      #sel i:nth-child(4) {
+        right: -15px;
+        bottom: -15px;
+      }
+      #sel-tag {
+        position: absolute;
+        left: -4px;
+        top: -52px;
+        padding: 6px 18px;
+        background: var(--blue);
+        color: #fff;
+        font-size: 24px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      /* S3-4 · the board */
+      #board {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        transform-origin: 50% 45%;
+      }
+      #hdr {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1080px;
+        height: 84px;
+        background: rgba(18, 21, 29, 0.92);
+        border-bottom: 2px solid var(--line);
+        display: flex;
+        align-items: center;
+        padding: 0 36px;
+        gap: 16px;
+        font-size: 30px;
+        font-weight: 800;
+      }
+      #hdr b {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        background: var(--blue);
+      }
+      #hdr span {
+        margin-left: auto;
+        padding: 6px 18px;
+        border-radius: 20px;
+        background: #1c2030;
+        color: var(--muted);
+        font-size: 24px;
+        font-weight: 700;
+      }
+      .ghost {
+        position: absolute;
+        border: 3px dashed #343b4f;
+        border-radius: 22px;
+        opacity: 0;
+      }
+      .node {
+        position: absolute;
+        border-radius: 22px;
+        background: var(--panel);
+        border: 3px solid var(--line);
+        box-shadow: 0 24px 50px rgba(0, 0, 0, 0.55);
+        overflow: hidden;
+        opacity: 0;
+      }
+      .nh {
+        height: 54px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 0 20px;
+        border-bottom: 2px solid var(--line);
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--muted);
+      }
+      .nh i {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+      }
+      #nPhoto {
+        left: 40px;
+        top: 130px;
+        width: 300px;
+        height: 460px;
+      }
+      #nPhoto img {
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+        object-position: 50% 62%;
+        display: block;
+      }
+      #nPrompt {
+        left: 380px;
+        top: 110px;
+        width: 660px;
+        height: 150px;
+      }
+      #ptxt {
+        padding: 18px 24px;
+        font-size: 36px;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+      #caret {
+        display: inline-block;
+        width: 4px;
+        height: 40px;
+        background: var(--text);
+        vertical-align: -6px;
+        margin-left: 4px;
+      }
+      #nVideo {
+        left: 520px;
+        top: 340px;
+        width: 520px;
+        height: 346px;
+      }
+      #nVideo video {
+        width: 100%;
+        height: 286px;
+        object-fit: cover;
+        display: block;
+      }
+      #nVoice {
+        left: 380px;
+        top: 740px;
+        width: 660px;
+        height: 130px;
+      }
+      #wave {
+        position: absolute;
+        left: 28px;
+        right: 28px;
+        top: 66px;
+        height: 56px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      #wave i {
+        flex: 1;
+        height: 100%;
+        border-radius: 4px;
+        background: var(--blue);
+        transform: scaleY(0.2);
+      }
+      #wires {
+        position: absolute;
+        inset: 0;
+      }
+      #wires path {
+        fill: none;
+        stroke-width: 6;
+        stroke-linecap: round;
+      }
+      .port {
+        position: absolute;
+        width: 22px;
+        height: 22px;
+        margin: -11px 0 0 -11px;
+        border-radius: 50%;
+        opacity: 0;
+      }
+      .tagc {
+        position: absolute;
+        padding: 6px 18px;
+        border-radius: 8px;
+        font-size: 26px;
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: #07080c;
+        opacity: 0;
+      }
+      #grp {
+        position: absolute;
+        left: 18px;
+        top: 98px;
+        width: 1044px;
+        height: 790px;
+        border: 5px dashed var(--blue);
+        border-radius: 30px;
+        opacity: 0;
+      }
+      #grp-tag {
+        position: absolute;
+        right: 40px;
+        top: -24px;
+        padding: 4px 18px;
+        background: var(--bg);
+        color: var(--blue);
+        font-size: 24px;
+        font-weight: 800;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+      #pill {
+        position: absolute;
+        left: 280px;
+        top: 898px;
+        width: 520px;
+        height: 52px;
+        border-radius: 26px;
+        background: var(--blue);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 26px;
+        font-weight: 800;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        opacity: 0;
+      }
+
+      /* S5 · end card */
+      #end {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        background: radial-gradient(70% 55% at 50% 40%, rgba(29, 139, 255, 0.35), rgba(7, 8, 12, 0.94) 75%);
+      }
+      #e-logo {
+        position: absolute;
+        left: 320px;
+        top: 130px;
+        width: 440px;
+      }
+      #e-name {
+        position: absolute;
+        left: 0;
+        width: 1080px;
+        top: 360px;
+        text-align: center;
+        font-size: 96px;
+        white-space: nowrap;
+      }
+      #e-sub {
+        position: absolute;
+        left: 0;
+        width: 1080px;
+        top: 490px;
+        text-align: center;
+        font-size: 40px;
+        font-weight: 600;
+        color: #c9cedb;
+      }
+      #e-cta {
+        position: absolute;
+        left: 280px;
+        top: 590px;
+        width: 520px;
+        height: 118px;
+        border-radius: 59px;
+        background: var(--blue);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 40px;
+        box-shadow: 0 0 70px rgba(29, 139, 255, 0.55);
+      }
+      #e-url {
+        position: absolute;
+        left: 0;
+        width: 1080px;
+        top: 790px;
+        text-align: center;
+        color: #aab1c3;
+      }
+
+      #cursor {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 90px;
+        height: 90px;
+        opacity: 0;
+      }
+      #flash {
+        position: absolute;
+        inset: 0;
+        background: #fff;
+        opacity: 0;
+        pointer-events: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="15.04" data-width="1080" data-height="1920">
+      <!-- audio: tools/house.py (original deep house) + tools/soundtrack.py (her voice untouched, SFX from sfx-library) -->
+      <audio id="music" src="assets/audio/music.wav" data-start="0" data-duration="15.04" data-track-index="10" data-volume="1"></audio>
+      <audio id="sfx" src="assets/audio/sfx.wav" data-start="0" data-duration="15.04" data-track-index="11" data-volume="1"></audio>
+      <audio id="voice" src="assets/audio/voice.wav" data-start="0" data-duration="15.04" data-track-index="12" data-volume="1"></audio>
+
+      <div id="top">
+        <div id="meWrap"><div id="meKick"><div id="meFit">
+          <video id="me" class="clip" src="assets/video/me.mp4" muted playsinline data-start="0" data-duration="15.04" data-track-index="1"></video>
+        </div></div></div>
+      </div>
+
+      <div id="bot">
+        <div class="dots" data-layout-allow-overflow></div>
+
+        <!-- S1 · made in a few clicks -->
+        <div class="scene" id="s1">
+          <div class="h1 big" id="s1a">Made in</div>
+          <div class="h1 big" id="s1b">a few</div>
+          <div class="h1 big" id="s1c">clicks</div>
+          <div class="rip" id="rp1" style="left: 240px"></div>
+          <div class="rip" id="rp2" style="left: 540px"></div>
+          <div class="rip" id="rp3" style="left: 840px"></div>
+          <div class="dot" id="d1" style="left: 240px">1</div>
+          <div class="dot" id="d2" style="left: 540px">2</div>
+          <div class="dot" id="d3" style="left: 840px">3</div>
+        </div>
+
+        <!-- S2 · the trick: CANVAS -->
+        <div class="scene" id="s2">
+          <div id="trick" class="mono"><span>Here's</span><span>the</span><span>trick</span></div>
+          <div id="sel"><div id="sel-tag">Canvas</div><i></i><i></i><i></i><i></i></div>
+          <div id="cv" class="big">Canvas</div>
+        </div>
+
+        <!-- S3-4 · the board -->
+        <div id="board">
+          <div class="ghost" id="g0" style="left: -160px; top: 330px; width: 260px; height: 300px"></div>
+          <div class="ghost" id="g1" style="left: 1090px; top: 200px; width: 260px; height: 360px"></div>
+          <div class="ghost" id="g2" style="left: 40px; top: 130px; width: 300px; height: 460px"></div>
+          <div class="ghost" id="g3" style="left: 380px; top: 110px; width: 660px; height: 150px"></div>
+          <div class="ghost" id="g4" style="left: 520px; top: 340px; width: 520px; height: 346px"></div>
+          <div class="ghost" id="g5" style="left: 380px; top: 740px; width: 660px; height: 130px"></div>
+
+          <svg id="wires" viewBox="0 0 1080 960">
+            <path id="w1" d="M 340 360 C 430 360, 440 510, 520 510" stroke="#3ec9e6" />
+            <path id="w2" d="M 780 260 L 780 340" stroke="#e23ad6" />
+            <path id="w3" d="M 780 686 L 780 740" stroke="#eef33a" />
+          </svg>
+          <div class="port" id="p1" style="left: 340px; top: 360px; background: #3ec9e6"></div>
+          <div class="port" id="p2" style="left: 520px; top: 510px; background: #3ec9e6"></div>
+          <div class="port" id="p3" style="left: 780px; top: 260px; background: #e23ad6"></div>
+          <div class="port" id="p4" style="left: 780px; top: 340px; background: #e23ad6"></div>
+
+          <div class="node" id="nPhoto"><div class="nh"><i style="background: #3ec9e6"></i>Photo</div><img src="assets/img/car.jpg" alt="" /></div>
+          <div class="node" id="nPrompt"><div class="nh"><i style="background: #e23ad6"></i>Prompt</div><div id="ptxt"><span id="typed"></span><span id="caret"></span></div></div>
+          <div class="node" id="nVideo"><div class="nh"><i style="background: #eef33a"></i>Video</div><video id="carv" class="clip" src="assets/video/car.mp4" muted playsinline data-start="10.35" data-duration="3.7" data-track-index="3"></video></div>
+          <div class="node" id="nVoice"><div class="nh"><i style="background: #1d8bff"></i>Voice</div><div id="wave"></div></div>
+
+          <div class="tagc" id="tPhotos" style="left: 40px; top: 84px; background: #3ec9e6">Photos</div>
+          <div class="tagc" id="tVideos" style="left: 520px; top: 294px; background: #eef33a">Videos</div>
+          <div class="tagc" id="tVoice" style="left: 380px; top: 694px; background: #1d8bff; color: #fff">Voice</div>
+
+          <div id="grp"><div id="grp-tag">One board</div></div>
+          <div id="pill">All in one place</div>
+          <div id="hdr"><b></b>Canvas<span>100%</span></div>
+        </div>
+
+        <!-- S5 · end card -->
+        <div id="end">
+          <img id="e-logo" src="assets/img/logo.png" alt="WeArt" />
+          <div id="e-name" class="big">WeArt Studio</div>
+          <div id="e-sub">All AI tools on one canvas</div>
+          <div id="e-cta" class="big">Start creating →</div>
+          <div id="e-url" class="mono">weartstudio.io</div>
+        </div>
+
+        <svg id="cursor" viewBox="0 0 24 24"><path d="M4 2l16 9-7 2-3 7z" fill="#fff" stroke="#07080c" stroke-width="1.4" stroke-linejoin="round" /></svg>
+      </div>
+
+      <div id="seam"></div>
+      <div id="cap"></div>
+      <div id="flash"></div>
+    </div>
+
+    <script>
+      // word timings: from the voice track (silence gaps + per-phrase transcription)
+      const WORDS = [
+        ["Wait", 0.49, 0.78], ["did", 1.28, 1.48], ["you", 1.48, 1.72], ["really", 1.79, 1.98], ["think", 2.15, 2.36], ["I'm", 2.36, 2.5], ["real", 2.5, 2.64],
+        ["I", 3.82, 3.92], ["was", 3.92, 4.06], ["made", 4.06, 4.3], ["in", 4.3, 4.42], ["a", 4.42, 4.5], ["few", 4.5, 4.72], ["clicks", 4.72, 5.0],
+        ["Here's", 5.25, 5.42], ["the", 5.42, 5.52], ["trick", 5.52, 5.72], ["Canvas", 6.02, 6.5],
+        ["One", 6.68, 6.85], ["big", 6.85, 7.05], ["board", 7.05, 7.36], ["for", 7.41, 7.53], ["creators", 7.53, 7.98],
+        ["Drop", 8.29, 8.5], ["a", 8.5, 8.6], ["photo", 8.6, 8.95], ["Type", 9.1, 9.33], ["your", 9.33, 9.52], ["idea", 9.52, 9.85],
+        ["connect", 10.0, 10.22], ["the", 10.22, 10.32], ["blocks", 10.32, 10.66],
+        ["Photos", 10.93, 11.32], ["videos", 11.37, 11.74], ["voice", 11.8, 12.12], ["all", 12.26, 12.46], ["in", 12.46, 12.58], ["one", 12.58, 12.72], ["place", 12.74, 12.94],
+        ["See", 13.92, 14.08], ["you", 14.08, 14.24], ["at", 14.24, 14.36], ["WeArt", 14.36, 14.72], ["Studio", 14.72, 15.03],
+      ];
+      const HOT = ["real", "clicks", "canvas", "board", "photo", "idea", "blocks", "photos", "videos", "voice", "place", "weart", "studio"];
+      const BLUE = "#1d8bff";
+
+      const tl = gsap.timeline({ paused: true, defaults: { immediateRender: false } });
+      const T_FLY = 3.82; // "I was made in a few clicks": the video flies up
+
+      function flash(t, a = 0.6, color = "#fff") {
+        tl.set("#flash", { backgroundColor: color }, t);
+        tl.fromTo("#flash", { opacity: a }, { opacity: 0, duration: 0.3, ease: "power2.out" }, t);
+      }
+      function sceneIn(id, t, from = { y: 50 }) {
+        tl.fromTo(id, { opacity: 0, ...from }, { opacity: 1, x: 0, y: 0, scale: 1, duration: 0.35, ease: "power3.out" }, t);
+      }
+      function sceneOut(id, t, to = { y: -40 }) {
+        tl.to(id, { opacity: 0, ...to, duration: 0.25, ease: "power2.in" }, t);
+      }
+
+      // ---------- captions: one word at a time, on her half ----------
+      const cap = document.getElementById("cap");
+      WORDS.forEach(([w, s, e], i) => {
+        const el = document.createElement("div");
+        el.className = "cw big" + (HOT.includes(w.toLowerCase()) ? " hot" : "");
+        const sp = document.createElement("span");
+        sp.textContent = w;
+        el.appendChild(sp);
+        cap.appendChild(el);
+        const next = WORDS[i + 1];
+        const end = next && next[1] - e < 0.3 ? next[1] : e + 0.18;
+        tl.set(el, { opacity: 1 }, s);
+        tl.fromTo(el, { scale: 0.85, y: 14 }, { scale: 1, y: 0, duration: 0.14, ease: "power2.out" }, s);
+        tl.set(el, { opacity: 0 }, end);
+      });
+
+      // ---------- hook (0 – 3.82): her, full screen, slow push-in ----------
+      tl.set("#bot", { y: 960 }, 0);
+      tl.fromTo("#meWrap", { scale: 1.0 }, { scale: 1.1, duration: T_FLY, ease: "none" }, 0);
+      tl.fromTo("#meKick", { scale: 1.06 }, { scale: 1.0, duration: 0.5, ease: "power2.out" }, 0.49);
+      tl.fromTo("#meKick", { scale: 1.05 }, { scale: 1.0, duration: 0.5, ease: "power2.out" }, 2.5);
+
+      // ---------- the fly-up (3.82): video goes to the top half, canvas rises ----------
+      tl.to("#top", { clipPath: "inset(0px 0px 960px 0px)", duration: 0.55, ease: "power4.inOut" }, T_FLY - 0.06);
+      tl.to("#meFit", { scale: 0.5, duration: 0.55, ease: "power4.inOut" }, T_FLY - 0.06);
+      tl.to("#cap", { y: -650, duration: 0.55, ease: "power4.inOut" }, T_FLY - 0.06);
+      tl.to("#bot", { y: 0, duration: 0.6, ease: "back.out(1.25)" }, T_FLY - 0.06);
+      tl.fromTo("#meKick", { scale: 1.16 }, { scale: 1.0, duration: 0.7, ease: "power3.out" }, T_FLY);
+      tl.to("#seam", { opacity: 1, duration: 0.2 }, T_FLY + 0.3);
+      flash(T_FLY, 0.55, "#1d8bff");
+
+      // ---------- S1 · made in a few clicks (3.82 – 5.2) ----------
+      tl.set("#s1", { opacity: 1 }, T_FLY);
+      tl.fromTo(".dot", { scale: 0.5, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.35, ease: "back.out(2)", stagger: 0.08 }, T_FLY + 0.35);
+      [["#s1a", 4.06], ["#s1b", 4.42], ["#s1c", 4.72]].forEach(([id, t]) => {
+        tl.set(id, { opacity: 1 }, t);
+        tl.fromTo(id, { scale: 1.35, x: -50 }, { scale: 1, x: 0, duration: 0.3, ease: "expo.out" }, t);
+      });
+      tl.set("#cursor", { opacity: 0, x: 120, y: 880 }, 3.8);
+      tl.to("#cursor", { opacity: 1, duration: 0.12 }, 3.86);
+      [[1, 240, 4.1], [2, 540, 4.48], [3, 840, 4.86]].forEach(([n, x, t]) => {
+        tl.to("#cursor", { x: x + 8, y: 700, duration: 0.3, ease: "power3.inOut" }, t - 0.3);
+        tl.to("#cursor", { scale: 0.82, duration: 0.07, yoyo: true, repeat: 1 }, t);
+        tl.fromTo("#rp" + n, { opacity: 1, scale: 0.8 }, { opacity: 0, scale: 1.9, duration: 0.5, ease: "power2.out" }, t);
+        tl.to("#d" + n, { backgroundColor: BLUE, borderColor: BLUE, color: "#ffffff", duration: 0.12 }, t);
+        tl.fromTo("#d" + n, { scale: 0.88 }, { scale: 1, duration: 0.3, ease: "back.out(3)" }, t);
+      });
+      tl.to("#cursor", { opacity: 0, duration: 0.15 }, 5.0);
+      sceneOut("#s1", 5.12);
+
+      // ---------- S2 · the trick: CANVAS (5.2 – 6.6) ----------
+      tl.set("#s2", { opacity: 1 }, 5.2);
+      [["Here's", 5.25], ["the", 5.42], ["trick", 5.52]].forEach((_, i) => {
+        const t = [5.25, 5.42, 5.52][i];
+        tl.set("#trick span:nth-child(" + (i + 1) + ")", { opacity: 1 }, t);
+        tl.fromTo("#trick span:nth-child(" + (i + 1) + ")", { y: 24 }, { y: 0, duration: 0.25, ease: "power3.out" }, t);
+      });
+      tl.set("#cv", { opacity: 1 }, 6.02);
+      tl.fromTo("#cv", { scale: 1.3 }, { scale: 1, duration: 0.3, ease: "expo.out" }, 6.02);
+      tl.set("#sel", { opacity: 1 }, 6.08);
+      tl.fromTo("#sel", { scale: 1.08 }, { scale: 1, duration: 0.25, ease: "power3.out" }, 6.08);
+      flash(6.02, 0.35, "#ffffff");
+      sceneOut("#s2", 6.52, { scale: 0.92, y: 0 });
+
+      // ---------- S3 · "one big board": the canvas opens (6.55 – 8.3) ----------
+      tl.set("#board", { opacity: 1 }, 6.55);
+      tl.fromTo("#board", { scale: 1.25 }, { scale: 1, duration: 1.5, ease: "power2.out" }, 6.55);
+      tl.fromTo("#hdr", { y: -84 }, { y: 0, duration: 0.35, ease: "power3.out" }, 6.58);
+      [["#g0", 6.7], ["#g1", 6.85], ["#g2", 7.05], ["#g3", 7.2], ["#g4", 7.45], ["#g5", 7.6]].forEach(([id, t]) => {
+        tl.fromTo(id, { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.3, ease: "power3.out" }, t);
+      });
+      tl.to("#g2", { borderColor: BLUE, duration: 0.2 }, 8.29);
+
+      // ---------- "Drop a photo" (8.29): the car lands on the board ----------
+      tl.set("#nPhoto", { opacity: 1 }, 8.29);
+      tl.fromTo("#nPhoto", { y: -520, rotation: -6 }, { y: 0, rotation: 0, duration: 0.42, ease: "back.out(1.5)" }, 8.29);
+      tl.to("#g2", { opacity: 0, duration: 0.15 }, 8.7);
+      tl.fromTo("#nPhoto", { boxShadow: "0 0 0 0 rgba(62,201,230,0)" }, { boxShadow: "0 0 0 8px rgba(62,201,230,0.5)", duration: 0.2, yoyo: true, repeat: 1 }, 8.7);
+
+      // ---------- "Type your idea" (9.1): the prompt ----------
+      tl.set("#nPrompt", { opacity: 1 }, 9.05);
+      tl.fromTo("#nPrompt", { scale: 0.9, y: 20 }, { scale: 1, y: 0, duration: 0.3, ease: "back.out(2)" }, 9.05);
+      tl.to("#g3", { opacity: 0, duration: 0.15 }, 9.05);
+      const idea = "yellow sports car, mountain road";
+      for (let i = 1; i <= idea.length; i++) tl.set("#typed", { textContent: idea.slice(0, i) }, 9.12 + i * 0.0225);
+      tl.fromTo("#caret", { opacity: 1 }, { opacity: 0, duration: 0.15, repeat: 5, yoyo: true, ease: "steps(1)" }, 9.85);
+
+      // ---------- "connect the blocks" (10.0): wires + the video appears ----------
+      tl.set("#cursor", { opacity: 0, x: 330, y: 350, scale: 1 }, 9.88);
+      tl.to("#cursor", { opacity: 1, duration: 0.1 }, 9.9);
+      tl.to("#cursor", { x: 520, y: 500, duration: 0.4, ease: "power2.inOut" }, 10.0);
+      tl.to("#cursor", { opacity: 0, duration: 0.15 }, 10.5);
+      ["#w1", "#w2", "#w3"].forEach((id) => {
+        const w = document.querySelector(id);
+        const L = w.getTotalLength();
+        w.style.strokeDasharray = L;
+        w.style.strokeDashoffset = L;
+      });
+      [["#w1", 10.0, 0.35], ["#w2", 10.2, 0.2]].forEach(([id, t, d]) => {
+        const L = document.querySelector(id).getTotalLength();
+        tl.fromTo(id, { strokeDashoffset: L }, { strokeDashoffset: 0, duration: d, ease: "power2.inOut" }, t);
+      });
+      tl.fromTo("#p1", { opacity: 0, scale: 0 }, { opacity: 1, scale: 1, duration: 0.2, ease: "back.out(3)" }, 10.0);
+      tl.fromTo("#p3", { opacity: 0, scale: 0 }, { opacity: 1, scale: 1, duration: 0.2, ease: "back.out(3)" }, 10.2);
+      tl.fromTo("#p2", { opacity: 0, scale: 0 }, { opacity: 1, scale: 1, duration: 0.2, ease: "back.out(3)" }, 10.33);
+      tl.fromTo("#p4", { opacity: 0, scale: 0 }, { opacity: 1, scale: 1, duration: 0.2, ease: "back.out(3)" }, 10.4);
+      tl.set("#nVideo", { opacity: 1 }, 10.3);
+      tl.fromTo("#nVideo", { scale: 0.85 }, { scale: 1, duration: 0.35, ease: "back.out(1.8)" }, 10.3);
+      tl.to("#g4", { opacity: 0, duration: 0.15 }, 10.3);
+
+      // ---------- "Photos, videos, voice" (10.93 – 12.1): each block is named ----------
+      tl.fromTo("#tPhotos", { opacity: 0, y: 14, scale: 0.8 }, { opacity: 1, y: 0, scale: 1, duration: 0.25, ease: "back.out(2.5)" }, 10.93);
+      tl.to("#nPhoto", { borderColor: "#3ec9e6", duration: 0.15 }, 10.93);
+      tl.fromTo("#tVideos", { opacity: 0, y: 14, scale: 0.8 }, { opacity: 1, y: 0, scale: 1, duration: 0.25, ease: "back.out(2.5)" }, 11.37);
+      tl.to("#nVideo", { borderColor: "#eef33a", duration: 0.15 }, 11.37);
+      tl.set("#nVoice", { opacity: 1 }, 11.8);
+      tl.fromTo("#nVoice", { scale: 0.85 }, { scale: 1, duration: 0.3, ease: "back.out(2)" }, 11.8);
+      tl.to("#g5", { opacity: 0, duration: 0.15 }, 11.8);
+      tl.fromTo("#tVoice", { opacity: 0, y: 14, scale: 0.8 }, { opacity: 1, y: 0, scale: 1, duration: 0.25, ease: "back.out(2.5)" }, 11.82);
+      tl.to("#nVoice", { borderColor: BLUE, duration: 0.15 }, 11.82);
+      const wave = document.getElementById("wave");
+      for (let i = 0; i < 44; i++) wave.appendChild(document.createElement("i"));
+      let seed = 17;
+      const rnd = () => ((seed = (seed * 1664525 + 1013904223) % 4294967296) / 4294967296);
+      [...wave.children].forEach((b) => {
+        const h = 0.25 + 0.75 * rnd();
+        tl.fromTo(b, { scaleY: 0.15 }, { scaleY: h, duration: 0.12 + 0.1 * rnd(), ease: "sine.inOut", repeat: 11, yoyo: true }, 11.85);
+      });
+      ["#w3"].forEach((id) => {
+        const L = document.querySelector(id).getTotalLength();
+        tl.fromTo(id, { strokeDashoffset: L }, { strokeDashoffset: 0, duration: 0.2, ease: "power2.out" }, 11.85);
+      });
+
+      // ---------- "all in one place" (12.26): one frame around everything ----------
+      tl.set("#grp", { opacity: 1 }, 12.26);
+      tl.fromTo("#grp", { scale: 1.06 }, { scale: 1, duration: 0.4, ease: "power3.out" }, 12.26);
+      tl.to("#grp", { borderStyle: "solid", duration: 0.01 }, 12.55);
+      tl.fromTo(["#nPhoto", "#nPrompt", "#nVideo", "#nVoice"], { y: 0 }, { y: -8, duration: 0.18, ease: "power2.out", yoyo: true, repeat: 1, stagger: 0.05 }, 12.3);
+      tl.to(["#nPhoto", "#nPrompt", "#nVideo", "#nVoice"], { borderColor: BLUE, duration: 0.3 }, 12.5);
+      tl.to(["#tPhotos", "#tVideos", "#tVoice"], { opacity: 0, duration: 0.2 }, 12.45);
+      tl.fromTo("#pill", { opacity: 0, y: 24, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.3, ease: "back.out(2)" }, 12.55);
+
+      // ---------- end card (13.92): "See you at WeArt Studio" ----------
+      tl.to("#pill", { opacity: 0, duration: 0.2 }, 13.8);
+      tl.set("#board", { opacity: 0 }, 13.92); // the flash covers the cut
+      tl.set("#end", { opacity: 1 }, 13.9);
+      flash(13.92, 0.6, "#1d8bff");
+      tl.fromTo("#e-logo", { scale: 1.5, opacity: 0, filter: "blur(14px)" }, { scale: 1, opacity: 1, filter: "blur(0px)", duration: 0.4, ease: "expo.out" }, 13.92);
+      tl.fromTo("#e-name", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.35, ease: "power3.out" }, 14.36);
+      tl.fromTo("#e-sub", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.3, ease: "power3.out" }, 14.5);
+      tl.fromTo("#e-cta", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.35, ease: "back.out(2)" }, 14.55);
+      tl.fromTo("#e-url", { opacity: 0 }, { opacity: 1, duration: 0.25 }, 14.72);
+      tl.fromTo("#e-cta", { scale: 1.05 }, { scale: 1, duration: 0.3, ease: "power2.out" }, 14.95);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
