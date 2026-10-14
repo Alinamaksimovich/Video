@@ -1,0 +1,544 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>PROMPTICA — AI digital agency</title>
+    <script src="assets/vendor/gsap.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "Roboto Flex";
+        src: url("assets/fonts/rf-lat.woff2") format("woff2");
+        font-weight: 100 1000;
+        font-stretch: 25% 151%;
+      }
+      :root {
+        --red: #b1202d;
+        --red-hi: #e8505d;
+        --ink: #111111;
+        --black: #000000;
+        --cream: #fefdf9;
+        --muted: #8f8f8f;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: var(--black);
+      }
+      #root {
+        position: relative;
+        width: 1920px;
+        height: 1080px;
+        overflow: hidden;
+        background: var(--black);
+        font-family: "Roboto Flex", system-ui, sans-serif;
+        color: var(--cream);
+      }
+      .x {
+        font-stretch: 140%;
+        font-weight: 1000;
+        text-transform: uppercase;
+        letter-spacing: -0.01em;
+      }
+      .mono {
+        font-family: ui-monospace, "DejaVu Sans Mono", monospace;
+        font-size: 26px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+      .scene {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        overflow: hidden;
+      }
+      .grid {
+        position: absolute;
+        left: -80px;
+        top: -80px;
+        width: 2080px;
+        height: 1240px;
+        background-image: linear-gradient(rgba(255, 255, 255, 0.07) 2px, transparent 2px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.07) 2px, transparent 2px);
+        background-size: 80px 80px;
+      }
+
+      /* A · prompt */
+      #sA {
+        background: var(--black);
+        opacity: 1;
+      }
+      #pbar {
+        position: absolute;
+        left: 360px;
+        top: 470px;
+        width: 1200px;
+        height: 140px;
+        border-radius: 70px;
+        background: #161616;
+        border: 3px solid #2e2e2e;
+        display: flex;
+        align-items: center;
+        padding: 0 30px 0 56px;
+        gap: 24px;
+      }
+      #ptext {
+        flex-grow: 1;
+        font-size: 46px;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+      #caret {
+        display: inline-block;
+        width: 4px;
+        height: 52px;
+        background: var(--cream);
+        vertical-align: -8px;
+        margin-left: 6px;
+      }
+      #send {
+        width: 92px;
+        height: 92px;
+        border-radius: 50%;
+        background: var(--red);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      #send svg {
+        width: 44px;
+        height: 44px;
+        stroke: #fff;
+        fill: none;
+        stroke-width: 2.6;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      #a-tag {
+        position: absolute;
+        left: 0;
+        width: 1920px;
+        top: 400px;
+        text-align: center;
+        color: var(--muted);
+      }
+
+      /* B · logo */
+      #sB {
+        background: var(--red);
+      }
+      #b-logo {
+        position: absolute;
+        left: 360px;
+        top: 390px;
+        width: 1200px;
+      }
+      .corner {
+        position: absolute;
+        color: rgba(255, 255, 255, 0.85);
+      }
+
+      /* C · headline */
+      #sC {
+        background: var(--black);
+      }
+      #head {
+        position: absolute;
+        left: 160px;
+        top: 250px;
+        width: 1600px;
+        font-size: 150px;
+        line-height: 1.08;
+      }
+      #head span {
+        display: inline-block;
+        opacity: 0;
+        margin-right: 30px;
+      }
+      #head .hl {
+        background: var(--red);
+        padding: 0 24px;
+      }
+
+      /* D · services */
+      .svc {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+      }
+      .svc .num {
+        position: absolute;
+        left: 140px;
+        top: 150px;
+      }
+      .svc .word {
+        position: absolute;
+        left: 130px;
+        top: 360px;
+        font-size: 230px;
+        line-height: 1;
+        white-space: nowrap;
+      }
+      .svc .desc {
+        position: absolute;
+        left: 140px;
+        top: 640px;
+        font-size: 50px;
+        font-weight: 600;
+      }
+      .svc svg {
+        position: absolute;
+        right: 160px;
+        top: 330px;
+        width: 380px;
+        height: 380px;
+        fill: none;
+        stroke-width: 1.4;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+      .svc .bar {
+        position: absolute;
+        left: 140px;
+        top: 760px;
+        width: 600px;
+        height: 14px;
+        transform-origin: 0 50%;
+      }
+      .c-cream {
+        background: var(--cream);
+        color: var(--ink);
+      }
+      .c-cream .word {
+        color: var(--red);
+      }
+      .c-cream svg {
+        stroke: var(--red);
+      }
+      .c-cream .bar {
+        background: var(--red);
+      }
+      .c-red {
+        background: var(--red);
+        color: #fff;
+      }
+      .c-red svg {
+        stroke: #fff;
+      }
+      .c-red .bar {
+        background: #fff;
+      }
+      .c-black {
+        background: var(--black);
+        color: #fff;
+      }
+      .c-black svg {
+        stroke: var(--red-hi);
+      }
+      .c-black .bar {
+        background: var(--red);
+      }
+      .c-black .num {
+        color: var(--red-hi);
+      }
+      #stack {
+        position: absolute;
+        inset: 0;
+        background: var(--black);
+        opacity: 0;
+      }
+      .row {
+        position: absolute;
+        left: 0;
+        width: 3200px;
+        font-size: 170px;
+        line-height: 1;
+        white-space: nowrap;
+      }
+      .row.o {
+        color: #1c1c1c;
+        -webkit-text-stroke: 3px var(--cream);
+      }
+      .row.f {
+        color: var(--red);
+      }
+
+      /* E · statement */
+      #sE {
+        background: var(--black);
+      }
+      .half {
+        position: absolute;
+        top: 0;
+        width: 960px;
+        height: 1080px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        font-size: 130px;
+        line-height: 1;
+      }
+      #eL {
+        left: 0;
+        background: var(--black);
+      }
+      #eR {
+        left: 960px;
+        background: var(--red);
+      }
+      #eOne {
+        position: absolute;
+        inset: 0;
+        background: var(--cream);
+        color: var(--ink);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 200px;
+        opacity: 0;
+      }
+      #eOne b {
+        color: var(--red);
+        font-weight: inherit;
+      }
+
+      /* F · end */
+      #sF {
+        background: var(--red);
+      }
+      #f-logo {
+        position: absolute;
+        left: 460px;
+        top: 250px;
+        width: 1000px;
+      }
+      #f-line {
+        position: absolute;
+        left: 0;
+        width: 1920px;
+        top: 590px;
+        text-align: center;
+        font-size: 100px;
+      }
+      #f-cta {
+        position: absolute;
+        left: 710px;
+        top: 760px;
+        width: 500px;
+        height: 110px;
+        border-radius: 55px;
+        background: var(--cream);
+        color: var(--red);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 40px;
+      }
+      #f-url {
+        position: absolute;
+        left: 0;
+        width: 1920px;
+        top: 950px;
+        text-align: center;
+        color: rgba(255, 255, 255, 0.9);
+      }
+      #flash {
+        position: absolute;
+        inset: 0;
+        background: #fff;
+        opacity: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="15" data-width="1920" data-height="1080">
+      <!-- audio: tools/dnb.py (original 174 BPM drum & bass) + tools/sfx.py (her sound packs) -->
+      <audio id="music" src="assets/audio/music.wav" data-start="0" data-duration="15" data-track-index="10" data-volume="1"></audio>
+      <audio id="sfx" src="assets/audio/sfx.wav" data-start="0" data-duration="15" data-track-index="11" data-volume="1"></audio>
+
+      <!-- A · a prompt is typed (intro bar) -->
+      <div class="scene" id="sA">
+        <div id="a-tag" class="mono">new brief</div>
+        <div id="pbar">
+          <div id="ptext"><span id="typed"></span><span id="caret"></span></div>
+          <div id="send"><svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7" /></svg></div>
+        </div>
+      </div>
+
+      <!-- B · logo on the drop -->
+      <div class="scene" id="sB">
+        <div class="grid" id="gB" data-layout-allow-overflow></div>
+        <img id="b-logo" src="assets/img/logo-white.png" alt="promptica digital agency" />
+        <div class="corner mono" style="left: 80px; top: 70px">AI digital agency</div>
+        <div class="corner mono" style="right: 80px; top: 70px">prompticadigital.com</div>
+        <div class="corner mono" style="left: 80px; bottom: 70px">design · video · ads · smm · content</div>
+      </div>
+
+      <!-- C · headline, a word per beat -->
+      <div class="scene" id="sC">
+        <div id="head" class="x">
+          <span>We</span><span>turn</span><span class="hl">prompts</span><br />
+          <span>into</span><span>content</span><br />
+          <span>that</span><span class="hl">sells.</span>
+        </div>
+      </div>
+
+      <!-- D · services, two beats each -->
+      <div class="scene" id="sD">
+        <div class="svc c-cream" id="v0">
+          <div class="num mono">01 / services</div>
+          <div class="word x">Design</div>
+          <div class="desc">Brand identity · key visuals</div>
+          <div class="bar"></div>
+          <svg viewBox="0 0 24 24"><circle cx="13.5" cy="6.5" r="2.5" /><path d="M3 21l6-6M14 14l-4-4 7-7 4 4z" /></svg>
+        </div>
+        <div class="svc c-red" id="v1">
+          <div class="num mono">02 / services</div>
+          <div class="word x">Video</div>
+          <div class="desc">AI films · reels · motion</div>
+          <div class="bar"></div>
+          <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3" /><path d="M10 9l5 3-5 3z" /></svg>
+        </div>
+        <div class="svc c-black" id="v2">
+          <div class="num mono">03 / services</div>
+          <div class="word x">Ads</div>
+          <div class="desc">Creatives · campaigns</div>
+          <div class="bar"></div>
+          <svg viewBox="0 0 24 24"><path d="M3 11v2a1 1 0 0 0 1 1h3l5 4V6L7 10H4a1 1 0 0 0-1 1z" /><path d="M16 8a5 5 0 0 1 0 8M19 5a9 9 0 0 1 0 14" /></svg>
+        </div>
+        <div class="svc c-red" id="v3">
+          <div class="num mono">04 / services</div>
+          <div class="word x">SMM</div>
+          <div class="desc">Strategy · content plans</div>
+          <div class="bar"></div>
+          <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" /><path d="M8 9h8M8 13h5" /></svg>
+        </div>
+        <div class="svc c-cream" id="v4">
+          <div class="num mono">05 / services</div>
+          <div class="word x">Content</div>
+          <div class="desc">Posts · stories · UGC</div>
+          <div class="bar"></div>
+          <svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="3" /><path d="M8 8h8M8 12h8M8 16h5" /></svg>
+        </div>
+        <div id="stack" data-layout-allow-overflow>
+          <div class="row x o" id="r0" style="top: 40px">Design Video Ads SMM Content Design Video Ads SMM Content</div>
+          <div class="row x f" id="r1" style="top: 240px">Video Ads SMM Content Design Video Ads SMM Content Design</div>
+          <div class="row x o" id="r2" style="top: 440px">Ads SMM Content Design Video Ads SMM Content Design Video</div>
+          <div class="row x f" id="r3" style="top: 640px">SMM Content Design Video Ads SMM Content Design Video Ads</div>
+          <div class="row x o" id="r4" style="top: 840px">Content Design Video Ads SMM Content Design Video Ads SMM</div>
+        </div>
+      </div>
+
+      <!-- E · statement -->
+      <div class="scene" id="sE">
+        <div class="half x" id="eL">AI<br />speed.</div>
+        <div class="half x" id="eR">Human<br />taste.</div>
+        <div id="eOne" class="x">One&nbsp;<b>agency.</b></div>
+      </div>
+
+      <!-- F · end card -->
+      <div class="scene" id="sF">
+        <div class="grid" id="gF" data-layout-allow-overflow></div>
+        <img id="f-logo" src="assets/img/logo-white.png" alt="promptica digital agency" />
+        <div id="f-line" class="x">Let's create.</div>
+        <div id="f-cta" class="x">Start a project →</div>
+        <div id="f-url" class="mono">prompticadigital.com</div>
+      </div>
+
+      <div id="flash"></div>
+    </div>
+
+    <script>
+      // music grid (tools/dnb.py): 174 BPM, bar 0 = intro, drop on bar 1, stop beat before bar 9
+      const Q = 60 / 174;
+      const BAR = 4 * Q;
+      const at = (bar, beat = 0) => +(bar * BAR + beat * Q).toFixed(3);
+      const RED = "#b1202d";
+      const tl = gsap.timeline({ paused: true, defaults: { immediateRender: false } });
+
+      function cut(from, to, t) {
+        if (from) tl.set(from, { opacity: 0 }, t);
+        tl.set(to, { opacity: 1 }, t);
+      }
+      function flash(t, a = 0.8, color = "#fff") {
+        tl.set("#flash", { backgroundColor: color }, t);
+        tl.fromTo("#flash", { opacity: a }, { opacity: 0, duration: 0.3, ease: "power2.out" }, t);
+      }
+
+      // ---------- A · prompt (bar 0) ----------
+      tl.fromTo("#pbar", { opacity: 0, y: 40, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.4, ease: "power3.out" }, 0.0);
+      tl.fromTo("#a-tag", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 0.1);
+      const brief = "make promptica unforgettable";
+      for (let i = 1; i <= brief.length; i++) tl.set("#typed", { textContent: brief.slice(0, i) }, 0.15 + i * 0.026);
+      tl.fromTo("#caret", { opacity: 1 }, { opacity: 0, duration: 0.15, repeat: 3, yoyo: true, ease: "steps(1)" }, 0.95);
+      tl.fromTo("#send", { scale: 0.8 }, { scale: 1, duration: 0.25, ease: "back.out(3)" }, at(1) - 0.12);
+      tl.to("#pbar", { scale: 1.06, duration: at(1) - 0.9, ease: "power2.in" }, 0.9);
+
+      // ---------- B · logo on the drop (bar 1) ----------
+      cut("#sA", "#sB", at(1));
+      flash(at(1), 0.9);
+      tl.fromTo("#b-logo", { scale: 1.5, opacity: 0, filter: "blur(18px)" }, { scale: 1, opacity: 1, filter: "blur(0px)", duration: 0.4, ease: "expo.out" }, at(1));
+      tl.fromTo(".corner", { opacity: 0 }, { opacity: 1, duration: 0.3, stagger: 0.08 }, at(1, 1));
+      for (let b = 1; b < 4; b++) tl.fromTo("#b-logo", { scale: 1.035 }, { scale: 1, duration: 0.3, ease: "power2.out" }, at(1, b));
+      tl.fromTo("#gB", { x: 0 }, { x: 80, duration: BAR, ease: "none" }, at(1));
+
+      // ---------- C · headline, one word per beat (bars 2-3) ----------
+      cut("#sB", "#sC", at(2));
+      document.querySelectorAll("#head span").forEach((w, i) => {
+        tl.set(w, { opacity: 1 }, at(2, i));
+        tl.fromTo(w, { y: 60, scale: 1.15 }, { y: 0, scale: 1, duration: 0.3, ease: "expo.out" }, at(2, i));
+      });
+      tl.to("#head", { scale: 1.04, duration: 2 * Q, ease: "power1.inOut", transformOrigin: "0% 50%" }, at(3, 2));
+
+      // ---------- D · services, two beats each (bars 4-6) ----------
+      cut("#sC", "#sD", at(4));
+      ["#v0", "#v1", "#v2", "#v3", "#v4"].forEach((v, i) => {
+        const t = at(4, i * 2);
+        tl.set(v, { opacity: 1 }, t);
+        tl.fromTo(v, { clipPath: "inset(0 0 0 100%)" }, { clipPath: "inset(0 0 0 0%)", duration: 0.25, ease: "power3.inOut" }, t);
+        tl.fromTo(v + " .word", { x: 120 }, { x: 0, duration: 0.45, ease: "power3.out" }, t + 0.05);
+        tl.fromTo(v + " svg", { scale: 0.7, rotation: -10 }, { scale: 1, rotation: 0, duration: 0.5, ease: "back.out(1.8)" }, t + 0.1);
+        tl.fromTo(v + " .bar", { scaleX: 0 }, { scaleX: 1, duration: 2 * Q, ease: "none" }, t);
+        tl.fromTo(v + " .word", { scale: 1.03 }, { scale: 1, duration: 0.25, ease: "power2.out" }, t + Q);
+      });
+      // all five, scrolling, on the last two beats of bar 6
+      tl.set("#stack", { opacity: 1 }, at(6, 2));
+      ["#r0", "#r1", "#r2", "#r3", "#r4"].forEach((r, i) => {
+        const dir = i % 2 ? 1 : -1;
+        tl.fromTo(r, { x: dir < 0 ? 0 : -900 }, { x: dir < 0 ? -900 : 0, duration: 2 * Q + 0.2, ease: "none" }, at(6, 2));
+      });
+
+      // ---------- E · statement (bars 7-8, stop beat) ----------
+      cut("#sD", "#sE", at(7));
+      tl.fromTo("#eL", { xPercent: -100 }, { xPercent: 0, duration: 0.35, ease: "power3.out" }, at(7));
+      tl.fromTo("#eR", { xPercent: 100 }, { xPercent: 0, duration: 0.35, ease: "power3.out" }, at(7, 2));
+      tl.set("#eR", { opacity: 0 }, 0);
+      tl.set("#eR", { opacity: 1 }, at(7, 2));
+      tl.set("#eOne", { opacity: 1 }, at(8));
+      tl.fromTo("#eOne", { clipPath: "circle(0% at 50% 50%)" }, { clipPath: "circle(80% at 50% 50%)", duration: 0.4, ease: "power3.inOut" }, at(8));
+      tl.fromTo("#eOne", { scale: 1.08 }, { scale: 1, duration: 1.0, ease: "power2.out" }, at(8));
+      tl.set("#sE", { opacity: 0 }, at(8, 3)); // the stop beat: black
+
+      // ---------- F · end card (bar 9) ----------
+      tl.set("#sF", { opacity: 1 }, at(9));
+      flash(at(9), 0.9);
+      tl.fromTo("#f-logo", { scale: 1.4, opacity: 0, filter: "blur(16px)" }, { scale: 1, opacity: 1, filter: "blur(0px)", duration: 0.45, ease: "expo.out" }, at(9));
+      tl.fromTo("#f-line", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" }, at(9, 1));
+      tl.fromTo("#f-cta", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(2)" }, at(9, 2));
+      tl.fromTo("#f-url", { opacity: 0 }, { opacity: 1, duration: 0.3 }, at(9, 3));
+      tl.fromTo("#gF", { x: 0 }, { x: 80, duration: 15 - at(9), ease: "none" }, at(9));
+      tl.fromTo("#f-logo", { y: 0 }, { y: -10, duration: 2, ease: "sine.inOut" }, at(10));
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
