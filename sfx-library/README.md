@@ -26,6 +26,7 @@ its own `assets/sfx/` (HyperFrames serves files from the project folder).
 | File | Length | Use for |
 |---|---|---|
 | SJC_RACE_Foley_Stem.wav | 0.24 s | short mechanical foley hit: snap-in of cards, switches, transitions |
+| SJC_TILE_Plastic_Tiles_01.wav | 0.35 s | plastic tiles clatter: grid/tile reveals, cards flipping, mosaic builds |
 
 ## ui-pack/ — cut from the "небанальные звуки" pack demos (44.1 kHz stereo)
 appear_1-4, click_1-2, select, select_2, loading, ticks, typing, notification,
@@ -41,3 +42,15 @@ sms, whoosh_shine, trtrtr_1-2, intro_whoosh
 | File | Length | Use for |
 |---|---|---|
 | SJC_IMPACT_Liquid_Impact_01.wav | 1.40 s | soft liquid thud: logo lands, big card drops, reveal beat (gentler than a hard boom) |
+
+## pops/ — bubble and pop-up sounds (48 kHz stereo)
+| File | Length | Use for |
+|---|---|---|
+| SJC_POP_Bubble_Single_01.wav | 0.15 s | one soft pop: a chip, tag or icon appears |
+| SJC_POP_Bubble_Triple_01.wav | 0.25 s | three quick pops: several items appearing at once (chips, stickers) |
+| SJC_POP_PopUp_Soft_02.wav | 0.30 s | window/card pops up: notification, popup, bubble |
+
+## transitions/
+| File | Length | Use for |
+|---|---|---|
+| SJC_TRANSITION_Laser_Downer_01.wav | 1.80 s | descending laser sweep: power-down, a scene "falling" out, end of a section |
