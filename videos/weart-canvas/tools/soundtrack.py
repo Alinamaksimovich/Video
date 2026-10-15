@@ -13,36 +13,40 @@ import soundfile as sf
 from scipy.signal import resample_poly
 
 SR = 44100
-DUR = 15.04
+DUR = 14.67
 N = int(SR * DUR)
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, "..", "assets", "audio")
 SFX = os.path.join(HERE, "..", "assets", "sfx")
 
-CUES = [  # (file, time s, gain dB, max length s or None)
-    ("whoosh_shine", 3.55, -10, None),  # video flies up
-    ("SJC_IMPACT_Liquid_Impact_01", 3.82, -9, None),
-    ("SJC_CLICK_Woodblock_01", 4.10, -6, None),  # three clicks
-    ("SJC_CLICK_Woodblock_01", 4.48, -6, None),
-    ("SJC_CLICK_Tonal_Click_Double_01", 4.86, -6, None),
-    ("SJC_HOVER_Hover_01", 3.93, -10, None),
-    ("SJC_HOVER_Hover_04", 4.33, -10, None),
-    ("SJC_HOVER_Hover_01", 4.71, -10, None),
-    ("SJC_BLEEP_Data_Notification_01", 5.25, -10, None),  # "Here's the trick"
-    ("SJC_FILMCAMERA_Leaf_Shutter_04", 6.02, -6, None),  # CANVAS
-    ("appear_1", 6.04, -10, None),
-    ("whoosh_shine", 6.55, -12, None),  # board opens
-    ("SJC_TILE_Plastic_Tiles_01", 8.42, -6, None),  # photo drops
-    ("typing", 9.10, -9, 0.8),  # prompt typed
-    ("SJC_CLICK_Tonal_Click_Run_Up_01", 10.00, -8, None),  # connect
-    ("SJC_POP_PopUp_Soft_02", 10.32, -9, None),
-    ("SJC_POP_Bubble_Single_01", 10.95, -8, None),  # Photos
-    ("SJC_POP_Bubble_Single_01", 11.39, -8, None),  # Videos
-    ("SJC_POP_Bubble_Triple_01", 11.82, -8, None),  # Voice
-    ("SJC_DSLR_Focus_Beep_01", 12.50, -9, None),  # all in one place
-    ("SJC_IMPACT_Liquid_Impact_01", 13.92, -10, None),  # logo
-    ("SJC_DSLR_Flash_Close_02", 13.95, -10, None),
-    ("SJC_BLEEP_Cute_Double_Bleep_01", 14.55, -9, None),  # CTA
+SH = 0.37  # the main take starts 0.37 s earlier than in the original recording (new intro is shorter)
+CUT = 3.22  # comp time where the two screens fly in
+MEDIA_CUT = CUT + SH  # = 3.59: where the original recording is joined
+
+CUES = [  # (file, time s, gain dB, max length s or None); times marked "o" are original-recording times, shifted by SH
+    ("whoosh_shine", CUT - 0.1, -9, None),  # two screens fly in
+    ("SJC_IMPACT_Liquid_Impact_01", CUT + 0.2, -9, None),  # they meet
+    ("SJC_CLICK_Woodblock_01", 4.10 - SH, -6, None),  # three clicks
+    ("SJC_CLICK_Woodblock_01", 4.48 - SH, -6, None),
+    ("SJC_CLICK_Tonal_Click_Double_01", 4.86 - SH, -6, None),
+    ("SJC_HOVER_Hover_01", 3.93 - SH, -10, None),
+    ("SJC_HOVER_Hover_04", 4.33 - SH, -10, None),
+    ("SJC_HOVER_Hover_01", 4.71 - SH, -10, None),
+    ("SJC_BLEEP_Data_Notification_01", 5.25 - SH, -10, None),  # "Here's the trick"
+    ("SJC_FILMCAMERA_Leaf_Shutter_04", 6.02 - SH, -6, None),  # CANVAS
+    ("appear_1", 6.04 - SH, -10, None),
+    ("whoosh_shine", 6.55 - SH, -12, None),  # board opens
+    ("SJC_TILE_Plastic_Tiles_01", 8.42 - SH, -6, None),  # photo drops
+    ("typing", 9.10 - SH, -9, 0.8),  # prompt typed
+    ("SJC_CLICK_Tonal_Click_Run_Up_01", 10.00 - SH, -8, None),  # connect
+    ("SJC_POP_PopUp_Soft_02", 10.32 - SH, -9, None),
+    ("SJC_POP_Bubble_Single_01", 10.95 - SH, -8, None),  # Photos
+    ("SJC_POP_Bubble_Single_01", 11.39 - SH, -8, None),  # Videos
+    ("SJC_POP_Bubble_Triple_01", 11.82 - SH, -8, None),  # Voice
+    ("SJC_DSLR_Focus_Beep_01", 12.50 - SH, -9, None),  # all in one place
+    ("SJC_IMPACT_Liquid_Impact_01", 13.92 - SH, -10, None),  # logo
+    ("SJC_DSLR_Flash_Close_02", 13.95 - SH, -10, None),
+    ("SJC_BLEEP_Cute_Double_Bleep_01", 14.55 - SH, -9, None),  # CTA
 ]
 
 
@@ -70,15 +74,16 @@ def speech_gate(voice):
 
 
 if __name__ == "__main__":
-    # voice = new intro take (0 - 3.425 s) + the original recording from 3.64 s on.
+    # voice = intro take (0 - 3.22 s) + the original recording from MEDIA_CUT (3.59 s) on, placed at 3.22 s.
     # Her recordings are untouched: only gain (the intro take is quieter, +5 dB matches its speech
     # level to the main take) and a 30 ms fade-in where the original starts.
     orig = load(os.path.join(OUT, "voice-raw.wav"))
     g = 10 ** (-1 / 20) / np.abs(orig).max()  # main take: peak at -1 dBFS
     intro = load(os.path.join(OUT, "voice-intro-raw.wav")) * g * 10 ** (5.0 / 20)
     voice = np.zeros(N)
-    cut = int(3.64 * SR)
-    tail = orig[cut:N] * g
+    cut, mcut = int(CUT * SR), int(MEDIA_CUT * SR)
+    tail = orig[mcut:] * g
+    tail = tail[: N - cut]
     voice[cut : cut + len(tail)] = tail
     voice[cut : cut + int(0.03 * SR)] *= np.linspace(0, 1, int(0.03 * SR))
     n_in = min(len(intro), cut)

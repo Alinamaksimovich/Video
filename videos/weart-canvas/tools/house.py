@@ -1,8 +1,8 @@
 """Original deep-house bed for the WeArt canvas reel (written for this video).
 
 109.09 BPM (bar = 2.2 s), A minor: Am7 - Fmaj7 - Cmaj7 - G6. The grid is locked to
-the voice: the drop lands on 3.82 s ("I was made in a few clicks"), bar lines fall
-on "Canvas" (6.02), "Drop a photo" (8.22) and "all in one place" (12.62).
+the voice: the drop lands on 3.45 s ("I was made in a few clicks"), bar lines fall
+on "Canvas" (5.65), "Drop a photo" (7.85) and "all in one place" (12.25).
 Soft by design: it sits ~15 dB under speech. Pre-drop: pad swell + filtered chords;
 drop: kick, offbeat bass, chord stabs, shaker; the arp joins at 6.02, a lead pad at
 10.42; fades out over the last second. Deterministic.
@@ -16,9 +16,9 @@ import soundfile as sf
 from scipy.signal import butter, fftconvolve, sosfilt
 
 SR = 44100
-DUR = 15.04
+DUR = 14.67
 N = int(SR * DUR)
-DROP = 3.82
+DROP = 3.45
 BAR = 2.2
 Q = BAR / 4
 S16 = Q / 4

@@ -56,28 +56,26 @@
       }
 
       /* ---------- her ---------- */
-      #top {
+      /* intro take: full screen, then the two panels fly in over it */
+      #introLayer {
         position: absolute;
-        left: 0;
-        top: 0;
-        width: 1080px;
-        height: 1920px;
+        inset: 0;
         overflow: hidden;
         background: #000;
-        clip-path: inset(0px 0px 0px 0px);
+        transform-origin: 50% 50%;
       }
-      #meWrap,
-      #meKick {
+      #introWrap,
+      #introKick {
         position: absolute;
         inset: 0;
         transform-origin: 50% 40%;
       }
-      #meFit {
+      #introDim {
         position: absolute;
         inset: 0;
-        transform-origin: 50% 0%;
+        background: #000;
+        opacity: 0;
       }
-      /* the 16:9 clip at full height (3413x1920), centred: the 9:16 window is its middle */
       #intro {
         position: absolute;
         left: 0;
@@ -85,12 +83,27 @@
         width: 1080px;
         height: 1920px;
       }
+      /* top panel: the main clip (16:9) cover-fitted into 1080x960, centred */
+      #top {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 1080px;
+        height: 960px;
+        overflow: hidden;
+        background: #000;
+      }
+      #meKick {
+        position: absolute;
+        inset: 0;
+        transform-origin: 50% 40%;
+      }
       #me {
         position: absolute;
-        left: -1166.5px;
+        left: -313.5px;
         top: 0;
-        width: 3413px;
-        height: 1920px;
+        width: 1707px;
+        height: 960px;
       }
       #seam {
         position: absolute;
@@ -102,13 +115,19 @@
         opacity: 0;
       }
 
-      /* captions: one word, on her half */
-      #cap {
+      /* captions: one word at a time. #capA = intro (full screen), #cap = on her half */
+      #cap,
+      #capA {
         position: absolute;
         left: 40px;
         width: 1000px;
-        top: 1420px;
         height: 160px;
+      }
+      #cap {
+        top: 770px;
+      }
+      #capA {
+        top: 1420px;
       }
       .cw {
         position: absolute;
@@ -552,18 +571,24 @@
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="main" data-start="0" data-duration="15.04" data-width="1080" data-height="1920">
+    <div id="root" data-composition-id="main" data-start="0" data-duration="14.67" data-width="1080" data-height="1920">
       <!-- audio: tools/house.py (original deep house) + tools/soundtrack.py (her voice untouched, SFX from sfx-library) -->
-      <audio id="music" src="assets/audio/music.wav" data-start="0" data-duration="15.04" data-track-index="10" data-volume="1"></audio>
-      <audio id="sfx" src="assets/audio/sfx.wav" data-start="0" data-duration="15.04" data-track-index="11" data-volume="1"></audio>
-      <audio id="voice" src="assets/audio/voice.wav" data-start="0" data-duration="15.04" data-track-index="12" data-volume="1"></audio>
+      <audio id="music" src="assets/audio/music.wav" data-start="0" data-duration="14.67" data-track-index="10" data-volume="1"></audio>
+      <audio id="sfx" src="assets/audio/sfx.wav" data-start="0" data-duration="14.67" data-track-index="11" data-volume="1"></audio>
+      <audio id="voice" src="assets/audio/voice.wav" data-start="0" data-duration="14.67" data-track-index="12" data-volume="1"></audio>
+
+      <div id="introLayer">
+        <div id="introWrap"><div id="introKick">
+          <video id="intro" class="clip" src="assets/video/intro.mp4" muted playsinline data-start="0" data-duration="3.7" data-track-index="1"></video>
+        </div></div>
+        <div id="introDim"></div>
+      </div>
 
       <div id="top">
-        <div id="meWrap"><div id="meKick"><div id="meFit">
-          <video id="me" class="clip" src="assets/video/me.mp4" muted playsinline data-start="0" data-duration="15.04" data-track-index="1"></video>
-          <!-- new intro take (3.64 s, her first phrase): full screen, hands over to the main clip right before the fly-up -->
-          <video id="intro" class="clip" src="assets/video/intro.mp4" muted playsinline data-start="0" data-duration="3.64" data-track-index="2"></video>
-        </div></div></div>
+        <div id="meKick">
+          <!-- main take, joined at 3.59 s of the recording (the laugh before "I was made" is cut) -->
+          <video id="me" class="clip" src="assets/video/me.mp4" muted playsinline data-start="3.22" data-media-start="3.59" data-duration="11.45" data-track-index="2"></video>
+        </div>
       </div>
 
       <div id="bot">
@@ -610,7 +635,7 @@
 
           <div class="node" id="nPhoto"><div class="nh"><i style="background: #3ec9e6"></i>Photo</div><img src="assets/img/car.jpg" alt="" /></div>
           <div class="node" id="nPrompt"><div class="nh"><i style="background: #e23ad6"></i>Prompt</div><div id="ptxt"><span id="typed"></span><span id="caret"></span></div></div>
-          <div class="node" id="nVideo"><div class="nh"><i style="background: #eef33a"></i>Video</div><video id="carv" class="clip" src="assets/video/car.mp4" muted playsinline data-start="10.35" data-duration="3.7" data-track-index="3"></video></div>
+          <div class="node" id="nVideo"><div class="nh"><i style="background: #eef33a"></i>Video</div><video id="carv" class="clip" src="assets/video/car.mp4" muted playsinline data-start="9.98" data-duration="3.7" data-track-index="3"></video></div>
           <div class="node" id="nVoice"><div class="nh"><i style="background: #1d8bff"></i>Voice</div><div id="wave"></div></div>
 
           <div class="tagc" id="tPhotos" style="left: 40px; top: 84px; background: #3ec9e6">Photos</div>
@@ -635,14 +660,17 @@
       </div>
 
       <div id="seam"></div>
+      <div id="capA"></div>
       <div id="cap"></div>
       <div id="flash"></div>
     </div>
 
     <script>
-      // word timings: from the voice track (silence gaps + per-phrase transcription)
+      // word timings: from the voice tracks (silence gaps + per-phrase transcription)
+      // intro take: comp clock (0 = start of the intro)
+      const INTRO_WORDS = [["Wait", 0.36, 0.58], ["did", 1.24, 1.5], ["you", 1.5, 1.75], ["really", 1.84, 2.03], ["think", 2.49, 2.7], ["I'm", 2.7, 2.85], ["real", 2.85, 3.05]];
+      // main take: the recording's own clock (the timeline `tl` below plays it from 3.59 s, 0.37 s ahead of the comp clock)
       const WORDS = [
-        ["Wait", 0.36, 0.58], ["did", 1.24, 1.5], ["you", 1.5, 1.75], ["really", 1.84, 2.03], ["think", 2.49, 2.7], ["I'm", 2.7, 2.85], ["real", 2.85, 3.05],
         ["I", 3.82, 3.92], ["was", 3.92, 4.06], ["made", 4.06, 4.3], ["in", 4.3, 4.42], ["a", 4.42, 4.5], ["few", 4.5, 4.72], ["clicks", 4.72, 5.0],
         ["Here's", 5.25, 5.42], ["the", 5.42, 5.52], ["trick", 5.52, 5.72], ["Canvas", 6.02, 6.5],
         ["One", 6.68, 6.85], ["big", 6.85, 7.05], ["board", 7.05, 7.36], ["for", 7.41, 7.53], ["creators", 7.53, 7.98],
@@ -655,7 +683,7 @@
       const BLUE = "#1d8bff";
 
       const tl = gsap.timeline({ paused: true, defaults: { immediateRender: false } });
-      const T_FLY = 3.82; // "I was made in a few clicks": the video flies up
+      const T_FLY = 3.82; // "I was made in a few clicks" (recording clock)
 
       function flash(t, a = 0.6, color = "#fff") {
         tl.set("#flash", { backgroundColor: color }, t);
@@ -684,20 +712,8 @@
         tl.set(el, { opacity: 0 }, end);
       });
 
-      // ---------- hook (0 – 3.82): her, full screen, slow push-in ----------
-      tl.set("#bot", { y: 960 }, 0);
-      tl.fromTo("#meWrap", { scale: 1.0 }, { scale: 1.05, duration: T_FLY, ease: "none" }, 0);
-      tl.fromTo("#meKick", { scale: 1.06 }, { scale: 1.0, duration: 0.5, ease: "power2.out" }, 0.36);
-      tl.fromTo("#meKick", { scale: 1.05 }, { scale: 1.0, duration: 0.5, ease: "power2.out" }, 2.85);
-
-      // ---------- the fly-up (3.82): video goes to the top half, canvas rises ----------
-      tl.to("#top", { clipPath: "inset(0px 0px 960px 0px)", duration: 0.55, ease: "power4.inOut" }, T_FLY - 0.06);
-      tl.to("#meFit", { scale: 0.5, duration: 0.55, ease: "power4.inOut" }, T_FLY - 0.06);
-      tl.to("#cap", { y: -650, duration: 0.55, ease: "power4.inOut" }, T_FLY - 0.06);
-      tl.to("#bot", { y: 0, duration: 0.6, ease: "back.out(1.25)" }, T_FLY - 0.06);
-      tl.fromTo("#meKick", { scale: 1.16 }, { scale: 1.0, duration: 0.7, ease: "power3.out" }, T_FLY);
-      tl.to("#seam", { opacity: 1, duration: 0.2 }, T_FLY + 0.3);
-      flash(T_FLY, 0.55, "#1d8bff");
+      // the main clip punches in as it lands (3.82 = "I was made")
+      tl.fromTo("#meKick", { scale: 1.12 }, { scale: 1.0, duration: 0.7, ease: "power3.out" }, T_FLY);
 
       // ---------- S1 · made in a few clicks (3.82 – 5.2) ----------
       tl.set("#s1", { opacity: 1 }, T_FLY);
@@ -822,8 +838,50 @@
       tl.fromTo("#e-url", { opacity: 0 }, { opacity: 1, duration: 0.25 }, 14.72);
       tl.fromTo("#e-cta", { scale: 1.05 }, { scale: 1, duration: 0.3, ease: "power2.out" }, 14.95);
 
+      // ============ master timeline (comp clock) ============
+      const master = gsap.timeline({ paused: true, defaults: { immediateRender: false } });
+      const CUT = 3.22; // right after "...think I'm real?": the two screens fly in
+      const SH = 0.37; // main take plays 0.37 s earlier than in the original recording
+      function mflash(t, a, color) {
+        master.set("#flash", { backgroundColor: color }, t);
+        master.fromTo("#flash", { opacity: a }, { opacity: 0, duration: 0.25, ease: "power2.out" }, t);
+      }
+
+      // intro: her, full screen, one word at a time
+      const capA = document.getElementById("capA");
+      INTRO_WORDS.forEach(([w, s, e], i) => {
+        const el = document.createElement("div");
+        el.className = "cw big" + (HOT.includes(w.toLowerCase()) ? " hot" : "");
+        const sp = document.createElement("span");
+        sp.textContent = w;
+        el.appendChild(sp);
+        capA.appendChild(el);
+        const next = INTRO_WORDS[i + 1];
+        const end = next && next[1] - e < 0.3 ? next[1] : e + 0.18;
+        master.set(el, { opacity: 1 }, s);
+        master.fromTo(el, { scale: 0.85, y: 14 }, { scale: 1, y: 0, duration: 0.14, ease: "power2.out" }, s);
+        master.set(el, { opacity: 0 }, end);
+      });
+      master.fromTo("#introWrap", { scale: 1.0 }, { scale: 1.05, duration: CUT + 0.4, ease: "none" }, 0);
+      master.fromTo("#introKick", { scale: 1.06 }, { scale: 1.0, duration: 0.5, ease: "power2.out" }, 0.36);
+      master.fromTo("#introKick", { scale: 1.05 }, { scale: 1.0, duration: 0.5, ease: "power2.out" }, 2.85);
+
+      // the two screens: girl from the top, canvas from the bottom, they meet in the middle
+      master.set("#top", { y: -960 }, 0);
+      master.set("#bot", { y: 960 }, 0);
+      master.to("#top", { y: 0, duration: 0.42, ease: "power4.out" }, CUT);
+      master.to("#bot", { y: 0, duration: 0.42, ease: "power4.out" }, CUT);
+      master.to("#introLayer", { scale: 0.92, duration: 0.45, ease: "power2.in" }, CUT);
+      master.to("#introDim", { opacity: 0.8, duration: 0.22, ease: "power2.out" }, CUT);
+      master.to("#introLayer", { opacity: 0, duration: 0.05 }, CUT + 0.42);
+      master.fromTo("#seam", { opacity: 0, scaleX: 0.2 }, { opacity: 1, scaleX: 1, duration: 0.25, ease: "power3.out" }, CUT + 0.36);
+      mflash(CUT + 0.4, 0.55, "#1d8bff");
+
+      // everything after the cut: the recording-clock timeline, shifted by SH
+      master.fromTo(tl, { time: CUT + SH }, { time: 15.04, duration: 15.04 - (CUT + SH), ease: "none" }, CUT);
+
       window.__timelines = window.__timelines || {};
-      window.__timelines["main"] = tl;
+      window.__timelines["main"] = master;
     </script>
   </body>
 </html>
