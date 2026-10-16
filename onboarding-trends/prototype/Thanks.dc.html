@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>You are in</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+@font-face{font-family:"Fluctuation";src:url(/_blob/94361c4b384a41bd5d50a9aaa687bfeb) format("opentype");font-weight:100 900;font-style:normal;font-display:swap}
+body{margin:0}
+a{color:#06232b}
+@keyframes bgIn{from{opacity:0}to{opacity:1}}
+@keyframes drift{0%{transform:translate3d(-20px,0,0)}50%{transform:translate3d(30px,24px,0)}100%{transform:translate3d(-20px,0,0)}}
+@keyframes fall{0%{transform:translateY(-40px) rotate(0deg);opacity:0}8%{opacity:1}100%{transform:translateY(900px) rotate(540deg);opacity:1}}
+@keyframes pop{0%{transform:scale(.3);opacity:0}60%{transform:scale(1.12);opacity:1}100%{transform:scale(1);opacity:1}}
+@keyframes ringOut{0%{transform:scale(.8);opacity:.7}100%{transform:scale(1.9);opacity:0}}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.bgin{animation:bgIn .7s ease-out both}
+.blob{animation:drift 9s ease-in-out infinite;will-change:transform}
+.conf{position:absolute;top:0;border-radius:3px;animation:fall 3.4s linear infinite both;will-change:transform}
+.pop{animation:pop .7s cubic-bezier(.2,.9,.3,1.2) both}
+.ring{animation:ringOut 2.2s ease-out infinite}
+.rowin{animation:rise .55s ease-out both}
+@media (prefers-reduced-motion: reduce){.blob,.conf,.ring,.pop,.rowin{animation:none}.conf{display:none}}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #07080c; font-family: Fluctuation, system-ui, sans-serif; color: #f4f6fb">
+  <div style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; background: radial-gradient(110% 46% at 50% 18%, #11295a 0%, #07080c 70%)"></div>
+  <div class="bgin" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; background: radial-gradient(120% 56% at 50% 34%, #0a4a52 0%, #07080c 66%)"></div>
+  <div class="blob" style="position: absolute; left: 40px; top: 190px; width: 310px; height: 260px; border-radius: 50%; background: radial-gradient(closest-side, rgba(62,201,230,0.4), rgba(238,243,58,0.12), rgba(62,201,230,0)); filter: blur(10px)"></div>
+
+  <sc-for list="{{pieces}}" as="p" hint-placeholder-count="18">
+    <span class="conf" style="{{p.style}}"></span>
+  </sc-for>
+
+  <div style="position: absolute; left: 0; right: 0; top: 150px; display: flex; flex-direction: column; align-items: center; text-align: center">
+    <div style="position: relative; width: 120px; height: 120px">
+      <span class="ring" style="position: absolute; left: 0; top: 0; width: 120px; height: 120px; border-radius: 50%; border: 3px solid #3ec9e6"></span>
+      <span class="pop" style="position: absolute; left: 0; top: 0; width: 120px; height: 120px; border-radius: 50%; background: linear-gradient(145deg, #3ec9e6, #eef33a); display: flex; align-items: center; justify-content: center; box-shadow: 0 18px 44px rgba(62,201,230,0.45)">
+        <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#06232b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg>
+      </span>
+    </div>
+    <h1 class="rowin" style="margin: 26px 0 0; font-size: 38px; line-height: 1.05; font-weight: 800; letter-spacing: -0.03em; animation-delay: 0.25s">You are in!</h1>
+    <p class="rowin" style="margin: 10px 0 0; font-size: 16px; line-height: 1.45; color: #b7c9cf; animation-delay: 0.35s">Thank you for joining WeArt.<br>Your 7-day trial has started.</p>
+
+    <div class="rowin" style="margin-top: 28px; display: flex; align-items: center; gap: 14px; padding: 14px 22px 14px 16px; border-radius: 22px; background: rgba(255,255,255,0.07); border: 1.5px solid rgba(238,243,58,0.55); animation-delay: 0.5s">
+      <span style="width: 46px; height: 46px; border-radius: 50%; background: #eef33a; display: flex; align-items: center; justify-content: center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1a1a05" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"></circle><path d="M12 7.5v9M9.5 10h4a1.6 1.6 0 0 1 0 3.2h-3a1.6 1.6 0 0 0 0 3.2H15"></path></svg></span>
+      <span style="text-align: left"><span style="display: block; font-size: 30px; line-height: 1; font-weight: 800; color: #eef33a">+100 tokens</span><span style="display: block; margin-top: 4px; font-size: 13px; color: #c3cbe0; font-weight: 500">added to your account</span></span>
+    </div>
+  </div>
+
+  <a href="SignUp.dc.html" style="position: absolute; left: 24px; right: 24px; bottom: 28px; height: 56px; border-radius: 28px; background: linear-gradient(90deg, #3ec9e6, #eef33a); color: #06232b; font-size: 17px; font-weight: 800; text-decoration: none; display: flex; align-items: center; justify-content: center; box-shadow: 0 14px 34px rgba(62,201,230,0.35)">Create my first trend</a>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const colors = ['#3ec9e6', '#eef33a', '#1d8bff', '#e23ad6', '#ffffff'];
+    let s = 7;
+    const rnd = () => ((s = (s * 1664525 + 1013904223) % 4294967296) / 4294967296);
+    const pieces = [];
+    for (let i = 0; i < 22; i++) {
+      const w = 6 + Math.round(rnd() * 6);
+      pieces.push({
+        style: 'left: ' + Math.round(rnd() * 370) + 'px; width: ' + w + 'px; height: ' + (w + 6) + 'px; background: ' + colors[i % colors.length] + '; animation-delay: -' + (rnd() * 3.4).toFixed(2) + 's; animation-duration: ' + (2.8 + rnd() * 1.6).toFixed(2) + 's'
+      });
+    }
+    return { pieces };
+  }
+}
+</script>
+</body>
+</html>

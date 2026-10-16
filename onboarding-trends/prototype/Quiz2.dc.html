@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pick the trends you love</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+@font-face{font-family:"Fluctuation";src:url(/_blob/94361c4b384a41bd5d50a9aaa687bfeb) format("opentype");font-weight:100 900;font-style:normal;font-display:swap}
+body{margin:0}
+a{color:#eef33a}a:hover{color:#f6f98a}
+button{font-family:inherit}
+@keyframes bgIn{from{opacity:0}to{opacity:1}}
+@keyframes drift{0%{transform:translate3d(-20px,0,0)}50%{transform:translate3d(30px,24px,0)}100%{transform:translate3d(-20px,0,0)}}
+@keyframes pop{from{opacity:0;transform:scale(.92)}to{opacity:1;transform:scale(1)}}
+.bgin{animation:bgIn .7s ease-out both}
+.blob{animation:drift 9s ease-in-out infinite;will-change:transform}
+.cardin{animation:pop .45s ease-out both}
+@media (prefers-reduced-motion: reduce){.blob,.cardin{animation:none}}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #07080c; font-family: Fluctuation, system-ui, sans-serif; color: #f4f6fb">
+  <div style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; background: radial-gradient(120% 55% at 50% 22%, #08414f 0%, #07080c 64%)"></div>
+  <div class="bgin" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; background: radial-gradient(120% 55% at 50% 20%, #3d3a06 0%, #07080c 64%)"></div>
+  <div class="blob" style="position: absolute; left: 50px; top: 60px; width: 300px; height: 190px; border-radius: 50%; background: radial-gradient(closest-side, rgba(238,243,58,0.26), rgba(238,243,58,0)); filter: blur(10px)"></div>
+
+  <div style="position: absolute; left: 24px; right: 24px; top: 16px; display: flex; gap: 6px">
+    <span style="flex: 1; height: 4px; border-radius: 2px; background: #eef33a"></span>
+    <span style="flex: 1; height: 4px; border-radius: 2px; background: #eef33a"></span>
+    <span style="flex: 1; height: 4px; border-radius: 2px; background: #eef33a"></span>
+    <span style="flex: 1; height: 4px; border-radius: 2px; background: #eef33a"></span>
+    <span style="flex: 1; height: 4px; border-radius: 2px; background: #2a3042"></span>
+  </div>
+
+  <div style="position: absolute; left: 12px; right: 24px; top: 32px; height: 48px; display: flex; justify-content: space-between; align-items: center">
+    <a href="Quiz1.dc.html" aria-label="Back" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; text-decoration: none"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#a3a9b8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg></a>
+    <a href="Paywall.dc.html" style="color: #a3a9b8; font-size: 15px; font-weight: 600; text-decoration: none; padding: 14px 4px">Skip</a>
+  </div>
+
+  <div style="position: absolute; left: 24px; right: 24px; top: 96px">
+    <div style="display: flex; justify-content: space-between; align-items: baseline">
+      <span style="font-size: 13px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #eef33a">Your taste</span>
+      <span style="font-size: 13px; font-weight: 600; color: #c9c98f">{{countText}}</span>
+    </div>
+    <h1 style="margin: 8px 0 0; font-size: 31px; line-height: 1.1; font-weight: 800; letter-spacing: -0.025em">Pick the trends<br>you love</h1>
+  </div>
+
+  <div style="position: absolute; left: 24px; right: 24px; top: 206px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+    <sc-for list="{{cards}}" as="c" hint-placeholder-count="8">
+      <button class="cardin" onClick="{{c.pick}}" aria-pressed="{{c.on}}" aria-label="{{c.label}}" style="position: relative; height: 120px; padding: 0; border: 0; border-radius: 18px; overflow: hidden; cursor: pointer; background-color: {{c.bg}}; animation-delay: {{c.delay}}">
+        <img src="{{c.src}}" alt="" decoding="async" style="width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; display: block">
+        <span style="position: absolute; left: 0; right: 0; bottom: 0; height: 56px; background: linear-gradient(to top, rgba(7,8,12,0.82), rgba(7,8,12,0))"></span>
+        <span style="position: absolute; left: 10px; bottom: 8px; font-size: 12.5px; font-weight: 700; color: #ffffff; text-align: left">{{c.label}}</span>
+        <span style="{{c.ring}}"></span>
+        <span style="{{c.badge}}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#1a1a05" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg></span>
+      </button>
+    </sc-for>
+  </div>
+
+  <sc-if value="{{hasSel}}" hint-placeholder-val="{{ true }}">
+    <a href="Result.dc.html" style="position: absolute; left: 24px; right: 24px; bottom: 28px; height: 56px; border-radius: 28px; background: #eef33a; color: #1a1a05; font-size: 17px; font-weight: 700; text-decoration: none; display: flex; align-items: center; justify-content: center; box-shadow: 0 14px 34px rgba(238,243,58,0.3)">Continue</a>
+  </sc-if>
+  <sc-if value="{{noSel}}" hint-placeholder-val="{{ false }}">
+    <div style="position: absolute; left: 24px; right: 24px; bottom: 28px; height: 56px; border-radius: 28px; background: #1d1f10; color: #85875f; font-size: 17px; font-weight: 700; display: flex; align-items: center; justify-content: center">Pick at least one</div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { sel: [] };
+  }
+  renderVals() {
+    const sel = this.state.sel;
+    const T = [
+      { id: 't2', label: 'Red crowd', src: '/_blob/605a1b94ab607d2d02af0012cf747155', bg: '#643932' },
+      { id: 't1', label: 'Giant in the city', src: '/_blob/500943454aae47c3a8f05301147f389a', bg: '#6f757f' },
+      { id: 't3', label: 'Fruit furniture', src: '/_blob/c466dacfa525df5221ab55d31d8e7385', bg: '#937e62' },
+      { id: 't5', label: 'Tiny knight', src: '/_blob/8fbed0a331a843d678cdd6f2d77da7cc', bg: '#a1a5a6' },
+      { id: 't6', label: 'Sky fall', src: '/_blob/bc0689e060beb44ccf072e4246682a09', bg: '#b27978' },
+      { id: 't7', label: 'Cat rappers', src: '/_blob/9ff89c7e5253ae9b0d92b3665cb2a1f5', bg: '#ae6a41' },
+      { id: 't8', label: 'Cat selfie', src: '/_blob/840e44943cb9e0f13659f2dcf9790eec', bg: '#786962' },
+      { id: 't9', label: '3D billboard', src: '/_blob/792d2f4802c2ef82e088bec83bac2cf0', bg: '#715b50' }
+    ];
+    const cards = T.map((t, i) => {
+      const on = sel.indexOf(t.id) >= 0;
+      return {
+        ...t,
+        on,
+        delay: (i * 0.05) + 's',
+        pick: () => {
+          const cur = this.state.sel;
+          if (cur.indexOf(t.id) >= 0) this.setState({ sel: cur.filter((x) => x !== t.id) });
+          else if (cur.length < 3) this.setState({ sel: cur.concat([t.id]) });
+        },
+        ring: 'position: absolute; left: 0; top: 0; right: 0; bottom: 0; border-radius: 18px; box-sizing: border-box; pointer-events: none; ' + (on ? 'border: 3px solid #eef33a;' : 'border: 1px solid rgba(255,255,255,0.14);'),
+        badge: 'position: absolute; right: 8px; top: 8px; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; ' + (on ? 'background: #eef33a;' : 'background: rgba(7,8,12,0.55); border: 1.5px solid rgba(255,255,255,0.5);') + (on ? '' : ' visibility: visible;')
+      };
+    });
+    return { cards, hasSel: sel.length > 0, noSel: sel.length === 0, countText: sel.length + '/3 selected' };
+  }
+}
+</script>
+</body>
+</html>

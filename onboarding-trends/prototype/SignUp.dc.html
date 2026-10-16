@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Save your trends</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+@font-face{font-family:"Fluctuation";src:url(/_blob/94361c4b384a41bd5d50a9aaa687bfeb) format("opentype");font-weight:100 900;font-style:normal;font-display:swap}
+body{margin:0}
+a{color:#7fbcff}a:hover{color:#b4d8ff}
+input{font-family:inherit}
+input::placeholder{color:#7f8aa3}
+input:focus{outline:2px solid #1d8bff;outline-offset:2px}
+@keyframes bgIn{from{opacity:0}to{opacity:1}}
+@keyframes drift{0%{transform:translate3d(-20px,0,0)}50%{transform:translate3d(30px,24px,0)}100%{transform:translate3d(-20px,0,0)}}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(var(--r))}50%{transform:translateY(-8px) rotate(var(--r))}}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.bgin{animation:bgIn .7s ease-out both}
+.blob{animation:drift 9s ease-in-out infinite;will-change:transform}
+.fl{animation:floaty 5s ease-in-out infinite;will-change:transform}
+.rowin{animation:rise .55s ease-out both}
+@media (prefers-reduced-motion: reduce){.blob,.fl,.rowin{animation:none}}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #07080c; font-family: Fluctuation, system-ui, sans-serif; color: #f4f6fb">
+  <div style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; background: radial-gradient(120% 56% at 50% 34%, #0a4a52 0%, #07080c 66%)"></div>
+  <div class="bgin" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; background: radial-gradient(120% 52% at 50% 16%, #0e3f8c 0%, #07080c 68%)"></div>
+  <div class="blob" style="position: absolute; left: 50px; top: 40px; width: 300px; height: 210px; border-radius: 50%; background: radial-gradient(closest-side, rgba(29,139,255,0.42), rgba(29,139,255,0)); filter: blur(10px)"></div>
+
+  <div style="position: absolute; left: 24px; right: 24px; top: 28px; display: flex; justify-content: center">
+    <img src="/_blob/78f2ac65dbbe2490806c34d47f9b74b1" alt="WeArt" style="height: 22px; width: auto; display: block">
+  </div>
+
+  <div style="position: absolute; left: 0; right: 0; top: 72px; height: 190px">
+    <div class="fl" style="--r: -12deg; position: absolute; left: 40px; top: 36px; width: 98px; height: 132px; border-radius: 18px; overflow: hidden; background-color: #b27978; border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 16px 32px rgba(0,0,0,0.5); transform: rotate(-12deg)"><img src="/_blob/bc0689e060beb44ccf072e4246682a09" alt="" decoding="async" style="width: 100%; height: 100%; object-fit: cover; display: block"></div>
+    <div class="fl" style="--r: 12deg; animation-delay: -2.2s; position: absolute; right: 40px; top: 36px; width: 98px; height: 132px; border-radius: 18px; overflow: hidden; background-color: #ae6a41; border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 16px 32px rgba(0,0,0,0.5); transform: rotate(12deg)"><img src="/_blob/9ff89c7e5253ae9b0d92b3665cb2a1f5" alt="" decoding="async" style="width: 100%; height: 100%; object-fit: cover; display: block"></div>
+    <div class="fl" style="--r: -4deg; animation-delay: -1s; position: absolute; left: 98px; top: 14px; width: 104px; height: 142px; border-radius: 18px; overflow: hidden; background-color: #643932; border: 1px solid rgba(255,255,255,0.24); box-shadow: 0 18px 36px rgba(0,0,0,0.55); transform: rotate(-4deg)"><img src="/_blob/605a1b94ab607d2d02af0012cf747155" alt="" decoding="async" style="width: 100%; height: 100%; object-fit: cover; display: block"></div>
+    <div class="fl" style="--r: 5deg; animation-delay: -3s; position: absolute; left: 190px; top: 22px; width: 104px; height: 142px; border-radius: 18px; overflow: hidden; background-color: #715b50; border: 1px solid rgba(255,255,255,0.24); box-shadow: 0 18px 36px rgba(0,0,0,0.55); transform: rotate(5deg)"><img src="/_blob/792d2f4802c2ef82e088bec83bac2cf0" alt="" decoding="async" style="width: 100%; height: 100%; object-fit: cover; display: block"></div>
+  </div>
+
+  <div class="rowin" style="position: absolute; left: 24px; right: 24px; top: 282px; animation-delay: 0.1s">
+    <h1 style="margin: 0; font-size: 36px; line-height: 1.06; font-weight: 800; letter-spacing: -0.025em">Save your<br><span style="color: #4aa8ff">trends.</span></h1>
+    <p style="margin: 10px 0 0; font-size: 14.5px; line-height: 1.45; color: #aebbd2">Sign in to keep everything you create and pick up on any device.</p>
+  </div>
+
+  <div class="rowin" style="position: absolute; left: 24px; right: 24px; top: 430px; display: flex; flex-direction: column; gap: 14px; animation-delay: 0.2s">
+    <a href="Main.dc.html" style="height: 54px; border-radius: 27px; background: #ffffff; color: #1b1f2a; font-size: 16px; font-weight: 700; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 12px">
+      <svg width="20" height="20" viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9 3.5l6.7-6.7C35.6 2.4 30.2 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.8 6.1C12.3 13.6 17.7 9.5 24 9.5z"></path><path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.5 5.8c4.4-4.1 7.1-10.1 7.1-17.5z"></path><path fill="#FBBC05" d="M10.4 28.7c-.5-1.5-.8-3-.8-4.7s.3-3.2.8-4.7l-7.8-6.1C.9 16.5 0 20.1 0 24s.9 7.5 2.6 10.8l7.8-6.1z"></path><path fill="#34A853" d="M24 48c6.2 0 11.4-2 15.2-5.5l-7.5-5.8c-2.1 1.4-4.7 2.3-7.7 2.3-6.3 0-11.7-4.1-13.6-9.8l-7.8 6.1C6.5 42.6 14.6 48 24 48z"></path></svg>
+      Continue with Google
+    </a>
+    <div style="display: flex; align-items: center; gap: 12px; color: #8793ac; font-size: 12.5px; font-weight: 600"><span style="flex: 1; height: 1px; background: #26324a"></span>or use email<span style="flex: 1; height: 1px; background: #26324a"></span></div>
+    <div style="display: flex; flex-direction: column; gap: 8px">
+      <label for="email" style="font-size: 12.5px; font-weight: 600; color: #aebbd2">Email</label>
+      <input id="email" type="email" placeholder="you@email.com" style="height: 52px; box-sizing: border-box; border-radius: 16px; border: 1.5px solid #26324a; background: #0d1424; color: #f4f6fb; font-size: 16px; padding: 0 16px; width: 100%">
+    </div>
+    <a href="Main.dc.html" style="height: 54px; border-radius: 27px; background: #1d8bff; color: #ffffff; font-size: 16.5px; font-weight: 700; text-decoration: none; display: flex; align-items: center; justify-content: center; box-shadow: 0 14px 34px rgba(29,139,255,0.42)">Continue</a>
+  </div>
+
+  <div style="position: absolute; left: 32px; right: 32px; bottom: 20px; text-align: center; font-size: 11.5px; line-height: 1.45; color: #7f8aa3">By continuing you agree to the Terms of Use and Privacy Policy.</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

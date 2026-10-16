@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Easier than copying it</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+@font-face{font-family:"Fluctuation";src:url(/_blob/94361c4b384a41bd5d50a9aaa687bfeb) format("opentype");font-weight:100 900;font-style:normal;font-display:swap}
+body{margin:0}
+a{color:#e86be0}a:hover{color:#f2a0ec}
+@keyframes bgIn{from{opacity:0}to{opacity:1}}
+@keyframes drift{0%{transform:translate3d(-20px,0,0)}50%{transform:translate3d(30px,24px,0)}100%{transform:translate3d(-20px,0,0)}}
+@keyframes fade4{0%{opacity:0}5%{opacity:1}25%{opacity:1}30%{opacity:0}100%{opacity:0}}
+@keyframes scanY{0%{transform:translateY(-90px);opacity:0}10%{opacity:1}90%{opacity:1}100%{transform:translateY(380px);opacity:0}}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(var(--r))}50%{transform:translateY(-8px) rotate(var(--r))}}
+.bgin{animation:bgIn .7s ease-out both}
+.blob{animation:drift 9s ease-in-out infinite;will-change:transform}
+.fr{position:absolute;left:0;top:0;width:100%;height:100%;opacity:0;animation:fade4 12s infinite both}
+.scan{animation:scanY 3s linear infinite;will-change:transform}
+.fl{animation:floaty 5s ease-in-out infinite;will-change:transform}
+@media (prefers-reduced-motion: reduce){.blob,.scan,.fl{animation:none}.fr{animation:none}.fr:first-child{opacity:1}}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #07080c; font-family: Fluctuation, system-ui, sans-serif; color: #f4f6fb">
+  <div style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; background: radial-gradient(120% 55% at 50% 24%, #10306a 0%, #07080c 64%)"></div>
+  <div class="bgin" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; background: radial-gradient(120% 58% at 50% 30%, #4a0f4c 0%, #07080c 66%)"></div>
+  <div class="blob" style="position: absolute; left: 30px; top: 300px; width: 330px; height: 240px; border-radius: 50%; background: radial-gradient(closest-side, rgba(226,58,214,0.4), rgba(226,58,214,0)); filter: blur(10px)"></div>
+
+  <div style="position: absolute; left: 24px; right: 24px; top: 16px; display: flex; gap: 6px">
+    <span style="flex: 1; height: 4px; border-radius: 2px; background: #e23ad6"></span>
+    <span style="flex: 1; height: 4px; border-radius: 2px; background: #e23ad6"></span>
+    <span style="flex: 1; height: 4px; border-radius: 2px; background: #2a3042"></span>
+    <span style="flex: 1; height: 4px; border-radius: 2px; background: #2a3042"></span>
+    <span style="flex: 1; height: 4px; border-radius: 2px; background: #2a3042"></span>
+  </div>
+
+  <div style="position: absolute; left: 12px; right: 24px; top: 32px; height: 48px; display: flex; justify-content: space-between; align-items: center">
+    <a href="Main.dc.html" aria-label="Back" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; text-decoration: none"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#a3a9b8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg></a>
+    <a href="Paywall.dc.html" style="color: #a3a9b8; font-size: 15px; font-weight: 600; text-decoration: none; padding: 14px 4px">Skip</a>
+  </div>
+
+  <div class="fl" style="--r: -9deg; position: absolute; left: -14px; top: 210px; width: 118px; height: 156px; border-radius: 18px; overflow: hidden; background-color: #ae6a41; border: 1px solid rgba(255,255,255,0.16); box-shadow: 0 18px 36px rgba(0,0,0,0.5); transform: rotate(-9deg)"><img src="/_blob/9ff89c7e5253ae9b0d92b3665cb2a1f5" alt="" decoding="async" style="width: 100%; height: 100%; object-fit: cover; display: block"></div>
+  <div class="fl" style="--r: 9deg; animation-delay: -2s; position: absolute; right: -14px; top: 170px; width: 118px; height: 156px; border-radius: 18px; overflow: hidden; background-color: #715b50; border: 1px solid rgba(255,255,255,0.16); box-shadow: 0 18px 36px rgba(0,0,0,0.5); transform: rotate(9deg)"><img src="/_blob/792d2f4802c2ef82e088bec83bac2cf0" alt="" decoding="async" style="width: 100%; height: 100%; object-fit: cover; display: block"></div>
+
+  <div style="position: absolute; left: 45px; top: 104px; width: 300px; height: 372px; border-radius: 28px; overflow: hidden; background-color: #1a1420; border: 2px solid rgba(255,255,255,0.22); box-shadow: 0 30px 60px rgba(0,0,0,0.6), 0 0 60px rgba(226,58,214,0.3)">
+    <div class="fr" style="animation-delay: 0s"><img src="/_blob/7723fb9fc86ec263d0f17cce047643d5" alt="Selfie of a woman on a sofa" decoding="async" style="width: 100%; height: 100%; object-fit: cover; display: block"><span style="position: absolute; left: 12px; bottom: 12px; padding: 6px 12px; border-radius: 999px; background: rgba(7,8,12,0.78); font-size: 12px; font-weight: 700">Your photo</span></div>
+    <div class="fr" style="animation-delay: 3s"><img src="/_blob/9ecc40b7ac42549a8d71a29640d5573e" alt="The same woman in a viral street-fashion trend" decoding="async" style="width: 100%; height: 100%; object-fit: cover; display: block"><span style="position: absolute; left: 12px; bottom: 12px; padding: 6px 12px; border-radius: 999px; background: #e23ad6; font-size: 12px; font-weight: 700">Trend · ready in seconds</span></div>
+    <div class="fr" style="animation-delay: 6s"><img src="/_blob/66cc8a306e804bb4410ac4d1d53c3c2d" alt="Selfie of a man at a desk" decoding="async" style="width: 100%; height: 100%; object-fit: cover; display: block"><span style="position: absolute; left: 12px; bottom: 12px; padding: 6px 12px; border-radius: 999px; background: rgba(7,8,12,0.78); font-size: 12px; font-weight: 700">Your photo</span></div>
+    <div class="fr" style="animation-delay: 9s"><img src="/_blob/2c501ccf91bdade1a5d84f89792fad40" alt="The same man floating in a sunset sky with his things" decoding="async" style="width: 100%; height: 100%; object-fit: cover; display: block"><span style="position: absolute; left: 12px; bottom: 12px; padding: 6px 12px; border-radius: 999px; background: #e23ad6; font-size: 12px; font-weight: 700">Trend · ready in seconds</span></div>
+    <div class="scan" style="position: absolute; left: 0; top: 0; width: 100%; height: 70px; background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0.38), rgba(255,255,255,0))"></div>
+  </div>
+
+  <div style="position: absolute; left: 24px; right: 24px; top: 502px; display: flex; flex-direction: column; gap: 8px">
+    <h1 style="margin: 0; font-size: 30px; line-height: 1.08; font-weight: 800; letter-spacing: -0.025em">Easier than<br><span style="color: #f08ae9">copying it.</span></h1>
+    <p style="margin: 0; font-size: 14px; line-height: 1.45; color: #b3a9bd">Upload one photo and we recreate any trend in seconds, as a photo or a video.</p>
+    <div style="margin-top: 6px; display: flex; flex-direction: column; gap: 6px">
+      <div style="display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; color: #dcd0e3"><span style="width: 44px; color: #b3a9bd; font-weight: 500">Photo</span><span style="padding: 4px 10px; border-radius: 999px; background: #1f1526; border: 1px solid #3a2644">Nano Banana 2</span><span style="padding: 4px 10px; border-radius: 999px; background: #1f1526; border: 1px solid #3a2644">GPT Image 2</span></div>
+      <div style="display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; color: #dcd0e3"><span style="width: 44px; color: #b3a9bd; font-weight: 500">Video</span><span style="padding: 4px 10px; border-radius: 999px; background: #1f1526; border: 1px solid #3a2644">Kling 3.0</span><span style="padding: 4px 10px; border-radius: 999px; background: #1f1526; border: 1px solid #3a2644">Seedance 2.5</span></div>
+    </div>
+  </div>
+
+  <a href="Quiz1.dc.html" style="position: absolute; left: 24px; right: 24px; bottom: 28px; height: 56px; border-radius: 28px; background: #e23ad6; color: #ffffff; font-size: 17px; font-weight: 700; text-decoration: none; display: flex; align-items: center; justify-content: center; box-shadow: 0 14px 34px rgba(226,58,214,0.4)">Next</a>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>

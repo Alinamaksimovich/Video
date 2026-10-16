@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Any trend. One photo.</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+@font-face{font-family:"Fluctuation";src:url(/_blob/94361c4b384a41bd5d50a9aaa687bfeb) format("opentype");font-weight:100 900;font-style:normal;font-display:swap}
+body{margin:0}
+a{color:#4aa8ff}a:hover{color:#8cc8ff}
+@keyframes wallUp{from{transform:translateY(0)}to{transform:translateY(-50%)}}
+@keyframes wallDown{from{transform:translateY(-50%)}to{transform:translateY(0)}}
+@keyframes bgIn{from{opacity:0}to{opacity:1}}
+@keyframes drift{0%{transform:translate3d(-20px,0,0)}50%{transform:translate3d(30px,24px,0)}100%{transform:translate3d(-20px,0,0)}}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.7)}}
+.wall-up{animation:wallUp 36s linear infinite;will-change:transform}
+.wall-down{animation:wallDown 42s linear infinite;will-change:transform}
+.bgin{animation:bgIn .7s ease-out both}
+.blob{animation:drift 9s ease-in-out infinite;will-change:transform}
+.live{animation:pulse 1.6s ease-in-out infinite}
+@media (prefers-reduced-motion: reduce){.wall-up,.wall-down,.blob,.live{animation:none}}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #07080c; font-family: Fluctuation, system-ui, sans-serif; color: #f4f6fb">
+  <div class="bgin" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; background: radial-gradient(120% 55% at 50% 24%, #10306a 0%, #07080c 64%)"></div>
+  <div class="blob" style="position: absolute; left: 40px; top: 470px; width: 320px; height: 220px; border-radius: 50%; background: radial-gradient(closest-side, rgba(29,139,255,0.45), rgba(29,139,255,0)); filter: blur(10px)"></div>
+
+  <div style="position: absolute; left: 24px; right: 24px; top: 16px; display: flex; gap: 6px">
+    <span style="flex: 1; height: 4px; border-radius: 2px; background: #1d8bff"></span>
+    <span style="flex: 1; height: 4px; border-radius: 2px; background: #2a3042"></span>
+    <span style="flex: 1; height: 4px; border-radius: 2px; background: #2a3042"></span>
+    <span style="flex: 1; height: 4px; border-radius: 2px; background: #2a3042"></span>
+    <span style="flex: 1; height: 4px; border-radius: 2px; background: #2a3042"></span>
+  </div>
+
+  <div style="position: absolute; left: 24px; right: 24px; top: 32px; height: 48px; display: flex; justify-content: space-between; align-items: center">
+    <img src="/_blob/78f2ac65dbbe2490806c34d47f9b74b1" alt="WeArt" style="height: 24px; width: auto; display: block">
+    <a href="Paywall.dc.html" style="color: #a3a9b8; font-size: 15px; font-weight: 600; text-decoration: none; padding: 14px 4px">Skip</a>
+  </div>
+
+  <div style="position: absolute; left: 0; right: 0; top: 92px; height: 392px; display: flex; gap: 10px; padding: 0 24px; box-sizing: border-box; -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 11%, #000 84%, transparent 100%); mask-image: linear-gradient(to bottom, transparent 0%, #000 11%, #000 84%, transparent 100%)">
+    <div style="flex: 1; overflow: hidden; height: 100%">
+      <div class="wall-up" style="display: flex; flex-direction: column; gap: 10px">
+        <sc-for list="{{wall1}}" as="c" hint-placeholder-count="8">
+          <div style="height: 150px; flex-shrink: 0; border-radius: 16px; overflow: hidden; background-color: {{c.bg}}"><img src="{{c.src}}" alt="" decoding="async" style="width: 100%; height: 100%; object-fit: cover; display: block"></div>
+        </sc-for>
+      </div>
+    </div>
+    <div style="flex: 1; overflow: hidden; height: 100%">
+      <div class="wall-down" style="display: flex; flex-direction: column; gap: 10px">
+        <sc-for list="{{wall2}}" as="c" hint-placeholder-count="8">
+          <div style="height: 150px; flex-shrink: 0; border-radius: 16px; overflow: hidden; background-color: {{c.bg}}"><img src="{{c.src}}" alt="" decoding="async" style="width: 100%; height: 100%; object-fit: cover; display: block"></div>
+        </sc-for>
+      </div>
+    </div>
+    <div style="flex: 1; overflow: hidden; height: 100%">
+      <div class="wall-up" style="display: flex; flex-direction: column; gap: 10px">
+        <sc-for list="{{wall3}}" as="c" hint-placeholder-count="8">
+          <div style="height: 150px; flex-shrink: 0; border-radius: 16px; overflow: hidden; background-color: {{c.bg}}"><img src="{{c.src}}" alt="" decoding="async" style="width: 100%; height: 100%; object-fit: cover; display: block"></div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+
+  <div style="position: absolute; left: 24px; top: 452px; display: flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; background: rgba(7,8,12,0.78); border: 1px solid rgba(255,255,255,0.14); font-size: 12px; font-weight: 600">
+    <span class="live" style="width: 8px; height: 8px; border-radius: 50%; background: #3ec9e6"></span>New trends every week
+  </div>
+
+  <div style="position: absolute; left: 24px; right: 24px; top: 498px; display: flex; flex-direction: column; gap: 8px">
+    <h1 style="margin: 0; font-size: 34px; line-height: 1.06; font-weight: 800; letter-spacing: -0.025em">Any trend.<br><span style="color: #4aa8ff">One photo.</span></h1>
+    <p style="margin: 0; font-size: 14px; line-height: 1.45; color: #a3a9b8">Drop a photo and get the whole look. Recreate any viral trend in seconds.</p>
+    <div style="margin-top: 6px; display: flex; flex-wrap: wrap; gap: 6px">
+      <span style="display: flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 999px; background: #151a26; border: 1px solid #262d40; font-size: 11.5px; font-weight: 600; color: #dfe4f0"><i style="width: 6px; height: 6px; border-radius: 50%; background: #e23ad6"></i>Nano Banana 2</span>
+      <span style="display: flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 999px; background: #151a26; border: 1px solid #262d40; font-size: 11.5px; font-weight: 600; color: #dfe4f0"><i style="width: 6px; height: 6px; border-radius: 50%; background: #e23ad6"></i>GPT Image 2</span>
+      <span style="display: flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 999px; background: #151a26; border: 1px solid #262d40; font-size: 11.5px; font-weight: 600; color: #dfe4f0"><i style="width: 6px; height: 6px; border-radius: 50%; background: #eef33a"></i>Kling 3.0</span>
+      <span style="display: flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 999px; background: #151a26; border: 1px solid #262d40; font-size: 11.5px; font-weight: 600; color: #dfe4f0"><i style="width: 6px; height: 6px; border-radius: 50%; background: #eef33a"></i>Seedance 2.5</span>
+      <span style="display: flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 999px; background: #151a26; border: 1px solid #262d40; font-size: 11.5px; font-weight: 600; color: #dfe4f0"><i style="width: 6px; height: 6px; border-radius: 50%; background: #eef33a"></i>Veo 3.1</span>
+      <span style="display: flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 999px; background: #151a26; border: 1px solid #262d40; font-size: 11.5px; font-weight: 600; color: #dfe4f0"><i style="width: 6px; height: 6px; border-radius: 50%; background: #3ec9e6"></i>ElevenLabs v3</span>
+    </div>
+  </div>
+
+  <a href="Before.dc.html" style="position: absolute; left: 24px; right: 24px; bottom: 28px; height: 56px; border-radius: 28px; background: #1d8bff; color: #ffffff; font-size: 17px; font-weight: 700; text-decoration: none; display: flex; align-items: center; justify-content: center; box-shadow: 0 14px 34px rgba(29,139,255,0.45)">Get started</a>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const A = {
+      t1: { src: '/_blob/500943454aae47c3a8f05301147f389a', bg: '#6f757f' },
+      t2: { src: '/_blob/605a1b94ab607d2d02af0012cf747155', bg: '#643932' },
+      t3: { src: '/_blob/c466dacfa525df5221ab55d31d8e7385', bg: '#937e62' },
+      t5: { src: '/_blob/8fbed0a331a843d678cdd6f2d77da7cc', bg: '#a1a5a6' },
+      t6: { src: '/_blob/bc0689e060beb44ccf072e4246682a09', bg: '#b27978' },
+      t7: { src: '/_blob/9ff89c7e5253ae9b0d92b3665cb2a1f5', bg: '#ae6a41' },
+      t8: { src: '/_blob/840e44943cb9e0f13659f2dcf9790eec', bg: '#786962' },
+      t9: { src: '/_blob/792d2f4802c2ef82e088bec83bac2cf0', bg: '#715b50' }
+    };
+    const col = (ids) => { const l = ids.map((k) => A[k]); return l.concat(l); };
+    return {
+      wall1: col(['t2', 't6', 't8', 't3']),
+      wall2: col(['t7', 't1', 't9', 't5']),
+      wall3: col(['t5', 't3', 't6', 't2'])
+    };
+  }
+}
+</script>
+</body>
+</html>

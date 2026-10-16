@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Try WeArt for 7 days</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+@font-face{font-family:"Fluctuation";src:url(/_blob/94361c4b384a41bd5d50a9aaa687bfeb) format("opentype");font-weight:100 900;font-style:normal;font-display:swap}
+body{margin:0}
+a{color:#8a90a0}a:hover{color:#b8bdcb}
+@keyframes bgIn{from{opacity:0}to{opacity:1}}
+@keyframes drift{0%{transform:translate3d(-20px,0,0)}50%{transform:translate3d(30px,24px,0)}100%{transform:translate3d(-20px,0,0)}}
+@keyframes floaty{0%,100%{transform:translateY(0) rotate(var(--r))}50%{transform:translateY(-9px) rotate(var(--r))}}
+@keyframes sheen{0%{transform:translateX(-140%) skewX(-18deg)}60%,100%{transform:translateX(420%) skewX(-18deg)}}
+@keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.bgin{animation:bgIn .7s ease-out both}
+.blob{animation:drift 9s ease-in-out infinite;will-change:transform}
+.fl{animation:floaty 5s ease-in-out infinite;will-change:transform}
+.sheen{animation:sheen 3.2s ease-in-out infinite}
+.rowin{animation:rise .5s ease-out both}
+@media (prefers-reduced-motion: reduce){.blob,.fl,.sheen,.rowin{animation:none}}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; position: relative; overflow: hidden; background: #07080c; font-family: Fluctuation, system-ui, sans-serif; color: #f4f6fb">
+  <div style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; background: radial-gradient(120% 58% at 50% 26%, #2c1660 0%, #07080c 66%)"></div>
+  <div class="bgin" style="position: absolute; left: 0; top: 0; right: 0; bottom: 0; background: radial-gradient(110% 46% at 50% 18%, #11295a 0%, #07080c 70%)"></div>
+  <div class="blob" style="position: absolute; left: 50px; top: 90px; width: 300px; height: 220px; border-radius: 50%; background: radial-gradient(closest-side, rgba(238,243,58,0.22), rgba(238,243,58,0)); filter: blur(10px)"></div>
+
+  <div style="position: absolute; left: 24px; right: 24px; top: 28px; display: flex; justify-content: center">
+    <img src="/_blob/78f2ac65dbbe2490806c34d47f9b74b1" alt="WeArt" style="height: 22px; width: auto; display: block; opacity: 0.95">
+  </div>
+
+  <div style="position: absolute; left: 0; right: 0; top: 70px; height: 262px">
+    <div class="fl" style="--r: -10deg; position: absolute; left: 22px; top: 52px; width: 124px; height: 168px; border-radius: 20px; overflow: hidden; background-color: #715b50; border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 20px 40px rgba(0,0,0,0.55); transform: rotate(-10deg)"><img src="/_blob/792d2f4802c2ef82e088bec83bac2cf0" alt="" decoding="async" style="width: 100%; height: 100%; object-fit: cover; display: block"></div>
+    <div class="fl" style="--r: 10deg; animation-delay: -2.4s; position: absolute; right: 22px; top: 60px; width: 124px; height: 168px; border-radius: 20px; overflow: hidden; background-color: #be958e; border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 20px 40px rgba(0,0,0,0.55); transform: rotate(10deg)"><img src="/_blob/2c501ccf91bdade1a5d84f89792fad40" alt="" decoding="async" style="width: 100%; height: 100%; object-fit: cover; object-position: 50% 25%; display: block"></div>
+    <div class="fl" style="--r: 0deg; animation-delay: -1.2s; position: absolute; left: 117px; top: 12px; width: 156px; height: 214px; border-radius: 24px; overflow: hidden; background-color: #a26a46; border: 2px solid rgba(255,255,255,0.3); box-shadow: 0 28px 56px rgba(0,0,0,0.6); transform: rotate(0deg)"><img src="/_blob/9ecc40b7ac42549a8d71a29640d5573e" alt="" decoding="async" style="width: 100%; height: 100%; object-fit: cover; display: block"></div>
+    <span class="fl" style="--r: -4deg; animation-delay: -3s; position: absolute; left: 14px; top: 226px; padding: 6px 12px; border-radius: 999px; background: #e23ad6; font-size: 12px; font-weight: 700; transform: rotate(-4deg)">Nano Banana 2</span>
+    <span class="fl" style="--r: 4deg; animation-delay: -1.8s; position: absolute; right: 14px; top: 232px; padding: 6px 12px; border-radius: 999px; background: #eef33a; color: #1a1a05; font-size: 12px; font-weight: 700; transform: rotate(4deg)">Kling 3.0</span>
+  </div>
+
+  <div class="rowin" style="position: absolute; left: 24px; right: 24px; top: 346px; animation-delay: 0.1s">
+    <h1 style="margin: 0; font-size: 29px; line-height: 1.08; font-weight: 800; letter-spacing: -0.025em">Try WeArt for 7 days</h1>
+    <div style="margin-top: 14px; display: flex; align-items: center; justify-content: space-between; padding: 16px 18px; border-radius: 22px; background: linear-gradient(160deg, #1b2a52 0%, #0f1424 100%); border: 1.5px solid #eef33a">
+      <span style="font-size: 46px; line-height: 1; font-weight: 800; letter-spacing: -0.03em; color: #eef33a">$6.99</span>
+      <span style="text-align: right"><span style="display: block; font-size: 15px; font-weight: 700">7-day trial</span><span style="display: block; margin-top: 3px; font-size: 13px; color: #c3cbe0; font-weight: 500">includes 100 tokens</span></span>
+    </div>
+  </div>
+
+  <div class="rowin" style="position: absolute; left: 24px; right: 24px; top: 508px; display: flex; flex-direction: column; gap: 12px; animation-delay: 0.2s">
+    <div style="display: flex; gap: 12px; align-items: flex-start"><span style="width: 22px; height: 22px; border-radius: 50%; background: #1d8bff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg></span><span style="font-size: 14.5px; line-height: 1.35; font-weight: 600">Recreate any trend from one photo</span></div>
+    <div style="display: flex; gap: 12px; align-items: flex-start"><span style="width: 22px; height: 22px; border-radius: 50%; background: #1d8bff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg></span><span style="font-size: 14.5px; line-height: 1.35; font-weight: 600">Top models in one place: Nano Banana 2, GPT Image 2, Kling 3.0, Seedance 2.5</span></div>
+    <div style="display: flex; gap: 12px; align-items: flex-start"><span style="width: 22px; height: 22px; border-radius: 50%; background: #1d8bff; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"></path></svg></span><span style="font-size: 14.5px; line-height: 1.35; font-weight: 600">100 tokens to start creating right away</span></div>
+  </div>
+
+  <a href="Thanks.dc.html" style="position: absolute; left: 24px; right: 24px; bottom: 66px; height: 56px; border-radius: 28px; overflow: hidden; background: #eef33a; color: #1a1a05; font-size: 17px; font-weight: 800; text-decoration: none; display: flex; align-items: center; justify-content: center; box-shadow: 0 14px 34px rgba(238,243,58,0.3)">
+    <span class="sheen" style="position: absolute; left: 0; top: 0; width: 60px; height: 100%; background: rgba(255,255,255,0.45)"></span>
+    <span style="position: relative">Start my 7-day trial</span>
+  </a>
+  <div style="position: absolute; left: 24px; right: 24px; bottom: 14px; text-align: center">
+    <div style="font-size: 11.5px; line-height: 1.4; color: #7f8696; font-weight: 500">Then $16.99/month after the trial. Cancel anytime.</div>
+    <div style="margin-top: 4px; font-size: 11px; color: #7f8696; font-weight: 500">&nbsp;Terms &nbsp;·&nbsp; Privacy</div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {};
+  }
+}
+</script>
+</body>
+</html>
