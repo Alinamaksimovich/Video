@@ -19,5 +19,5 @@ Plan: 8-screen onboarding (see chat). Photos get converted to WebP ≤150 KB + b
 Live canvas: https://claude.ai/artifact/VbjDdK4PFcdNN7tZsmqjcN
 Source: `prototype/*.dc.html` + `canvas.json`; optimized WebP assets (~400 KB total) in `prototype/assets/`.
 Models shown (latest as of Oct 2026): Nano Banana 2, GPT Image 2, Kling 3.0, Seedance 2.5, Veo 3.1, ElevenLabs v3.
-Font: Fluctuation Light (client-supplied, single weight).
+Font: SF Pro Display on Apple devices (system stack, licence does not allow web embedding), Inter as the embedded fallback.
 Rifle-on-carpet photo (04) intentionally left out of the UI: weapons risk App Store / Meta rejection.
