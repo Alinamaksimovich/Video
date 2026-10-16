@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>WeArt Studio — Try now</title>
+    <script src="assets/vendor/gsap.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "Manrope";
+        src: url("assets/fonts/manrope-lat.woff2") format("woff2");
+        font-weight: 200 800;
+      }
+      :root {
+        --bg: #07080c;
+        --blue: #1d8bff;
+        --cyan: #3ec9e6;
+        --yellow: #eef33a;
+        --magenta: #e23ad6;
+        --text: #f4f6fb;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: var(--bg);
+      }
+      #root {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: radial-gradient(70% 45% at 50% 52%, #10224a 0%, var(--bg) 72%);
+        font-family: "Manrope", system-ui, sans-serif;
+        color: var(--text);
+      }
+      .dots {
+        position: absolute;
+        left: -60px;
+        top: -60px;
+        width: 1200px;
+        height: 2040px;
+        background-image: radial-gradient(rgba(255, 255, 255, 0.14) 2px, transparent 2px);
+        background-size: 48px 48px;
+      }
+      #glow {
+        position: absolute;
+        left: 140px;
+        top: 760px;
+        width: 800px;
+        height: 520px;
+        border-radius: 50%;
+        background: radial-gradient(closest-side, rgba(29, 139, 255, 0.55), rgba(29, 139, 255, 0));
+        opacity: 0;
+      }
+      #logo {
+        position: absolute;
+        left: 430px;
+        top: 250px;
+        width: 220px;
+        opacity: 0;
+      }
+      #try {
+        position: absolute;
+        left: 0;
+        width: 1080px;
+        top: 520px;
+        text-align: center;
+        font-size: 190px;
+        font-weight: 800;
+        line-height: 1;
+        letter-spacing: -0.03em;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+      #try span {
+        display: inline-block;
+        opacity: 0;
+      }
+      #try .b {
+        color: var(--yellow);
+      }
+      #btn,
+      #done {
+        position: absolute;
+        left: 160px;
+        top: 900px;
+        width: 760px;
+        height: 200px;
+        border-radius: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 28px;
+        font-size: 72px;
+        font-weight: 800;
+        opacity: 0;
+      }
+      #btn {
+        background: var(--blue);
+        box-shadow: 0 30px 90px rgba(29, 139, 255, 0.55);
+      }
+      #btn svg {
+        width: 78px;
+        height: 78px;
+        stroke: #fff;
+        fill: none;
+        stroke-width: 2.2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        transform-origin: 50% 12%;
+      }
+      #done {
+        background: var(--text);
+        color: #0b1020;
+        box-shadow: 0 30px 90px rgba(62, 201, 230, 0.45);
+      }
+      #done b {
+        color: var(--blue);
+      }
+      #ring {
+        position: absolute;
+        left: 160px;
+        top: 900px;
+        width: 760px;
+        height: 200px;
+        border-radius: 100px;
+        border: 6px solid var(--cyan);
+        opacity: 0;
+      }
+      .conf {
+        position: absolute;
+        left: 540px;
+        top: 1000px;
+        width: 26px;
+        height: 26px;
+        margin: -13px 0 0 -13px;
+        border-radius: 7px;
+        opacity: 0;
+      }
+      #url {
+        position: absolute;
+        left: 0;
+        width: 1080px;
+        top: 1240px;
+        text-align: center;
+        font-family: ui-monospace, "DejaVu Sans Mono", monospace;
+        font-size: 34px;
+        letter-spacing: 0.14em;
+        color: #aab3c7;
+        opacity: 0;
+      }
+      #cursor {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 120px;
+        height: 120px;
+        opacity: 0;
+      }
+      #flash {
+        position: absolute;
+        inset: 0;
+        background: #fff;
+        opacity: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="2.7" data-width="1080" data-height="1920">
+      <!-- audio is muxed after render: tools/audio.py -> mix-vo.wav (voice "Try now!" + sfx) / mix-novo.wav (sfx only) -->
+      <div class="dots" id="dots" data-layout-allow-overflow></div>
+      <div id="glow"></div>
+      <img id="logo" src="assets/img/logo.png" alt="WeArt" />
+      <div id="try"><span>Try</span> <span class="b">now</span></div>
+      <div id="ring"></div>
+      <div id="btn"><svg id="bell" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.7 21a2 2 0 0 1-3.4 0" /></svg>Subscribe</div>
+      <div id="done">Subscribed&nbsp;<b>✓</b></div>
+      <div id="url">weartstudio.io</div>
+      <svg id="cursor" viewBox="0 0 24 24"><path d="M4 2l16 9-7 2-3 7z" fill="#fff" stroke="#07080c" stroke-width="1.3" stroke-linejoin="round" /></svg>
+      <div id="flash"></div>
+    </div>
+
+    <script>
+      const tl = gsap.timeline({ paused: true, defaults: { immediateRender: false } });
+      const CLICK = 1.15;
+
+      // in: flash, logo, TRY / NOW on the voice ("Try" ~0.2 s, "now" ~0.55 s)
+      tl.fromTo("#flash", { opacity: 0.7 }, { opacity: 0, duration: 0.25, ease: "power2.out" }, 0);
+      tl.fromTo("#dots", { y: 0 }, { y: 48, duration: 2.7, ease: "none" }, 0);
+      tl.fromTo("#logo", { opacity: 0, y: -30, scale: 0.8 }, { opacity: 1, y: 0, scale: 1, duration: 0.35, ease: "back.out(2)" }, 0.05);
+      tl.set("#try span:nth-child(1)", { opacity: 1 }, 0.16);
+      tl.fromTo("#try span:nth-child(1)", { scale: 1.6, y: 30 }, { scale: 1, y: 0, duration: 0.25, ease: "expo.out" }, 0.16);
+      tl.set("#try span:nth-child(2)", { opacity: 1 }, 0.5);
+      tl.fromTo("#try span:nth-child(2)", { scale: 1.6, y: 30 }, { scale: 1, y: 0, duration: 0.25, ease: "expo.out" }, 0.5);
+
+      // the button
+      tl.fromTo("#btn", { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(2.2)" }, 0.38);
+      tl.fromTo("#glow", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.5, ease: "power2.out" }, 0.4);
+      tl.fromTo("#bell", { rotation: -22 }, { rotation: 0, duration: 0.6, ease: "elastic.out(1.3, 0.3)" }, 0.6);
+
+      // cursor in, hover, click
+      tl.set("#cursor", { opacity: 0, x: 900, y: 1500 }, 0.6);
+      tl.to("#cursor", { opacity: 1, duration: 0.1 }, 0.66);
+      tl.to("#cursor", { x: 640, y: 1010, duration: 0.42, ease: "power3.inOut" }, 0.68);
+      tl.to("#btn", { scale: 1.04, duration: 0.15, ease: "power2.out" }, 0.95);
+      tl.to("#cursor", { scale: 0.82, duration: 0.07, yoyo: true, repeat: 1 }, CLICK);
+      tl.to("#btn", { scale: 0.93, duration: 0.08, ease: "power2.in" }, CLICK);
+      tl.fromTo("#ring", { opacity: 1, scale: 1 }, { opacity: 0, scale: 1.35, duration: 0.55, ease: "power2.out" }, CLICK + 0.04);
+
+      // subscribed
+      tl.set("#btn", { opacity: 0 }, CLICK + 0.08);
+      tl.set("#done", { opacity: 1 }, CLICK + 0.08);
+      tl.fromTo("#done", { scale: 0.93 }, { scale: 1, duration: 0.45, ease: "back.out(3)" }, CLICK + 0.08);
+      tl.to("#glow", { scale: 1.2, duration: 0.5, ease: "power2.out" }, CLICK + 0.08);
+      tl.to("#cursor", { x: 760, y: 1220, opacity: 0, duration: 0.4, ease: "power2.in" }, CLICK + 0.35);
+
+      // confetti burst (deterministic)
+      const COLORS = ["#1d8bff", "#3ec9e6", "#eef33a", "#e23ad6", "#ffffff"];
+      let seed = 11;
+      const rnd = () => ((seed = (seed * 1664525 + 1013904223) % 4294967296) / 4294967296);
+      for (let i = 0; i < 26; i++) {
+        const el = document.createElement("div");
+        el.className = "conf";
+        el.style.background = COLORS[i % COLORS.length];
+        document.getElementById("root").insertBefore(el, document.getElementById("try")); // confetti flies behind the type
+        const a = (i / 26) * Math.PI * 2 + rnd() * 0.3;
+        const r = 330 + rnd() * 260;
+        const t = CLICK + 0.1;
+        tl.set(el, { opacity: 1 }, t);
+        tl.fromTo(el, { x: 0, y: 0, rotation: 0, scale: 0.6 + rnd() * 0.8 }, { x: Math.cos(a) * r, y: Math.sin(a) * r * 0.75 - 60, rotation: rnd() * 540 - 270, duration: 0.7, ease: "power3.out" }, t);
+        tl.to(el, { y: "+=220", opacity: 0, duration: 0.7, ease: "power1.in" }, t + 0.7);
+      }
+
+      tl.fromTo("#url", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.3, ease: "power3.out" }, CLICK + 0.3);
+      tl.fromTo("#done", { scale: 1.04 }, { scale: 1, duration: 0.35, ease: "power2.out" }, 2.05);
+      tl.to("#root", { opacity: 1, duration: 0.01 }, 2.69);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
