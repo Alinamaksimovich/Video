@@ -1,0 +1,509 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>PROMPTICA — ноды</title>
+    <script src="assets/vendor/gsap.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "Roboto Flex";
+        src: url("assets/fonts/rf-cyr.woff2") format("woff2");
+        font-weight: 100 1000;
+        font-stretch: 25% 151%;
+        unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+      }
+      @font-face {
+        font-family: "Roboto Flex";
+        src: url("assets/fonts/rf-lat.woff2") format("woff2");
+        font-weight: 100 1000;
+        font-stretch: 25% 151%;
+      }
+      :root {
+        --red: #b1202d;
+        --red-hi: #ff4a57;
+        --bg: #0a0a0a;
+        --card: #151515;
+        --line: #2b2b2b;
+        --cream: #fefdf9;
+        --muted: #8f8f8f;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: var(--bg);
+      }
+      #root {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: var(--bg);
+        font-family: "Roboto Flex", system-ui, sans-serif;
+        color: var(--cream);
+      }
+      #board {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 3600px;
+        height: 1920px;
+        transform-origin: 0 0;
+        background-image: radial-gradient(rgba(255, 255, 255, 0.16) 2.5px, transparent 3px);
+        background-size: 60px 60px;
+      }
+      #wires {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 3600px;
+        height: 1920px;
+        overflow: visible;
+      }
+      .w {
+        fill: none;
+        stroke: #5a5a5a;
+        stroke-width: 5;
+        stroke-linecap: round;
+      }
+      .wf {
+        fill: none;
+        stroke: var(--red-hi);
+        stroke-width: 5;
+        stroke-linecap: round;
+        stroke-dasharray: 10 26;
+      }
+      .node {
+        position: absolute;
+        background: var(--card);
+        border: 2px solid var(--line);
+        border-radius: 30px;
+        box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+        opacity: 0;
+      }
+      .nh {
+        height: 64px;
+        padding: 0 24px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        border-bottom: 2px solid var(--line);
+        font-family: ui-monospace, "DejaVu Sans Mono", monospace;
+        font-size: 22px;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: #cfcfcf;
+      }
+      .dot {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        flex-shrink: 0;
+      }
+      .nb {
+        padding: 22px;
+      }
+      .nb img {
+        display: block;
+        width: 100%;
+        object-fit: cover;
+        border-radius: 18px;
+      }
+      .port {
+        position: absolute;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: var(--bg);
+        border: 5px solid #6a6a6a;
+      }
+      .port.on {
+        border-color: var(--red-hi);
+        background: var(--red-hi);
+      }
+      .tag {
+        margin-top: 16px;
+        font-size: 24px;
+        font-weight: 700;
+        color: #bdbdbd;
+      }
+      .ptext {
+        min-height: 300px;
+        padding: 22px 24px;
+        border-radius: 18px;
+        background: #0d0d0d;
+        border: 2px solid var(--line);
+        font-size: 31px;
+        line-height: 1.38;
+        font-weight: 500;
+        color: #f1f1f1;
+      }
+      .caret {
+        display: inline-block;
+        width: 4px;
+        height: 34px;
+        background: var(--red-hi);
+        vertical-align: -6px;
+        margin-left: 3px;
+      }
+      .row {
+        margin-top: 18px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .chip {
+        padding: 10px 20px;
+        border-radius: 30px;
+        background: #202020;
+        border: 2px solid var(--line);
+        font-size: 22px;
+        font-weight: 700;
+        color: #cfcfcf;
+        white-space: nowrap;
+      }
+      .run {
+        position: relative;
+        overflow: hidden;
+        margin-left: auto;
+        padding: 14px 34px;
+        border-radius: 34px;
+        background: var(--red);
+        font-size: 26px;
+        font-weight: 800;
+        white-space: nowrap;
+      }
+      .rip {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 40px;
+        height: 40px;
+        margin: -20px 0 0 -20px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.55);
+        opacity: 0;
+      }
+      .ph {
+        position: relative;
+        border-radius: 18px;
+        overflow: hidden;
+        background: #0e0e0e;
+        border: 2px solid var(--line);
+      }
+      .ph img {
+        position: absolute;
+        inset: 0;
+        height: 100%;
+        opacity: 0;
+      }
+      .shim {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(110deg, rgba(255, 255, 255, 0) 30%, rgba(255, 255, 255, 0.12) 50%, rgba(255, 255, 255, 0) 70%);
+        background-size: 300% 100%;
+      }
+      .pg {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 50%;
+        text-align: center;
+        font-family: ui-monospace, "DejaVu Sans Mono", monospace;
+        font-size: 30px;
+        letter-spacing: 0.1em;
+        color: #9a9a9a;
+      }
+      .bar {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        height: 8px;
+        width: 100%;
+        background: var(--red-hi);
+        transform-origin: 0 50%;
+        transform: scaleX(0);
+      }
+      .tl {
+        position: absolute;
+        left: 20px;
+        right: 20px;
+        bottom: 22px;
+        height: 54px;
+        border-radius: 14px;
+        background: rgba(0, 0, 0, 0.65);
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 0 18px;
+        font-family: ui-monospace, "DejaVu Sans Mono", monospace;
+        font-size: 22px;
+        opacity: 0;
+      }
+      .tl i {
+        flex-grow: 1;
+        height: 6px;
+        border-radius: 3px;
+        background: #444;
+        position: relative;
+        overflow: hidden;
+      }
+      .tl i b {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+        background: var(--red-hi);
+        transform-origin: 0 50%;
+        transform: scaleX(0);
+      }
+      #cursor {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 56px;
+        height: 56px;
+        opacity: 0;
+        filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.6));
+      }
+      #brand {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 360px;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.92) 30%, rgba(0, 0, 0, 0));
+        opacity: 0;
+      }
+      #b-logo {
+        position: absolute;
+        left: 290px;
+        bottom: 100px;
+        width: 500px;
+      }
+      #b-line {
+        position: absolute;
+        left: 0;
+        width: 1080px;
+        bottom: 220px;
+        text-align: center;
+        font-family: ui-monospace, "DejaVu Sans Mono", monospace;
+        font-size: 28px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: #d6d6d6;
+      }
+      #flash {
+        position: absolute;
+        inset: 0;
+        background: #fff;
+        opacity: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="5" data-width="1080" data-height="1920">
+      <!-- audio: music = first 5 s of the UK garage bed (../promptica-cases), tools/sfx.py = her sound library -->
+      <audio id="music" src="assets/audio/music.wav" data-start="0" data-duration="5" data-track-index="10" data-volume="1"></audio>
+      <audio id="sfx" src="assets/audio/sfx.wav" data-start="0" data-duration="5" data-track-index="11" data-volume="1"></audio>
+
+      <div id="board" data-layout-allow-overflow>
+        <svg id="wires" viewBox="0 0 3600 1920" data-layout-allow-overflow>
+          <path id="w1" class="w" d="M 520 560 C 610 560 610 960 700 960" />
+          <path id="w2" class="w" d="M 520 1250 C 610 1250 610 1100 700 1100" />
+          <path id="w3" class="w" d="M 1320 1040 C 1385 1040 1385 900 1450 900" />
+          <path id="w4" class="w" d="M 1970 900 C 2060 900 2060 530 2150 530" />
+          <path id="w5" class="w" d="M 2770 530 C 2835 530 2835 960 2900 960" />
+          <path id="f1" class="wf" d="M 520 560 C 610 560 610 960 700 960" />
+          <path id="f2" class="wf" d="M 520 1250 C 610 1250 610 1100 700 1100" />
+          <path id="f3" class="wf" d="M 1320 1040 C 1385 1040 1385 900 1450 900" />
+          <path id="f4" class="wf" d="M 1970 900 C 2060 900 2060 530 2150 530" />
+          <path id="f5" class="wf" d="M 2770 530 C 2835 530 2835 960 2900 960" />
+        </svg>
+
+        <!-- A · reference: face -->
+        <div class="node" id="nA" style="left: 80px; top: 240px; width: 440px; height: 640px">
+          <div class="nh"><span class="dot" style="background: #4aa8ff"></span>Референс · лицо</div>
+          <div class="nb"><img src="assets/img/face.jpg" alt="крупный план лица модели" style="height: 440px; object-position: 50% 35%" /><div class="tag">face_ref.jpg</div></div>
+          <span class="port on" style="right: -15px; top: 307px"></span>
+        </div>
+
+        <!-- B · reference: dress -->
+        <div class="node" id="nB" style="left: 80px; top: 930px; width: 440px; height: 640px">
+          <div class="nh"><span class="dot" style="background: #4aa8ff"></span>Референс · платье</div>
+          <div class="nb"><img src="assets/img/dress.jpg" alt="платье из перьев на белом фоне" style="height: 440px; object-position: 50% 45%" /><div class="tag">dress_ref.jpg</div></div>
+          <span class="port on" style="right: -15px; top: 307px"></span>
+        </div>
+
+        <!-- C · prompt 1 -->
+        <div class="node" id="nC" style="left: 700px; top: 760px; width: 620px; height: 570px">
+          <div class="nh"><span class="dot" style="background: var(--red-hi)"></span>Промпт · кадр</div>
+          <div class="nb">
+            <div class="ptext"><span id="t1"></span><span class="caret" id="c1"></span></div>
+            <div class="row"><span class="chip">Image</span><span class="chip">9:16</span><span class="run" id="run1"><span class="rip" id="rip1"></span><span id="run1t">Запустить</span></span></div>
+          </div>
+          <span class="port on" style="left: -15px; top: 187px"></span>
+          <span class="port on" style="left: -15px; top: 327px"></span>
+          <span class="port" id="pC" style="right: -15px; top: 267px"></span>
+        </div>
+
+        <!-- D · result frame -->
+        <div class="node" id="nD" style="left: 1450px; top: 410px; width: 520px; height: 1000px">
+          <div class="nh"><span class="dot" style="background: #3ddc84"></span>Результат · кадр 01</div>
+          <div class="nb">
+            <div class="ph" style="height: 860px"><div class="shim" id="sD"></div><div class="pg" id="pgD">0%</div><img id="iD" src="assets/img/model-close.jpg" alt="модель в платье из перьев" style="width: 100%; object-position: 50% 15%" /></div>
+            <div class="tag">frame_01.png</div>
+          </div>
+          <span class="port on" style="left: -15px; top: 477px"></span>
+          <span class="port" id="pD" style="right: -15px; top: 477px"></span>
+        </div>
+
+        <!-- E · prompt 2 -->
+        <div class="node" id="nE" style="left: 2150px; top: 290px; width: 620px; height: 480px">
+          <div class="nh"><span class="dot" style="background: var(--red-hi)"></span>Промпт · движение</div>
+          <div class="nb">
+            <div class="ptext" style="min-height: 210px"><span id="t2"></span><span class="caret" id="c2"></span></div>
+            <div class="row"><span class="chip">Video</span><span class="chip">5 сек</span><span class="run" id="run2"><span class="rip" id="rip2"></span><span id="run2t">Запустить</span></span></div>
+          </div>
+          <span class="port on" style="left: -15px; top: 227px"></span>
+          <span class="port" id="pE" style="right: -15px; top: 227px"></span>
+        </div>
+
+        <!-- F · result video -->
+        <div class="node" id="nF" style="left: 2900px; top: 470px; width: 520px; height: 1000px">
+          <div class="nh"><span class="dot" style="background: #3ddc84"></span>Результат · видео</div>
+          <div class="nb">
+            <div class="ph" style="height: 860px"><div class="shim" id="sF"></div><div class="pg" id="pgF">0%</div><img id="iF" src="assets/img/model-full.jpg" alt="модель в платье из перьев в полный рост" style="width: 100%; object-position: 50% 40%" /><div class="tl" id="tlF">▶<i><b id="tlb"></b></i>0:05</div></div>
+            <div class="tag" id="tagF">scene_01.mp4</div>
+          </div>
+          <span class="port on" style="left: -15px; top: 487px"></span>
+        </div>
+      </div>
+
+      <svg id="cursor" viewBox="0 0 24 24"><path d="M4 2l15 9-6.5 1.6L9.5 19z" fill="#fff" stroke="#111" stroke-width="1.4" stroke-linejoin="round" /></svg>
+
+      <div id="brand"><div id="b-line">Идея → кадр → видео</div><img id="b-logo" src="assets/img/logo-white.png" alt="PROMPTICA" /></div>
+      <div id="flash"></div>
+    </div>
+
+    <script>
+      const tl = gsap.timeline({ paused: true, defaults: { immediateRender: false } });
+      const board = "#board";
+      // camera = which board point sits at the screen centre, and the zoom
+      const cam = (cx, cy, s) => ({ x: 540 - cx * s, y: 960 - cy * s, scale: s });
+      const C0 = cam(560, 960, 1);
+      const C1 = cam(1010, 1040, 1);
+      const C2 = cam(1710, 915, 1);
+      const C3 = cam(2460, 640, 1);
+      const C4 = cam(3160, 975, 1.5);
+      gsap.set(board, C0);
+
+      function pop(sel, t) {
+        tl.fromTo(sel, { opacity: 0, y: 50, scale: 0.92 }, { opacity: 1, y: 0, scale: 1, duration: 0.3, ease: "back.out(1.6)" }, t);
+      }
+      function draw(id, t, d = 0.25) {
+        const len = document.querySelector(id).getTotalLength();
+        const el = id;
+        tl.fromTo(el, { strokeDasharray: len, strokeDashoffset: len }, { strokeDashoffset: 0, duration: d, ease: "power2.out" }, t);
+      }
+      function type(sel, text, t, dur) {
+        const n = text.length;
+        for (let i = 1; i <= n; i++) tl.set(sel, { textContent: text.slice(0, i) }, t + (i / n) * dur);
+      }
+      function click(rip, label, t, text) {
+        tl.fromTo(rip, { scale: 0.4, opacity: 0.8 }, { scale: 9, opacity: 0, duration: 0.4, ease: "power2.out" }, t);
+        tl.set(label, { textContent: text }, t + 0.05);
+      }
+      function reveal(img, shim, pg, t, dur) {
+        const steps = 5;
+        for (let i = 0; i <= steps; i++) tl.set(pg, { textContent: Math.round((i / steps) * 100) + "%" }, t + (i / steps) * dur);
+        tl.fromTo(shim, { backgroundPosition: "300% 0" }, { backgroundPosition: "-100% 0", duration: dur, ease: "none" }, t);
+        tl.set(pg, { opacity: 0 }, t + dur);
+        tl.set(shim, { opacity: 0 }, t + dur);
+        tl.fromTo(img, { opacity: 0, scale: 1.18, filter: "blur(26px)" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.35, ease: "power3.out", immediateRender: false }, t + dur);
+        tl.fromTo("#flash", { opacity: 0.35 }, { opacity: 0, duration: 0.25, ease: "power2.out", immediateRender: false }, t + dur);
+      }
+      function pan(c, t, d) {
+        tl.to(board, { ...c, duration: d, ease: "power3.inOut" }, t);
+      }
+
+      // ---------- intro: reference nodes pop in ----------
+      tl.fromTo(board, { opacity: 0 }, { opacity: 1, duration: 0.25 }, 0);
+      pop("#nA", 0.05);
+      pop("#nB", 0.18);
+      pop("#nC", 0.34);
+      draw("#w1", 0.45);
+      draw("#w2", 0.52);
+      tl.fromTo("#cursor", { opacity: 0, x: 900, y: 1250 }, { opacity: 1, x: 780, y: 1120, duration: 0.15, ease: "power2.out" }, 0.3);
+
+      // ---------- pan to the prompt, type it ----------
+      pan(C1, 0.45, 0.5);
+      tl.to("#cursor", { x: 520, y: 1160, duration: 0.5, ease: "power3.inOut" }, 0.45);
+      const p1 = "Fashion-съёмка: модель в скульптурном платье из белых перьев, мокрые зачёсанные волосы, мягкий студийный свет, белый фон";
+      type("#t1", p1, 0.8, 0.9);
+      tl.fromTo("#c1", { opacity: 1 }, { opacity: 0, duration: 0.12, repeat: 7, yoyo: true, ease: "steps(1)" }, 0.8);
+
+      // ---------- run -> frame 01 ----------
+      tl.to("#cursor", { x: 800, y: 1010, duration: 0.2, ease: "power2.inOut" }, 1.55);
+      click("#rip1", "#run1t", 1.75, "Генерация…");
+      tl.set("#pC", { className: "port on" }, 1.75);
+      pop("#nD", 1.75);
+      draw("#w3", 1.8, 0.25);
+      pan(C2, 1.8, 0.5);
+      tl.to("#cursor", { x: 700, y: 1100, duration: 0.5, ease: "power3.inOut" }, 1.8);
+      reveal("#iD", "#sD", "#pgD", 1.95, 0.4);
+
+      // ---------- second prompt: motion ----------
+      tl.set("#pD", { className: "port on" }, 2.45);
+      pop("#nE", 2.4);
+      draw("#w4", 2.5, 0.3);
+      pan(C3, 2.55, 0.5);
+      tl.to("#cursor", { x: 600, y: 1000, duration: 0.5, ease: "power3.inOut" }, 2.55);
+      const p2 = "Медленный поворот, перья колышутся, камера плавно отъезжает";
+      type("#t2", p2, 2.9, 0.55);
+      tl.fromTo("#c2", { opacity: 1 }, { opacity: 0, duration: 0.12, repeat: 5, yoyo: true, ease: "steps(1)" }, 2.9);
+      tl.to("#cursor", { x: 820, y: 880, duration: 0.2, ease: "power2.inOut" }, 3.3);
+      click("#rip2", "#run2t", 3.5, "Генерация…");
+      tl.set("#pE", { className: "port on" }, 3.5);
+
+      // ---------- video result ----------
+      pop("#nF", 3.5);
+      draw("#w5", 3.55, 0.25);
+      pan(C4, 3.6, 0.6);
+      tl.to("#cursor", { opacity: 0, duration: 0.2 }, 3.7);
+      reveal("#iF", "#sF", "#pgF", 3.85, 0.35);
+      tl.set("#tlF", { opacity: 1 }, 4.2);
+      tl.to("#tlb", { scaleX: 1, duration: 0.8, ease: "none" }, 4.2);
+      tl.fromTo("#iF", { scale: 1 }, { scale: 1.06, duration: 0.45, ease: "none", immediateRender: false }, 4.55);
+
+      // dashed "flow" on the wires, whole clip
+      ["#f1", "#f2", "#f3", "#f4", "#f5"].forEach((id) => tl.fromTo(id, { strokeDashoffset: 0 }, { strokeDashoffset: -216, duration: 5, ease: "none" }, 0));
+      tl.set(["#f1", "#f2"], { opacity: 0 }, 0);
+      tl.set("#f1", { opacity: 1 }, 0.9);
+      tl.set("#f2", { opacity: 1 }, 0.9);
+      tl.set("#f3", { opacity: 0 }, 0);
+      tl.set("#f3", { opacity: 1 }, 2.1);
+      tl.set("#f4", { opacity: 0 }, 0);
+      tl.set("#f4", { opacity: 1 }, 2.8);
+      tl.set("#f5", { opacity: 0 }, 0);
+      tl.set("#f5", { opacity: 1 }, 3.8);
+
+      // ---------- brand sign-off ----------
+      tl.to("#tagF", { opacity: 0, duration: 0.2 }, 4.3);
+      tl.fromTo("#brand", { opacity: 0 }, { opacity: 1, duration: 0.35, ease: "power2.out" }, 4.35);
+      tl.fromTo("#b-logo", { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power3.out" }, 4.4);
+      tl.fromTo("#b-line", { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, ease: "power3.out" }, 4.5);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
