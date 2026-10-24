@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>PROMPTICA — кейсы</title>
+    <script src="assets/vendor/gsap.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "Roboto Flex";
+        src: url("assets/fonts/rf-cyr.woff2") format("woff2");
+        font-weight: 100 1000;
+        font-stretch: 25% 151%;
+        unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+      }
+      @font-face {
+        font-family: "Roboto Flex";
+        src: url("assets/fonts/rf-lat.woff2") format("woff2");
+        font-weight: 100 1000;
+        font-stretch: 25% 151%;
+      }
+      :root {
+        --red: #b1202d;
+        --ink: #111111;
+        --black: #000000;
+        --cream: #fefdf9;
+        --muted: #9a9a9a;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: var(--black);
+      }
+      #root {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: var(--black);
+        font-family: "Roboto Flex", system-ui, sans-serif;
+        color: var(--cream);
+      }
+      .x {
+        font-stretch: 140%;
+        font-weight: 1000;
+        text-transform: uppercase;
+        letter-spacing: -0.01em;
+        line-height: 0.98;
+      }
+      .mono {
+        font-family: ui-monospace, "DejaVu Sans Mono", monospace;
+        font-size: 26px;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+      .scene {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        overflow: hidden;
+      }
+      .grid {
+        position: absolute;
+        left: -80px;
+        top: -80px;
+        width: 1240px;
+        height: 2080px;
+        background-image: linear-gradient(rgba(255, 255, 255, 0.07) 2px, transparent 2px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.07) 2px, transparent 2px);
+        background-size: 80px 80px;
+      }
+      .card {
+        position: absolute;
+        overflow: hidden;
+        border-radius: 28px;
+        box-shadow: 0 30px 70px rgba(0, 0, 0, 0.45);
+      }
+      .card img,
+      .card video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .tag {
+        position: absolute;
+        padding: 14px 26px;
+        border-radius: 40px;
+        font-size: 30px;
+        font-weight: 800;
+        white-space: nowrap;
+      }
+      .phone {
+        position: absolute;
+        border-radius: 56px;
+        background: #0a0a0a;
+        padding: 14px;
+        box-shadow: 0 40px 90px rgba(0, 0, 0, 0.55);
+      }
+      .phone .scr {
+        width: 100%;
+        height: 100%;
+        border-radius: 44px;
+        overflow: hidden;
+        position: relative;
+      }
+      .phone video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+
+      /* 0 · intro */
+      #s0 { opacity: 1; }
+      #i-logo { position: absolute; left: 140px; top: 800px; width: 800px; }
+      #i-tag { position: absolute; left: 0; width: 1080px; top: 1010px; text-align: center; color: var(--muted); font-size: 28px; }
+
+      /* 1 · services */
+      #s1 { background: var(--red); }
+      .svc { position: absolute; left: 0; width: 1080px; top: 840px; text-align: center; font-size: 112px; opacity: 0; white-space: nowrap; }
+      #s1 .corner { position: absolute; color: rgba(255,255,255,0.85); }
+      #svc-n { position: absolute; left: 60px; bottom: 80px; color: rgba(255,255,255,0.85); }
+
+      /* 2 · hey before/after */
+      #s2 { background: var(--cream); color: var(--ink); }
+      #h-kicker { position: absolute; left: 90px; top: 150px; color: var(--red); }
+      #h-title { position: absolute; left: 85px; top: 215px; font-size: 112px; }
+      #h-sub { position: absolute; left: 90px; top: 565px; width: 900px; font-size: 38px; font-weight: 600; line-height: 1.25; color: #333; }
+      #h-card { left: 90px; top: 700px; width: 900px; height: 960px; background: #f3f3f3; box-shadow: 0 30px 70px rgba(0,0,0,0.18); }
+      #h-card img { position: absolute; inset: 0; }
+      #h-empty { object-fit: contain; background: #f6f6f6; }
+      #h-full { opacity: 0; }
+      #h-scan { position: absolute; left: 0; top: 0; width: 100%; height: 140px; background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0.9), rgba(255,255,255,0)); opacity: 0; }
+      #tag-before { left: 130px; top: 1560px; background: var(--ink); color: var(--cream); }
+      #tag-after { left: 130px; top: 1560px; background: var(--red); color: #fff; opacity: 0; }
+
+      /* 3 · hey visuals */
+      #s3 { background: var(--black); }
+      .hv { width: 450px; height: 600px; }
+      #v-title { position: absolute; left: 70px; top: 1470px; font-size: 112px; }
+      #v-title b { color: var(--red); font-weight: 1000; }
+      #v-kick { position: absolute; left: 76px; top: 1750px; color: var(--muted); line-height: 1.6; }
+
+      /* 4 · hey ad video */
+      #s4 { background: var(--red); }
+      #ad-phone { left: 220px; top: 590px; width: 640px; height: 1180px; }
+      #ad-title { position: absolute; left: 70px; top: 170px; font-size: 96px; }
+      #ad-sub { position: absolute; left: 76px; top: 440px; color: rgba(255,255,255,0.85); }
+
+      /* 5 · avelor */
+      #s5 { background: var(--black); }
+      #m-kicker { position: absolute; left: 90px; top: 150px; color: var(--red); }
+      #m-title { position: absolute; left: 85px; top: 215px; font-size: 112px; }
+      #m-title b { color: var(--red); font-weight: 1000; }
+      .mv { left: 90px; top: 700px; width: 900px; height: 1000px; opacity: 0; }
+
+      /* 6 · avelor video */
+      #s6 { background: var(--red); }
+      #pour-phone { left: 110px; top: 500px; width: 560px; height: 1000px; }
+      #spoon-phone { left: 640px; top: 1000px; width: 340px; height: 600px; }
+      #mv-title { position: absolute; left: 70px; top: 170px; font-size: 100px; }
+
+      /* 7 · wall */
+      #s7 { background: var(--black); }
+      .wt { position: absolute; width: 330px; height: 450px; border-radius: 22px; overflow: hidden; }
+      .wt img { width: 100%; height: 100%; object-fit: cover; display: block; }
+      #wall-shade { position: absolute; inset: 0; background: rgba(0,0,0,0.62); }
+      #w-text { position: absolute; left: 0; width: 1080px; top: 740px; text-align: center; font-size: 84px; }
+      #w-text span { display: block; }
+      #w-text .r { color: #ff4a57; }
+
+      /* 8 · end */
+      #s8 { background: var(--red); }
+      #e-logo { position: absolute; left: 140px; top: 600px; width: 800px; }
+      #e-line { position: absolute; left: 0; width: 1080px; top: 880px; text-align: center; font-size: 100px; }
+      #e-cta { position: absolute; left: 190px; top: 1240px; width: 700px; height: 120px; border-radius: 60px; background: var(--cream); color: var(--red); display: flex; align-items: center; justify-content: center; font-size: 40px; }
+      #e-url { position: absolute; left: 0; width: 1080px; top: 1440px; text-align: center; color: rgba(255,255,255,0.92); }
+      #flash { position: absolute; inset: 0; background: #fff; opacity: 0; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="15" data-width="1080" data-height="1920">
+      <!-- audio: tools/garage.py (original 132 BPM UK garage) + tools/sfx.py (her sound library) -->
+      <audio id="music" src="assets/audio/music.wav" data-start="0" data-duration="15" data-track-index="10" data-volume="1"></audio>
+      <audio id="sfx" src="assets/audio/sfx.wav" data-start="0" data-duration="15" data-track-index="11" data-volume="1"></audio>
+
+      <!-- 0 · who we are -->
+      <div class="scene" id="s0">
+        <div class="grid" id="g0" data-layout-allow-overflow></div>
+        <img id="i-logo" src="assets/img/logo-white.png" alt="PROMPTICA" />
+        <div id="i-tag" class="mono">AI-агентство контента</div>
+      </div>
+
+      <!-- 1 · what we do -->
+      <div class="scene" id="s1">
+        <div class="corner mono" style="left: 80px; top: 70px">PROMPTICA</div>
+        <div class="corner mono" style="right: 80px; top: 70px">что мы делаем</div>
+        <div class="svc x">Дизайн</div>
+        <div class="svc x">Видео</div>
+        <div class="svc x">Реклама</div>
+        <div class="svc x">SMM</div>
+        <div class="svc x">Контент</div>
+        <div id="svc-n" class="mono"><span id="svc-i">01</span> / 05</div>
+      </div>
+
+      <!-- 2 · Hey: before / after -->
+      <div class="scene" id="s2">
+        <div id="h-kicker" class="mono">кейс 01 · Hey Sparkling</div>
+        <div id="h-title" class="x">Было:<br />пустая<br />банка</div>
+        <div id="h-sub">и макет упаковки в PDF. Нужны визуалы и реклама, чтобы продавать.</div>
+        <div class="card" id="h-card">
+          <img id="h-empty" src="assets/img/hey-empty.jpg" alt="пустая алюминиевая банка" />
+          <img id="h-full" src="assets/img/hey-glass.jpg" alt="банка Hey рядом со стаканом сока" />
+          <div id="h-scan"></div>
+        </div>
+        <div class="tag" id="tag-before">исходник</div>
+        <div class="tag" id="tag-after">AI-визуал PROMPTICA</div>
+      </div>
+
+      <!-- 3 · Hey: visuals -->
+      <div class="scene" id="s3">
+        <div class="card hv" style="left: 60px; top: 130px"><img src="assets/img/hey-apples.jpg" alt="банка Hey среди зелёных яблок" /></div>
+        <div class="card hv" style="left: 570px; top: 130px"><img src="assets/img/hey-glass.jpg" alt="банка Hey и стакан со льдом" /></div>
+        <div class="card hv" style="left: 60px; top: 760px"><img src="assets/img/hey-cafe.jpg" alt="две банки Hey в кафе" /></div>
+        <div class="card hv" style="left: 570px; top: 760px"><img src="assets/img/hey-girl.jpg" alt="девушка с банкой Hey" style="object-position: 50% 30%" /></div>
+        <div id="v-title" class="x">Создали<br /><b>AI-визуал</b></div>
+        <div id="v-kick" class="mono">предметка · лайфстайл<br />модели · реклама</div>
+      </div>
+
+      <!-- 4 · Hey: ad video -->
+      <div class="scene" id="s4">
+        <div class="grid" id="g4" data-layout-allow-overflow></div>
+        <div id="ad-title" class="x">И&nbsp;рекламные<br />ролики</div>
+        <div id="ad-sub" class="mono">для продвижения продукта</div>
+        <div class="phone" id="ad-phone">
+          <div class="scr">
+            <video id="heyad" src="assets/video/hey-ad.mp4" muted playsinline data-start="7.273" data-duration="1.818" data-media-start="2.0" data-track-index="2"></video>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5 · Avelor: design + visuals -->
+      <div class="scene" id="s5">
+        <div id="m-kicker" class="mono">кейс 02 · Avelor Matcha</div>
+        <div id="m-title" class="x">Дизайн<br />упаковки<br /><b>+ визуал</b></div>
+        <div class="card mv" id="mv0"><img src="assets/img/avelor-powder.jpg" alt="банка Avelor в порошке матчи" /></div>
+        <div class="card mv" id="mv1"><img src="assets/img/avelor-latte.jpg" alt="матча-латте с молоком" /></div>
+        <div class="card mv" id="mv2"><img src="assets/img/avelor-leaves.jpg" alt="банка Avelor на ветке" /></div>
+      </div>
+
+      <!-- 6 · Avelor: video -->
+      <div class="scene" id="s6">
+        <div class="grid" id="g6" data-layout-allow-overflow></div>
+        <div id="mv-title" class="x">И&nbsp;видео<br />для рекламы</div>
+        <div class="phone" id="pour-phone">
+          <div class="scr">
+            <video id="pour" src="assets/video/avelor-pour.mp4" muted playsinline data-start="10.909" data-duration="1.818" data-media-start="0.6" data-track-index="3"></video>
+          </div>
+        </div>
+        <div class="phone" id="spoon-phone">
+          <div class="scr">
+            <video id="spoon" src="assets/video/avelor-spoon.mp4" muted playsinline data-start="10.909" data-duration="1.818" data-media-start="0.2" data-track-index="4"></video>
+          </div>
+        </div>
+      </div>
+
+      <!-- 7 · wall of work -->
+      <div class="scene" id="s7">
+        <div id="wall" data-layout-allow-overflow>
+          <div class="wt" style="left: -90px; top: -60px"><img src="assets/img/hey-apples.jpg" alt="" /></div>
+          <div class="wt" style="left: 270px; top: -120px"><img src="assets/img/avelor-latte.jpg" alt="" /></div>
+          <div class="wt" style="left: 630px; top: -60px"><img src="assets/img/hey-girl.jpg" alt="" /></div>
+          <div class="wt" style="left: -50px; top: 340px"><img src="assets/img/avelor-powder.jpg" alt="" /></div>
+          <div class="wt" style="left: 310px; top: 280px"><img src="assets/img/hey-cafe.jpg" alt="" /></div>
+          <div class="wt" style="left: 670px; top: 340px"><img src="assets/img/avelor-leaves.jpg" alt="" /></div>
+          <div class="wt" style="left: -90px; top: 740px"><img src="assets/img/avelor-leaves.jpg" alt="" /></div>
+          <div class="wt" style="left: 270px; top: 680px"><img src="assets/img/hey-glass.jpg" alt="" /></div>
+          <div class="wt" style="left: 630px; top: 740px"><img src="assets/img/avelor-powder.jpg" alt="" /></div>
+          <div class="wt" style="left: -50px; top: 1140px"><img src="assets/img/hey-apples.jpg" alt="" /></div>
+          <div class="wt" style="left: 310px; top: 1080px"><img src="assets/img/avelor-latte.jpg" alt="" /></div>
+          <div class="wt" style="left: 670px; top: 1140px"><img src="assets/img/hey-girl.jpg" alt="" /></div>
+          <div class="wt" style="left: -90px; top: 1540px"><img src="assets/img/hey-glass.jpg" alt="" /></div>
+          <div class="wt" style="left: 270px; top: 1480px"><img src="assets/img/avelor-powder.jpg" alt="" /></div>
+          <div class="wt" style="left: 630px; top: 1540px"><img src="assets/img/hey-cafe.jpg" alt="" /></div>
+        </div>
+        <div id="wall-shade"></div>
+        <div id="w-text" class="x"><span id="w1">Быстрее<br />продакшена.</span><span id="w2" class="r">Без потери<br />качества.</span></div>
+      </div>
+
+      <!-- 8 · end card -->
+      <div class="scene" id="s8">
+        <div class="grid" id="g8" data-layout-allow-overflow></div>
+        <img id="e-logo" src="assets/img/logo-white.png" alt="PROMPTICA" />
+        <div id="e-line" class="x">От промпта<br />до продаж</div>
+        <div id="e-cta" class="x">Обсудить проект →</div>
+        <div id="e-url" class="mono">prompticadigital.com</div>
+      </div>
+
+      <div id="flash"></div>
+    </div>
+
+    <script>
+      // music grid (tools/garage.py): 132 BPM, bar 0 = filtered intro, drop on bar 1,
+      // stop + end hit on bar 7 beat 2 (13.636 s)
+      const Q = 60 / 132;
+      const BAR = 4 * Q;
+      const at = (bar, beat = 0) => +(bar * BAR + beat * Q).toFixed(3);
+      const tl = gsap.timeline({ paused: true, defaults: { immediateRender: false } });
+
+      function cut(from, to, t) {
+        if (from) tl.set(from, { opacity: 0 }, t);
+        tl.set(to, { opacity: 1 }, t);
+      }
+      function flash(t, a = 0.8, color = "#fff") {
+        tl.set("#flash", { backgroundColor: color }, t);
+        tl.fromTo("#flash", { opacity: a }, { opacity: 0, duration: 0.3, ease: "power2.out" }, t);
+      }
+
+      // ---------- 0 · intro: who we are (bar 0) ----------
+      tl.fromTo("#i-logo", { scale: 1.25, opacity: 0, filter: "blur(18px)" }, { scale: 1, opacity: 1, filter: "blur(0px)", duration: 0.7, ease: "expo.out", immediateRender: true }, 0.05);
+      tl.fromTo("#i-tag", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.35, ease: "power3.out" }, at(0, 2));
+      tl.fromTo("#i-logo", { y: 0 }, { y: -14, duration: BAR - 0.75, ease: "power1.inOut" }, 0.75);
+      tl.fromTo("#g0", { x: 0 }, { x: 80, duration: BAR, ease: "none" }, 0);
+
+      // ---------- 1 · services on the drop (bar 1) ----------
+      cut("#s0", "#s1", at(1));
+      flash(at(1), 0.9);
+      const svcT = [0, 0.75, 1.5, 2.25, 3];
+      const svcs = document.querySelectorAll(".svc");
+      svcs.forEach((w, i) => {
+        const t = at(1, svcT[i]);
+        if (i) tl.set(svcs[i - 1], { opacity: 0 }, t);
+        tl.set(w, { opacity: 1 }, t);
+        tl.fromTo(w, { scale: 1.25, y: 30 }, { scale: 1, y: 0, duration: 0.3, ease: "expo.out" }, t);
+        tl.set("#svc-i", { textContent: "0" + (i + 1) }, t);
+      });
+
+      // ---------- 2 · Hey: empty can -> visual (bar 2) ----------
+      cut("#s1", "#s2", at(2));
+      tl.fromTo("#h-card", { y: 80, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: "power3.out" }, at(2));
+      tl.fromTo("#h-kicker", { opacity: 0 }, { opacity: 1, duration: 0.2 }, at(2));
+      tl.fromTo("#h-title", { x: -60, opacity: 0 }, { x: 0, opacity: 1, duration: 0.35, ease: "power3.out" }, at(2, 0.25));
+      tl.fromTo("#h-sub", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" }, at(2, 1));
+      tl.fromTo("#tag-before", { scale: 0.6, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: "back.out(2)" }, at(2, 0.5));
+      // the reveal: scan sweep, then the finished visual
+      tl.set("#h-scan", { opacity: 1 }, at(2, 1.75));
+      tl.fromTo("#h-scan", { y: -140 }, { y: 960, duration: 0.45, ease: "power1.in" }, at(2, 1.75));
+      tl.set("#h-scan", { opacity: 0 }, at(2, 2.75));
+      tl.fromTo("#h-full", { opacity: 0, scale: 1.12 }, { opacity: 1, scale: 1, duration: 0.35, ease: "expo.out" }, at(2, 2));
+      tl.set("#tag-before", { opacity: 0 }, at(2, 2));
+      tl.fromTo("#tag-after", { scale: 0.6, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.3, ease: "back.out(2)" }, at(2, 2.25));
+      tl.to("#h-title", { opacity: 0.25, duration: 0.25 }, at(2, 2));
+
+      // ---------- 3 · Hey visuals, one per beat (bar 3) ----------
+      cut("#s2", "#s3", at(3));
+      document.querySelectorAll(".hv").forEach((c, i) => {
+        const t = at(3, i);
+        tl.fromTo(c, { y: 140, opacity: 0, rotation: i % 2 ? 4 : -4 }, { y: 0, opacity: 1, rotation: 0, duration: 0.4, ease: "expo.out" }, t);
+        tl.fromTo(c.querySelector("img"), { scale: 1.2 }, { scale: 1, duration: 1.2, ease: "power2.out" }, t);
+      });
+      tl.fromTo("#v-title", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.35, ease: "power3.out" }, at(3, 0.25));
+      tl.fromTo("#v-kick", { opacity: 0 }, { opacity: 1, duration: 0.3 }, at(3, 1.5));
+
+      // ---------- 4 · Hey ad video in a phone (bar 4) ----------
+      cut("#s3", "#s4", at(4));
+      flash(at(4), 0.6);
+      tl.fromTo("#ad-phone", { y: 260, rotation: 6, opacity: 0 }, { y: 0, rotation: 0, opacity: 1, duration: 0.5, ease: "expo.out" }, at(4));
+      tl.fromTo("#ad-title", { x: -80, opacity: 0 }, { x: 0, opacity: 1, duration: 0.35, ease: "power3.out" }, at(4, 0.5));
+      tl.fromTo("#ad-sub", { opacity: 0 }, { opacity: 1, duration: 0.3 }, at(4, 1.5));
+      tl.fromTo("#ad-phone", { scale: 1 }, { scale: 1.04, duration: BAR - 0.5, ease: "power1.inOut" }, at(4, 1));
+      tl.fromTo("#g4", { x: 0 }, { x: 80, duration: BAR, ease: "none" }, at(4));
+
+      // ---------- 5 · Avelor: design + visuals (bar 5) ----------
+      cut("#s4", "#s5", at(5));
+      tl.fromTo("#m-kicker", { opacity: 0 }, { opacity: 1, duration: 0.2 }, at(5));
+      tl.fromTo("#m-title", { x: -60, opacity: 0 }, { x: 0, opacity: 1, duration: 0.35, ease: "power3.out" }, at(5, 0.25));
+      ["#mv0", "#mv1", "#mv2"].forEach((m, i) => {
+        const t = at(5, i * 1.33);
+        if (i) tl.set(["#mv0", "#mv1"][i - 1], { opacity: 0 }, t + 0.3);
+        tl.set(m, { opacity: 1 }, t);
+        tl.fromTo(m, { clipPath: "inset(100% 0 0 0 round 28px)" }, { clipPath: "inset(0% 0 0 0 round 28px)", duration: 0.3, ease: "power3.inOut" }, t);
+        tl.fromTo(m + " img", { scale: 1.18 }, { scale: 1, duration: 1.0, ease: "power2.out" }, t);
+      });
+
+      // ---------- 6 · Avelor video (bar 6) ----------
+      cut("#s5", "#s6", at(6));
+      flash(at(6), 0.5);
+      tl.fromTo("#pour-phone", { y: 260, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "expo.out" }, at(6));
+      tl.fromTo("#spoon-phone", { y: 300, rotation: 0, opacity: 0 }, { y: 0, rotation: 6, opacity: 1, duration: 0.5, ease: "expo.out" }, at(6, 0.5));
+      tl.fromTo("#mv-title", { x: -80, opacity: 0 }, { x: 0, opacity: 1, duration: 0.35, ease: "power3.out" }, at(6, 0.5));
+      tl.fromTo("#g6", { x: 0 }, { x: 80, duration: BAR, ease: "none" }, at(6));
+
+      // ---------- 7 · wall + promise (bar 7, beats 0-1) ----------
+      cut("#s6", "#s7", at(7));
+      tl.fromTo("#wall", { scale: 1.15, x: 0 }, { scale: 1, x: -60, duration: 2 * Q, ease: "power2.out" }, at(7));
+      tl.fromTo("#w1", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.25, ease: "power3.out" }, at(7));
+      tl.fromTo("#w2", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.25, ease: "power3.out" }, at(7, 1));
+
+      // ---------- 8 · end card on the hit (bar 7 beat 2) ----------
+      const E = at(7, 2);
+      cut("#s7", "#s8", E);
+      flash(E, 0.9);
+      tl.fromTo("#e-logo", { scale: 1.35, opacity: 0, filter: "blur(16px)" }, { scale: 1, opacity: 1, filter: "blur(0px)", duration: 0.45, ease: "expo.out" }, E);
+      tl.fromTo("#e-line", { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: 0.35, ease: "power3.out" }, E + 0.2);
+      tl.fromTo("#e-cta", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(2)" }, E + 0.4);
+      tl.fromTo("#e-url", { opacity: 0 }, { opacity: 1, duration: 0.3 }, E + 0.6);
+      tl.fromTo("#g8", { x: 0 }, { x: 60, duration: 15 - E, ease: "none" }, E);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
