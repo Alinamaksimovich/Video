@@ -56,13 +56,13 @@ ZONE = {  # css for the caption block
     "bottom": "left: 0; width: 1080px; top: 1440px; text-align: center; font-size: 84px;",
     "top": "left: 0; width: 1080px; top: 250px; text-align: center; font-size: 84px;",
     "top-big": "left: 0; width: 1080px; top: 300px; text-align: center; font-size: 170px;",
-    "right": "left: 650px; width: 400px; top: 760px; text-align: left; font-size: 52px;",
+    "right": "left: 620px; width: 440px; top: 760px; text-align: center; font-size: 52px;",
 }
 
 
 def cap_html(i, c):
     l1, t1, l2, t2, zone, dx, dy = c
-    style = ZONE[zone] + f" margin-left: {dx}px; margin-top: {dy}px;"
+    style = ZONE[zone] + f" margin-top: {dy}px;"
     end = CAPS[i + 1][1] if i + 1 < len(CAPS) else END
     lines = f'<div class="ln" id="c{i}a">{l1}</div>'
     if l2:
