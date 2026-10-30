@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>Один запрос — три результата</title>
+    <script src="assets/vendor/gsap.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "Helios Ext";
+        src: url("assets/fonts/HeliosExtC.ttf") format("truetype");
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: #ffffff; }
+      #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #ffffff; color: #111111; font-family: "Helios Ext", sans-serif; }
+      .scene { position: absolute; inset: 0; opacity: 0; }
+      .card { position: absolute; overflow: hidden; border-radius: 34px; background: #eeeeee; box-shadow: 0 24px 60px rgba(0, 0, 0, 0.18); transform: rotate(var(--r, 0deg)); }
+      .card video { width: 100%; height: 100%; object-fit: cover; display: block; }
+      .cap { position: absolute; line-height: 1.12; white-space: nowrap; }
+      .ln { opacity: 0; }
+      .prompt { position: absolute; font-family: "DejaVu Sans", sans-serif; font-size: 23px; line-height: 1.38; color: #707070; }
+      .prompt b { color: #111111; font-weight: 700; letter-spacing: 0.08em; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="34.09" data-width="1080" data-height="1920">
+      <!-- her voice, untouched (gain only at export) + light SFX from her library (tools/sfx.py); no music -->
+      <audio id="voice" src="assets/audio/voice.wav" data-start="0" data-duration="34.09" data-track-index="10" data-volume="1"></audio>
+      <audio id="sfx" src="assets/audio/sfx.wav" data-start="0" data-duration="34.09" data-track-index="11" data-volume="1"></audio>
+
+      <!-- intro: one prompt, three results -->
+      <div class="scene" id="s0">
+        <div class="card" id="a0" style="left: 70px; top: 250px; width: 360px; height: 520px; --r: -6deg; opacity: 0"><video id="a0v" src="assets/video/v1-three-words.mp4" muted playsinline data-start="0" data-duration="2.82" data-media-start="0" data-track-index="1" aria-label="результат запроса из трёх слов"></video></div>
+        <div class="card" id="a1" style="left: 650px; top: 300px; width: 360px; height: 520px; --r: 5deg; opacity: 0"><video id="a1v" src="assets/video/v2-long-prompt.mp4" muted playsinline data-start="0" data-duration="2.82" data-media-start="0" data-track-index="2" aria-label="результат запроса из десяти модных слов"></video></div>
+        <div class="card" id="a2" style="left: 360px; top: 1240px; width: 360px; height: 560px; --r: -3deg; opacity: 0"><video id="a2v" src="assets/video/v3-structure.mp4" muted playsinline data-start="0" data-duration="2.82" data-media-start="0" data-track-index="3" aria-label="результат структурного запроса"></video></div>
+      </div>
+
+      <!-- 1 · three words: centre, captions below -->
+      <div class="scene" id="s1">
+        <div class="prompt" style="left: 170px; top: 170px; width: 740px"><b>ПРОМПТ</b>&nbsp; girl with coffee</div>
+        <div class="card" id="b" style="left: 170px; top: 240px; width: 740px; height: 1110px"><video id="bv" src="assets/video/v1-three-words.mp4" muted playsinline data-start="2.82" data-duration="7.18" data-media-start="0" data-track-index="4" aria-label="результат запроса из трёх слов"></video></div>
+      </div>
+
+      <!-- 2 · ten buzzwords: a little below centre, captions on top -->
+      <div class="scene" id="s2">
+        <div class="card" id="c" style="left: 200px; top: 600px; width: 680px; height: 1020px"><video id="cv" src="assets/video/v2-long-prompt.mp4" muted playsinline data-start="10.0" data-duration="8.71" data-media-start="0" data-track-index="5" aria-label="результат запроса из десяти модных слов"></video></div>
+        <div class="prompt" style="left: 90px; top: 1660px; width: 900px"><b>ПРОМПТ</b>&nbsp; beautiful girl with coffee, ultra realistic, 8k, hyper detailed, cinematic, masterpiece, best quality, golden hour, studio light, dramatic lighting, soft light, bokeh, vibrant colors, moody, warm tones, cold tones, perfect face, perfect hands, anime style, photorealistic</div>
+      </div>
+
+      <!-- 3 · structured prompt: off to the side, captions to the right, one word per line -->
+      <div class="scene" id="s3">
+        <div class="card" id="d" style="left: 50px; top: 300px; width: 560px; height: 996px"><video id="dv" src="assets/video/v3-structure.mp4" muted playsinline data-start="18.71" data-duration="8.50" data-media-start="0" data-track-index="6" aria-label="результат структурного запроса"></video></div>
+        <div class="prompt" style="left: 50px; top: 1340px; width: 980px; font-size: 22px"><b>ПРОМПТ</b>&nbsp; Young woman with a loose low ponytail holding a white ceramic mug with both hands by a window, soft morning daylight from the left at 45 degrees, a calm relaxed expression, a faint half-smile, eyes looking at the mug. Cozy bright apartment, a blurred plant in the background. Natural matte skin with visible pores and fine peach-fuzz hairs, no plastic effect. Shot on a full-frame camera, 85mm, shallow depth of field, fine grain.</div>
+      </div>
+
+      <!-- call to action: all three again -->
+      <div class="scene" id="s4">
+        <div class="card" id="e0" style="left: 70px; top: 250px; width: 360px; height: 520px; --r: -6deg; opacity: 0"><video id="e0v" src="assets/video/v1-three-words.mp4" muted playsinline data-start="27.21" data-duration="6.88" data-media-start="3" data-track-index="7" aria-label="результат запроса из трёх слов"></video></div>
+        <div class="card" id="e1" style="left: 650px; top: 300px; width: 360px; height: 520px; --r: 5deg; opacity: 0"><video id="e1v" src="assets/video/v2-long-prompt.mp4" muted playsinline data-start="27.21" data-duration="6.88" data-media-start="3" data-track-index="8" aria-label="результат запроса из десяти модных слов"></video></div>
+        <div class="card" id="e2" style="left: 360px; top: 1240px; width: 360px; height: 560px; --r: -3deg; opacity: 0"><video id="e2v" src="assets/video/v3-structure.mp4" muted playsinline data-start="27.21" data-duration="6.88" data-media-start="3" data-track-index="9" aria-label="результат структурного запроса"></video></div>
+      </div>
+
+      <div class="cap clip" id="c0" style="left: 0; width: 1080px; top: 900px; text-align: center; font-size: 84px; margin-left: 0px; margin-top: 0px;" data-start="0.30" data-duration="2.52" data-track-index="20"><div class="ln" id="c0a">Один запрос</div><div class="ln" id="c0b">три результата</div></div>
+      <div class="cap clip" id="c1" style="left: 0; width: 1080px; top: 1440px; text-align: center; font-size: 84px; margin-left: -30px; margin-top: 0px;" data-start="2.82" data-duration="1.33" data-track-index="20"><div class="ln" id="c1a">Первый кадр,</div><div class="ln" id="c1b">три слова</div></div>
+      <div class="cap clip" id="c2" style="left: 0; width: 1080px; top: 1440px; text-align: center; font-size: 84px; margin-left: 35px; margin-top: -40px;" data-start="4.15" data-duration="1.15" data-track-index="20"><div class="ln" id="c2a">в запросе.</div><div class="ln" id="c2b">Нейросеть</div></div>
+      <div class="cap clip" id="c3" style="left: 0; width: 1080px; top: 1440px; text-align: center; font-size: 84px; margin-left: -20px; margin-top: 30px;" data-start="5.30" data-duration="1.29" data-track-index="20"><div class="ln" id="c3a">дорисовала</div><div class="ln" id="c3b">всё сама.</div></div>
+      <div class="cap clip" id="c4" style="left: 0; width: 1080px; top: 1440px; text-align: center; font-size: 84px; margin-left: 25px; margin-top: -20px;" data-start="6.59" data-duration="1.36" data-track-index="20"><div class="ln" id="c4a">и вышел</div><div class="ln" id="c4b">случайный свет</div></div>
+      <div class="cap clip" id="c5" style="left: 0; width: 1080px; top: 1440px; text-align: center; font-size: 84px; margin-left: -35px; margin-top: 25px;" data-start="7.95" data-duration="2.11" data-track-index="20"><div class="ln" id="c5a">и пластиковая</div><div class="ln" id="c5b">кожа.</div></div>
+      <div class="cap clip" id="c6" style="left: 0; width: 1080px; top: 250px; text-align: center; font-size: 84px; margin-left: 20px; margin-top: 0px;" data-start="10.06" data-duration="0.83" data-track-index="20"><div class="ln" id="c6a">Второй.</div></div>
+      <div class="cap clip" id="c7" style="left: 0; width: 1080px; top: 250px; text-align: center; font-size: 84px; margin-left: -25px; margin-top: 30px;" data-start="10.89" data-duration="1.29" data-track-index="20"><div class="ln" id="c7a">Человек решил</div><div class="ln" id="c7b">наверняка</div></div>
+      <div class="cap clip" id="c8" style="left: 0; width: 1080px; top: 250px; text-align: center; font-size: 84px; margin-left: 30px; margin-top: -20px;" data-start="12.18" data-duration="1.03" data-track-index="20"><div class="ln" id="c8a">и накидал</div><div class="ln" id="c8b">в запрос</div></div>
+      <div class="cap clip" id="c9" style="left: 0; width: 1080px; top: 250px; text-align: center; font-size: 84px; margin-left: -20px; margin-top: 20px;" data-start="13.21" data-duration="1.30" data-track-index="20"><div class="ln" id="c9a">10 модных</div><div class="ln" id="c9b">слов.</div></div>
+      <div class="cap clip" id="c10" style="left: 0; width: 1080px; top: 250px; text-align: center; font-size: 84px; margin-left: 25px; margin-top: -25px;" data-start="14.51" data-duration="1.34" data-track-index="20"><div class="ln" id="c10a">Стили спорят</div><div class="ln" id="c10b">друг с другом,</div></div>
+      <div class="cap clip" id="c11" style="left: 0; width: 1080px; top: 250px; text-align: center; font-size: 84px; margin-left: -30px; margin-top: 15px;" data-start="15.85" data-duration="1.95" data-track-index="20"><div class="ln" id="c11a">и в кадре</div><div class="ln" id="c11b">получилась</div></div>
+      <div class="cap clip" id="c12" style="left: 0; width: 1080px; top: 300px; text-align: center; font-size: 170px; margin-left: 0px; margin-top: 0px;" data-start="17.80" data-duration="0.91" data-track-index="20"><div class="ln" id="c12a">каша.</div></div>
+      <div class="cap clip" id="c13" style="left: 650px; width: 400px; top: 760px; text-align: left; font-size: 52px; margin-left: 0px; margin-top: 0px;" data-start="18.71" data-duration="0.74" data-track-index="20"><div class="ln" id="c13a">Третий.</div></div>
+      <div class="cap clip" id="c14" style="left: 650px; width: 400px; top: 760px; text-align: left; font-size: 52px; margin-left: 0px; margin-top: -40px;" data-start="19.45" data-duration="1.44" data-track-index="20"><div class="ln" id="c14a">Запрос</div><div class="ln" id="c14b">по структуре:</div></div>
+      <div class="cap clip" id="c15" style="left: 650px; width: 400px; top: 760px; text-align: left; font-size: 52px; margin-left: 20px; margin-top: 40px;" data-start="20.89" data-duration="0.75" data-track-index="20"><div class="ln" id="c15a">Кто</div><div class="ln" id="c15b">в кадре,</div></div>
+      <div class="cap clip" id="c16" style="left: 650px; width: 400px; top: 760px; text-align: left; font-size: 52px; margin-left: -10px; margin-top: -30px;" data-start="21.64" data-duration="0.81" data-track-index="20"><div class="ln" id="c16a">что</div><div class="ln" id="c16b">делает,</div></div>
+      <div class="cap clip" id="c17" style="left: 650px; width: 400px; top: 760px; text-align: left; font-size: 52px; margin-left: 15px; margin-top: 30px;" data-start="22.45" data-duration="0.97" data-track-index="20"><div class="ln" id="c17a">откуда</div><div class="ln" id="c17b">свет,</div></div>
+      <div class="cap clip" id="c18" style="left: 650px; width: 400px; top: 760px; text-align: left; font-size: 52px; margin-left: -5px; margin-top: -45px;" data-start="23.42" data-duration="1.04" data-track-index="20"><div class="ln" id="c18a">какая</div><div class="ln" id="c18b">мимика?</div></div>
+      <div class="cap clip" id="c19" style="left: 650px; width: 400px; top: 760px; text-align: left; font-size: 52px; margin-left: 20px; margin-top: 20px;" data-start="24.46" data-duration="0.84" data-track-index="20"><div class="ln" id="c19a">Видны</div><div class="ln" id="c19b">поры,</div></div>
+      <div class="cap clip" id="c20" style="left: 650px; width: 400px; top: 760px; text-align: left; font-size: 52px; margin-left: 0px; margin-top: -20px;" data-start="25.30" data-duration="0.93" data-track-index="20"><div class="ln" id="c20a">свет</div><div class="ln" id="c20b">мягкий,</div></div>
+      <div class="cap clip" id="c21" style="left: 650px; width: 400px; top: 760px; text-align: left; font-size: 52px; margin-left: -10px; margin-top: 35px;" data-start="26.23" data-duration="0.98" data-track-index="20"><div class="ln" id="c21a">и мимика</div><div class="ln" id="c21b">живая.</div></div>
+      <div class="cap clip" id="c22" style="left: 0; width: 1080px; top: 900px; text-align: center; font-size: 84px; margin-left: 0px; margin-top: -20px;" data-start="27.21" data-duration="1.39" data-track-index="20"><div class="ln" id="c22a">Шаблон структуры</div><div class="ln" id="c22b">промптов</div></div>
+      <div class="cap clip" id="c23" style="left: 0; width: 1080px; top: 900px; text-align: center; font-size: 84px; margin-left: 30px; margin-top: 20px;" data-start="28.60" data-duration="1.05" data-track-index="20"><div class="ln" id="c23a">я собрала</div><div class="ln" id="c23b">у себя</div></div>
+      <div class="cap clip" id="c24" style="left: 0; width: 1080px; top: 900px; text-align: center; font-size: 84px; margin-left: -25px; margin-top: 0px;" data-start="29.65" data-duration="1.18" data-track-index="20"><div class="ln" id="c24a">в телеграме.</div></div>
+      <div class="cap clip" id="c25" style="left: 0; width: 1080px; top: 900px; text-align: center; font-size: 84px; margin-left: 20px; margin-top: -25px;" data-start="30.83" data-duration="1.10" data-track-index="20"><div class="ln" id="c25a">Напиши любой</div><div class="ln" id="c25b">смайлик</div></div>
+      <div class="cap clip" id="c26" style="left: 0; width: 1080px; top: 900px; text-align: center; font-size: 84px; margin-left: -30px; margin-top: 20px;" data-start="31.93" data-duration="0.82" data-track-index="20"><div class="ln" id="c26a">под этим</div><div class="ln" id="c26b">видео</div></div>
+      <div class="cap clip" id="c27" style="left: 0; width: 1080px; top: 900px; text-align: center; font-size: 84px; margin-left: 15px; margin-top: -10px;" data-start="32.75" data-duration="1.34" data-track-index="20"><div class="ln" id="c27a">и я пришлю</div><div class="ln" id="c27b">тебе ссылку</div></div>
+    </div>
+
+    <script>
+      const tl = gsap.timeline({ paused: true, defaults: { immediateRender: false } });
+      const pop = (sel, t) => tl.fromTo(sel, { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.32, ease: "back.out(2)" }, t);
+
+      // scenes are hard cuts on her words
+      tl.set("#s0", { opacity: 1 }, 0);
+      tl.set("#s0", { opacity: 0 }, 2.82);
+      tl.set("#s1", { opacity: 1 }, 2.82);
+      tl.set("#s1", { opacity: 0 }, 10.0);
+      tl.set("#s2", { opacity: 1 }, 10.0);
+      tl.set("#s2", { opacity: 0 }, 18.71);
+      tl.set("#s3", { opacity: 1 }, 18.71);
+      tl.set("#s3", { opacity: 0 }, 27.21);
+      tl.set("#s4", { opacity: 1 }, 27.21);
+
+      // intro: the three results pop around "три результата"
+      pop("#a0", 1.72);
+      pop("#a1", 1.92);
+      pop("#a2", 2.12);
+      // each section's video
+      tl.fromTo("#b", { opacity: 0, scale: 0.92 }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(1.6)" }, 2.82);
+      tl.fromTo("#c", { opacity: 0, scale: 0.92 }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(1.6)" }, 10.0);
+      tl.fromTo("#d", { opacity: 0, x: 200 }, { opacity: 1, x: 0, duration: 0.35, ease: "power3.out" }, 18.71);
+      tl.fromTo(".prompt", { opacity: 0 }, { opacity: 1, duration: 0.3 }, 0);
+      // call to action: three again
+      pop("#e0", 27.21);
+      pop("#e1", 27.39);
+      pop("#e2", 27.57);
+
+      // captions: each line pops in on its word
+      const CAPS = [['c0', 0.3, 1.69], ['c1', 2.82, 3.64], ['c2', 4.15, 4.94], ['c3', 5.3, 5.85], ['c4', 6.59, 7.13], ['c5', 7.95, 8.85], ['c6', 10.06, null], ['c7', 10.89, 11.65], ['c8', 12.18, 12.72], ['c9', 13.21, 13.75], ['c10', 14.51, 14.95], ['c11', 15.85, 16.6], ['c12', 17.8, null], ['c13', 18.71, null], ['c14', 19.45, 19.85], ['c15', 20.89, 21.12], ['c16', 21.64, 21.9], ['c17', 22.45, 22.85], ['c18', 23.42, 23.8], ['c19', 24.46, 24.86], ['c20', 25.3, 25.65], ['c21', 26.23, 26.7], ['c22', 27.21, 28.09], ['c23', 28.6, 29.3], ['c24', 29.65, null], ['c25', 30.83, 31.35], ['c26', 31.93, 32.4], ['c27', 32.75, 33.4]];
+      CAPS.forEach(([id, t1, t2]) => {
+        tl.fromTo("#" + id + "a", { opacity: 0, y: 24, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.18, ease: "back.out(2.2)" }, t1);
+        if (t2 !== null) tl.fromTo("#" + id + "b", { opacity: 0, y: 24, scale: 0.9 }, { opacity: 1, y: 0, scale: 1, duration: 0.18, ease: "back.out(2.2)" }, t2);
+      });
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
