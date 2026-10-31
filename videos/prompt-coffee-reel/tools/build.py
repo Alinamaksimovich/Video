@@ -56,13 +56,13 @@ ZONE = {  # css for the caption block
     "bottom": "left: 0; width: 1080px; top: 1440px; text-align: center; font-size: 84px;",
     "top": "left: 0; width: 1080px; top: 250px; text-align: center; font-size: 84px;",
     "top-big": "left: 0; width: 1080px; top: 300px; text-align: center; font-size: 170px;",
-    "right": "left: 620px; width: 440px; top: 760px; text-align: center; font-size: 52px;",
+    "right": "left: 640px; width: 400px; top: 760px; text-align: center; font-size: 48px;",
 }
 
 
 def cap_html(i, c):
     l1, t1, l2, t2, zone, dx, dy = c
-    style = ZONE[zone] + f" margin-top: {dy}px;"
+    style = ZONE[zone]
     end = CAPS[i + 1][1] if i + 1 < len(CAPS) else END
     lines = f'<div class="ln" id="c{i}a">{l1}</div>'
     if l2:
@@ -136,8 +136,8 @@ html = f"""<!doctype html>
 
       <!-- 3 · structured prompt: off to the side, captions to the right, one word per line -->
       <div class="scene" id="s3">
-        {video("d", "v3-structure.mp4", S3, S4 - S3, 0, "left: 50px; top: 300px; width: 560px; height: 996px", 6, "результат структурного запроса")}
-        <div class="prompt" style="left: 50px; top: 1340px; width: 980px; font-size: 22px"><b>ПРОМПТ</b>&nbsp; {P3}</div>
+        {video("d", "v3-structure.mp4", S3, S4 - S3, 0, "left: 70px; top: 300px; width: 560px; height: 996px", 6, "результат структурного запроса")}
+        <div class="prompt" style="left: 70px; top: 1340px; width: 940px; font-size: 22px"><b>ПРОМПТ</b>&nbsp; {P3}</div>
       </div>
 
       <!-- call to action: all three again -->
