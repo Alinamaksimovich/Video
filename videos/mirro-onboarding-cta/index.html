@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>MIRRO — Try MIRRO now</title>
+    <script>
+      // ===== CONFIG: всё, что меняется, — здесь =====
+      window.CONFIG = {
+        size: { w: 1080, h: 1920, fps: 30, duration: 3.0 },
+        text: {
+          logo: "MIRRO",
+          subtitle: "your closet, in your phone",
+          button: "Try MIRRO now",
+        },
+        looks: ["assets/look-a.png", "assets/look-b.png", "assets/look-c.png"],
+        colors: {
+          bg: "#FAF8F6",
+          lime: "#D8F27F",
+          lavender: "#B9A8F0",
+          pink: "#F0C8E0",
+          text: "#2C2C2A",
+          card: "#FFFFFF",
+        },
+        layout: {
+          logoSize: 180, // px, Cormorant
+          subtitleSize: 40, // px, Inter
+          logoY: 900, // центр логотипа на 1-м шаге
+          logoTopY: 300, // центр логотипа после ухода вверх (safe zone ≥ 250)
+          logoTopScale: 0.42,
+          cardW: 600,
+          cardH: 1066,
+          cardTop: 390,
+          cardRadius: 40,
+          cardPad: 16,
+          cardEndScale: 0.84, // на 3-м шаге
+          cardEndShift: -95, // px вверх на 3-м шаге
+          cardRise: 300, // px, откуда поднимается карточка
+          buttonW: 640,
+          buttonH: 120,
+          buttonTop: 1340, // низ кнопки 1460 < 1580 (safe zone 340 снизу)
+          buttonRadius: 60,
+          buttonFont: 44,
+        },
+        timing: {
+          introIn: [0.0, 0.8], // логотип + подзаголовок проявляются
+          logoUp: [0.8, 1.1], // логотип уходит вверх и уменьшается
+          cardIn: [0.95, 1.3], // карточка поднимается снизу, когда логотип уже наверху
+          lookCuts: [0.8, 1.2, 1.6], // hard cut A → B → C
+          outroAt: 2.0, // карточка уменьшается, выезжает кнопка
+          cardShrink: 0.4,
+          buttonIn: 0.45,
+          pulseAt: 2.5,
+          pulseDur: 0.3, // scale 1 → 1.04 → 1, к 2.8 с всё стоит
+        },
+      };
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+    <!-- the same fonts, self-hosted (used by the frame exporter, works offline) -->
+    <link href="fonts/fonts.css" rel="stylesheet" />
+    <script src="vendor/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: var(--bg); }
+      #stage { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: var(--bg); color: var(--text); }
+      #logo {
+        position: absolute; left: 0; width: 100%; text-align: center;
+        font-family: "Cormorant", serif; font-weight: 600; letter-spacing: 0.08em; line-height: 1;
+        font-size: var(--logoSize); transform-origin: 50% 50%;
+      }
+      #subtitle {
+        position: absolute; left: 0; width: 100%; text-align: center;
+        font-family: "Inter", sans-serif; font-weight: 400; font-size: var(--subtitleSize); letter-spacing: 0.01em; opacity: 0.72;
+      }
+      #subtitle i { font-style: normal; color: var(--text); }
+      #card {
+        position: absolute; left: calc(50% - var(--cardW) / 2); width: var(--cardW); height: var(--cardH);
+        padding: var(--cardPad); background: var(--card); border-radius: var(--cardRadius);
+        box-shadow: 0 30px 80px rgba(44, 44, 42, 0.12), 0 4px 14px rgba(44, 44, 42, 0.05);
+        opacity: 0;
+      }
+      #screen { position: relative; width: 100%; height: 100%; border-radius: calc(var(--cardRadius) - var(--cardPad)); overflow: hidden; background: var(--bg); }
+      .look { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; opacity: 0; }
+      #fav {
+        position: absolute; right: 22px; top: 22px; width: 60px; height: 60px; border-radius: 50%;
+        background: var(--pink); display: flex; align-items: center; justify-content: center;
+      }
+      #dots {
+        position: absolute; left: 50%; bottom: 26px; transform: translateX(-50%);
+        display: flex; gap: 12px; padding: 12px 18px; border-radius: 30px; background: rgba(250, 248, 246, 0.92);
+      }
+      .dot { width: 14px; height: 14px; border-radius: 7px; background: var(--lavender); }
+      .dot.on { width: 38px; background: var(--lime); }
+      #btn {
+        position: absolute; left: calc(50% - var(--buttonW) / 2); width: var(--buttonW); height: var(--buttonH);
+        border-radius: var(--buttonRadius); background: var(--lime); color: var(--text);
+        display: flex; align-items: center; justify-content: center;
+        font-family: "Inter", sans-serif; font-weight: 600; font-size: var(--buttonFont); letter-spacing: -0.005em;
+        opacity: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="stage">
+      <div id="logo"></div>
+      <div id="subtitle"></div>
+      <div id="card">
+        <div id="screen">
+          <img class="look" alt="look A" />
+          <img class="look" alt="look B" />
+          <img class="look" alt="look C" />
+          <div id="fav">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#2C2C2A" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" />
+            </svg>
+          </div>
+          <div id="dots"><span class="dot on"></span><span class="dot"></span><span class="dot"></span></div>
+        </div>
+      </div>
+      <div id="btn"></div>
+    </div>
+
+    <script>
+      const C = window.CONFIG, L = C.layout, T = C.timing;
+      // config -> CSS variables and content
+      const root = document.documentElement.style;
+      Object.entries(C.colors).forEach(([k, v]) => root.setProperty("--" + k, v));
+      ["logoSize", "subtitleSize", "cardW", "cardH", "cardRadius", "cardPad", "buttonW", "buttonH", "buttonRadius", "buttonFont"].forEach((k) =>
+        root.setProperty("--" + k, L[k] + "px")
+      );
+      document.getElementById("logo").textContent = C.text.logo;
+      document.getElementById("subtitle").textContent = C.text.subtitle;
+      document.getElementById("btn").textContent = C.text.button;
+      const looks = [...document.querySelectorAll(".look")];
+      looks.forEach((img, i) => (img.src = C.looks[i]));
+
+      // static positions
+      const logo = document.getElementById("logo");
+      gsap.set(logo, { top: L.logoY - L.logoSize / 2 });
+      gsap.set("#subtitle", { top: L.logoY + L.logoSize / 2 + 30 });
+      gsap.set("#card", { top: L.cardTop });
+      gsap.set("#btn", { top: L.buttonTop });
+
+      const tl = gsap.timeline({ paused: true });
+      const dur = (a) => a[1] - a[0];
+
+      // 0.0–0.8: logo + subtitle fade in, 20 px up
+      tl.fromTo(logo, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" }, T.introIn[0]);
+      tl.fromTo("#subtitle", { opacity: 0, y: 20 }, { opacity: 0.72, y: 0, duration: 0.6, ease: "power2.out" }, T.introIn[0] + 0.15);
+
+      // 0.8–1.25: logo up + smaller, subtitle out
+      tl.to("#subtitle", { opacity: 0, y: -20, duration: 0.15, ease: "power2.in" }, T.logoUp[0]);
+      tl.to(logo, { y: L.logoTopY - L.logoY, scale: L.logoTopScale, duration: dur(T.logoUp), ease: "power2.out" }, T.logoUp[0]);
+
+      // card in, then hard cuts A -> B -> C with the active dot
+      tl.fromTo("#card", { opacity: 0, y: L.cardRise, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: dur(T.cardIn), ease: "power3.out" }, T.cardIn[0]);
+      const dots = [...document.querySelectorAll(".dot")];
+      T.lookCuts.forEach((t, i) => {
+        looks.forEach((img, k) => tl.set(img, { opacity: k === i ? 1 : 0 }, t));
+        dots.forEach((d, k) => tl.set(d, { className: k === i ? "dot on" : "dot" }, t));
+      });
+
+      // 2.0–3.0: card smaller + up, button slides in, one pulse, then hold
+      tl.to("#card", { scale: L.cardEndScale, y: L.cardEndShift, duration: T.cardShrink, ease: "power2.inOut" }, T.outroAt);
+      tl.fromTo("#btn", { opacity: 0, y: 180 }, { opacity: 1, y: 0, duration: T.buttonIn, ease: "power3.out" }, T.outroAt + 0.05);
+      tl.to("#btn", { scale: 1.04, duration: T.pulseDur / 2, ease: "sine.out", yoyo: true, repeat: 1 }, T.pulseAt);
+      tl.set({}, {}, C.size.duration); // timeline is exactly 3.0 s
+
+      // render hook: the exporter seeks frame by frame; otherwise it plays once (no loop)
+      window.__seek = (t) => tl.time(Math.min(t, C.size.duration), false);
+      window.__ready = Promise.all([
+        document.fonts.load('600 180px "Cormorant"'),
+        document.fonts.load('400 40px "Inter"'),
+        document.fonts.load('600 44px "Inter"'),
+        document.fonts.ready,
+        ...looks.map((img) => new Promise((r) => (img.complete && img.naturalWidth ? r() : img.addEventListener("load", r, { once: true })))),
+      ]);
+      if (!/[?&]render\b/.test(location.search)) window.__ready.then(() => tl.play(0));
+    </script>
+  </body>
+</html>
