@@ -1,0 +1,1 @@
+@account-kit/CLAUDE.md
