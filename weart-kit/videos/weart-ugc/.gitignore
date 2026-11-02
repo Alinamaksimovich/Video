@@ -1,0 +1,6 @@
+snapshots/
+renders/
+.hyperframes/
+node_modules/
+assets/audio/preview-mix.wav
+renders/weart-ugc-c-raw.mp4
