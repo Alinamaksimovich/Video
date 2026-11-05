@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>WeArt Studio — product ad, made on the platform</title>
+    <script src="assets/vendor/gsap.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "Roboto Flex";
+        src: url("assets/fonts/rf-lat.woff2") format("woff2");
+        font-weight: 100 1000;
+        font-stretch: 25% 151%;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: #05080f; }
+      #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #05080f; font-family: "Roboto Flex", system-ui, sans-serif; color: #f5f7fa; }
+      .scene { position: absolute; inset: 0; opacity: 0; }
+      #bg { position: absolute; inset: 0; opacity: 0; background: radial-gradient(90% 55% at 50% 38%, #0f3a52 0%, #0a1e36 45%, #060b16 100%); }
+      video { display: block; object-fit: cover; }
+
+      /* creative on the first scene */
+      #cr1 { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; }
+
+      /* cards */
+      .card { position: absolute; border-radius: 64px; background: #11151f; border: 3px solid #272f45; box-shadow: 0 40px 100px rgba(0, 0, 0, 0.55); overflow: hidden; }
+      .ct { display: flex; align-items: center; gap: 26px; font-size: 64px; font-weight: 800; letter-spacing: -0.01em; }
+      .ct svg { width: 84px; height: 84px; flex-shrink: 0; }
+      .ic { fill: none; stroke: #f5f7fa; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+      /* scene 1: creative inside a card */
+      #b1card { left: 150px; top: 330px; width: 780px; height: 1040px; }
+      #b1card video { width: 100%; height: 100%; }
+
+      /* scene 2: platform home */
+      #b2logo { position: absolute; left: 480px; top: 150px; width: 120px; }
+      #b2card { left: 100px; top: 360px; width: 880px; height: 977px; background: transparent; border: 0; box-shadow: none; border-radius: 0; overflow: visible; }
+      #b2card img { width: 100%; height: 100%; display: block; filter: drop-shadow(0 40px 80px rgba(0, 0, 0, 0.5)); }
+
+      /* scene 3 + 8: prompt bar */
+      .pbar { position: absolute; left: 60px; width: 960px; height: 302px; filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.5)); }
+      .pbar img { width: 100%; height: 100%; display: block; }
+      .ptext { position: absolute; left: 50px; top: 52px; width: 780px; font-size: 44px; font-weight: 400; line-height: 1.25; color: #f5f7fa; white-space: pre-wrap; }
+      .ptext i { display: inline-block; width: 4px; height: 50px; background: #f5f7fa; vertical-align: -9px; margin-left: 3px; }
+      .ring { position: absolute; left: 826px; top: 173px; width: 70px; height: 70px; border-radius: 50%; border: 6px solid #d8f27f; opacity: 0; }
+      #pb1 { top: 760px; }
+      #pb2 { top: 760px; }
+
+      /* scene 4: AI Video */
+      #b4card { left: 130px; top: 250px; width: 820px; height: 1190px; padding: 52px 56px; }
+      #b4card video { margin-top: 40px; width: 708px; height: 940px; border-radius: 40px; }
+
+      /* scene 5: AI Audio */
+      #b5card { left: 110px; top: 380px; width: 860px; height: 960px; padding: 52px 56px; }
+      .track { margin-top: 36px; height: 300px; border-radius: 40px; background: #1a2030; border: 3px solid #2c3550; padding: 30px 40px; }
+      .tl { font-size: 38px; font-weight: 700; margin-bottom: 14px; }
+      .bars { display: flex; align-items: center; justify-content: space-between; height: 170px; }
+      .bars b { display: block; width: 11px; height: 160px; border-radius: 6px; transform-origin: 50% 50%; }
+
+      /* scene 6: all tools */
+      .tool { position: absolute; width: 430px; height: 390px; border-radius: 56px; background: #11151f; border: 3px solid #272f45; padding: 52px 48px; box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5); opacity: 0; }
+      .tool svg { width: 100px; height: 100px; }
+      .tool div { margin-top: 56px; font-size: 56px; font-weight: 800; }
+      #t5 { left: 110px; top: 1010px; width: 880px; height: 220px; border-color: #d8f27f; background: #131c22; display: flex; align-items: center; gap: 36px; padding: 0 56px; }
+      #t5 div { margin-top: 0; }
+      #t5 svg { width: 84px; height: 84px; }
+
+      /* scene 7: logo */
+      #glow { position: absolute; left: 90px; top: 450px; width: 900px; height: 900px; border-radius: 50%; background: radial-gradient(closest-side, rgba(40, 150, 190, 0.55), rgba(40, 150, 190, 0)); }
+      #logo { position: absolute; left: 260px; top: 640px; width: 560px; }
+
+      /* captions */
+      .cap { position: absolute; left: 70px; width: 940px; top: 1420px; text-align: center; font-size: 66px; font-weight: 800; line-height: 1.12; letter-spacing: -0.01em; color: #ffffff; text-shadow: 0 3px 14px rgba(0, 0, 0, 0.7), 0 0 3px rgba(0, 0, 0, 0.6); opacity: 0; }
+      .cap.low { top: 1470px; }
+      .cap.high { top: 1330px; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="27.1" data-width="1080" data-height="1920">
+      <!-- audio: her creative's own sound, then her voiceover (tools/mix.py). No music, no sfx. -->
+      <audio id="mix" src="assets/audio/mix.wav" data-start="0" data-duration="27.1" data-track-index="10" data-volume="1"></audio>
+
+      <div id="bg"></div>
+
+      <!-- 0 · her creative, full screen (own audio) -->
+      <div class="scene" id="s0">
+        <video id="cr1" src="assets/video/creative.mp4" muted playsinline data-start="0" data-duration="9.13" data-media-start="0" data-track-index="1"></video>
+      </div>
+
+      <!-- 1 · "This is what product ads look like now": the creative as a result card -->
+      <div class="scene" id="s1">
+        <div class="card" id="b1card"><video id="cr2" src="assets/video/creative.mp4" muted playsinline data-start="9.2" data-duration="2.5" data-media-start="4.2" data-track-index="2"></video></div>
+      </div>
+
+      <!-- 2 · "with WeArt Studio" -->
+      <div class="scene" id="s2">
+        <img id="b2logo" src="assets/img/wa-logo.png" alt="WeArt Studio" />
+        <div class="card" id="b2card"><img src="assets/img/hero-card.png" alt="WeArt Studio home with the prompt bar" /></div>
+      </div>
+
+      <!-- 3 · prompt typed -->
+      <div class="scene" id="s3">
+        <div class="pbar" id="pb1"><img src="assets/img/promptbar-panel.png" alt="Prompt bar" /><div class="ptext"><span id="typed1"></span><i id="caret1"></i></div><span class="ring" id="ring1"></span></div>
+      </div>
+
+      <!-- 4 · AI Video -->
+      <div class="scene" id="s4">
+        <div class="card" id="b4card">
+          <div class="ct"><svg viewBox="0 0 24 24"><rect class="ic" x="3" y="5" width="18" height="14" rx="3"/><path class="ic" d="M10 9l5 3-5 3z"/></svg>AI Video</div>
+          <video id="cr3" src="assets/video/creative.mp4" muted playsinline data-start="15.7" data-duration="2" data-media-start="1.5" data-track-index="3"></video>
+        </div>
+      </div>
+
+      <!-- 5 · AI Audio -->
+      <div class="scene" id="s5">
+        <div class="card" id="b5card">
+          <div class="ct"><svg viewBox="0 0 24 24"><path class="ic" d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect class="ic" x="3" y="13" width="4" height="7" rx="1.500"/><rect class="ic" x="17" y="13" width="4" height="7" rx="1.500"/></svg>AI Audio</div>
+          <div class="track"><div class="tl">Voiceover</div><div class="bars" id="wv1"></div></div>
+          <div class="track"><div class="tl">Music</div><div class="bars" id="wv2"></div></div>
+        </div>
+      </div>
+
+      <!-- 6 · all tools -->
+      <div class="scene" id="s6">
+        <div class="tool" id="t1" style="left: 110px; top: 290px"><svg viewBox="0 0 24 24"><path class="ic" d="M4 5h16a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H9l-5 4v-4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1z"/></svg><div>AI Chat</div></div>
+        <div class="tool" id="t2" style="left: 560px; top: 290px"><svg viewBox="0 0 24 24"><rect class="ic" x="3" y="4" width="18" height="16" rx="3"/><circle class="ic" cx="9" cy="9.500" r="1.800"/><path class="ic" d="M3.500 17l5-5 4 4 3-3 5 5"/></svg><div>AI Image</div></div>
+        <div class="tool" id="t3" style="left: 110px; top: 700px"><svg viewBox="0 0 24 24"><rect class="ic" x="3" y="5" width="18" height="14" rx="3"/><path class="ic" d="M10 9l5 3-5 3z"/></svg><div>AI Video</div></div>
+        <div class="tool" id="t4" style="left: 560px; top: 700px"><svg viewBox="0 0 24 24"><path class="ic" d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect class="ic" x="3" y="13" width="4" height="7" rx="1.500"/><rect class="ic" x="17" y="13" width="4" height="7" rx="1.500"/></svg><div>AI Audio</div></div>
+        <div class="tool" id="t5"><svg viewBox="0 0 24 24" style="stroke: #d8f27f"><rect class="ic" style="stroke: #d8f27f" x="8" y="3" width="13" height="13" rx="2.500"/><rect class="ic" style="stroke: #d8f27f; fill: #131c22" x="3" y="8" width="13" height="13" rx="2.500"/></svg><div>Canvas</div></div>
+      </div>
+
+      <!-- 7 · logo -->
+      <div class="scene" id="s7">
+        <div id="glow"></div>
+        <img id="logo" src="assets/img/wa-logo.png" alt="WeArt Studio" />
+      </div>
+
+      <!-- 8 · call to action: prompt bar for her own product -->
+      <div class="scene" id="s8">
+        <div class="pbar" id="pb2"><img src="assets/img/promptbar-panel.png" alt="Prompt bar" /><div class="ptext"><span id="typed2"></span><i id="caret2"></i></div></div>
+      </div>
+
+      <div id="caps"></div>
+    </div>
+
+    <script>
+      const tl = gsap.timeline({ paused: true, defaults: { immediateRender: false } });
+      const show = (sel, t, o = 0.0001) => tl.set(sel, { opacity: 1 }, t + o);
+      const hide = (sel, t) => tl.set(sel, { opacity: 0 }, t);
+
+      // ---------- timing (seconds) ----------
+      const VO = 9.4;               // voiceover starts here
+      const SC = [                  // scene cuts
+        ["s1", 9.15, 11.7], ["s2", 11.7, 13.3], ["s3", 13.3, 15.7], ["s4", 15.7, 17.65],
+        ["s5", 17.65, 19.7], ["s6", 19.7, 21.8], ["s7", 21.8, 23.85], ["s8", 23.85, 27.1],
+      ];
+
+      // ---------- captions: clean white text, appears and goes on her words ----------
+      const CAPS = [
+        // her creative
+        ["Girls? Yes.", 0.24, 1.5], ["I'm AI.", 1.6, 2.5], ["WeArt Studio made me.", 2.66, 4.2],
+        ["But this cream's effect", 4.55, 5.7], ["is real. Skin.", 5.7, 7.1], ["Want the same?", 7.3, 8.3], ["Get it.", 8.5, 9.13],
+        // voiceover
+        ["This is what product ads look like now", 9.45, 11.65], ["with WeArt Studio", 11.8, 13.25],
+        ["No model.", 13.43, 14.3], ["No studio photo", 14.4, 15.65], ["AI character video", 15.77, 17.55],
+        ["voiceover and music", 17.71, 19.45], ["all in one place", 19.76, 21.1], ["WeArt Studio", 21.9, 23.3],
+        ["Tap the link and try it on your product", 23.93, 27.1],
+      ];
+      const capsEl = document.getElementById("caps");
+      CAPS.forEach(([txt, a, b], i) => {
+        const el = document.createElement("div");
+        el.className = "cap" + (a >= 9.2 ? " low" : " high");
+        el.id = "cap" + i;
+        el.textContent = txt;
+        capsEl.appendChild(el);
+        tl.fromTo(el, { opacity: 0, y: 18 }, { opacity: 1, y: 0, duration: 0.16, ease: "power2.out" }, a);
+        tl.set(el, { opacity: 0 }, b - 0.02);
+      });
+
+      // ---------- scene switching: plain cuts ----------
+      tl.set("#s0", { opacity: 1 }, 0);
+      tl.set("#s0", { opacity: 0 }, 9.15);
+      tl.set("#bg", { opacity: 1 }, 9.15);
+      SC.forEach(([id, a, b]) => { tl.set("#" + id, { opacity: 1 }, a); tl.set("#" + id, { opacity: 0 }, b); });
+
+      const rise = (sel, t, y = 120, d = 0.45) => tl.fromTo(sel, { opacity: 0, y, scale: 0.97 }, { opacity: 1, y: 0, scale: 1, duration: d, ease: "power3.out" }, t);
+
+      // 1 · creative card
+      rise("#b1card", 9.15);
+      // 2 · platform home
+      tl.fromTo("#b2logo", { opacity: 0, y: -30 }, { opacity: 1, y: 0, duration: 0.35, ease: "power2.out" }, 11.7);
+      rise("#b2card", 11.7, 140);
+      // 3 · prompt bar and typing
+      rise("#pb1", 13.3, 100, 0.4);
+      const P1 = "UGC ad for my cream, no model, no studio";
+      for (let i = 1; i <= P1.length; i++) tl.set("#typed1", { textContent: P1.slice(0, i) }, 13.55 + (i / P1.length) * 1.7);
+      tl.fromTo("#caret1", { opacity: 1 }, { opacity: 0, duration: 0.12, repeat: 5, yoyo: true, ease: "steps(1)" }, 15.2);
+      tl.fromTo("#ring1", { opacity: 0.9, scale: 0.7 }, { opacity: 0, scale: 1.7, duration: 0.45, ease: "power2.out" }, 15.3);
+      // 4 · AI Video card
+      rise("#b4card", 15.7);
+      // 5 · AI Audio card + waves
+      rise("#b5card", 17.65);
+      const wave = (id, color, seed) => {
+        const host = document.getElementById(id); let s = seed;
+        const rnd = () => ((s = (s * 1664525 + 1013904223) % 4294967296) / 4294967296);
+        for (let i = 0; i < 34; i++) {
+          const b = document.createElement("b"); b.style.background = color; host.appendChild(b);
+          const a = 0.12 + rnd() * 0.3, z = 0.45 + rnd() * 0.55, d = 0.18 + rnd() * 0.22;
+          tl.fromTo(b, { scaleY: a }, { scaleY: z, duration: d, repeat: 7, yoyo: true, ease: "sine.inOut" }, 17.7 + i * 0.01);
+        }
+      };
+      wave("wv1", "#d8f27f", 3);
+      wave("wv2", "#b9a8f0", 11);
+      // 6 · all tools, one by one
+      ["#t1", "#t2", "#t3", "#t4", "#t5"].forEach((id, i) => tl.fromTo(id, { opacity: 0, y: 70, scale: 0.94 }, { opacity: 1, y: 0, scale: 1, duration: 0.38, ease: "power3.out" }, 19.72 + i * 0.2));
+      // 7 · logo
+      tl.fromTo("#glow", { opacity: 0, scale: 0.8 }, { opacity: 1, scale: 1, duration: 0.8, ease: "power2.out" }, 21.8);
+      tl.fromTo("#logo", { opacity: 0, scale: 0.86, y: 30 }, { opacity: 1, scale: 1, y: 0, duration: 0.55, ease: "expo.out" }, 21.85);
+      // 8 · closing prompt bar
+      rise("#pb2", 23.85, 100, 0.4);
+      const P2 = "Ad for my product";
+      for (let i = 1; i <= P2.length; i++) tl.set("#typed2", { textContent: P2.slice(0, i) }, 24.4 + (i / P2.length) * 1.2);
+      tl.fromTo("#caret2", { opacity: 1 }, { opacity: 0, duration: 0.14, repeat: 12, yoyo: true, ease: "steps(1)" }, 25.6);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>
