@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <title>WeArt lipstick creative</title>
+    <script src="assets/vendor/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Roboto Flex"; src: url("assets/fonts/rf-lat.woff2") format("woff2"); font-weight: 100 1000; font-stretch: 25% 151%; }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: #05080f; }
+      #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; font-family: "Roboto Flex", system-ui, sans-serif; color: #f5f7fa; background: radial-gradient(90% 55% at 50% 38%, #0f3a52 0%, #0a1e36 45%, #060b16 100%); }
+      .scene { position: absolute; inset: 0; opacity: 0; }
+      .card { position: absolute; border-radius: 48px; background: #11151f; border: 3px solid #272f45; box-shadow: 0 40px 100px rgba(0, 0, 0, 0.55); overflow: hidden; }
+      .ic { fill: none; stroke: #f5f7fa; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+      /* 1 · references + prompt */
+      #hdr { position: absolute; left: 0; width: 1080px; top: 90px; display: flex; justify-content: center; align-items: center; gap: 22px; font-size: 44px; font-weight: 800; }
+      #hdr img { height: 52px; }
+      #hdr i { width: 3px; height: 44px; background: #3a4562; }
+      .ref { position: absolute; top: 210px; width: 300px; height: 420px; border-radius: 40px; }
+      .ref img { width: 100%; height: 100%; object-fit: cover; display: block; }
+      .ref span { position: absolute; left: 18px; bottom: 18px; padding: 8px 18px; border-radius: 20px; background: rgba(8, 12, 22, 0.78); font-size: 28px; font-weight: 700; white-space: nowrap; }
+      .ref span b { color: #d8f27f; }
+      #pc { left: 60px; top: 680px; width: 960px; height: 850px; padding: 36px 44px; }
+      #pc .top { display: flex; justify-content: space-between; align-items: center; font-size: 36px; font-weight: 800; }
+      #pc .top em { font-style: normal; font-size: 28px; font-weight: 600; color: #9aa6c2; }
+      #pmask { position: absolute; left: 44px; right: 44px; top: 110px; bottom: 30px; overflow: hidden; -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 40px, #000 calc(100% - 90px), transparent 100%); mask-image: linear-gradient(180deg, transparent 0, #000 40px, #000 calc(100% - 90px), transparent 100%); }
+      #ptxt { padding-top: 30px; font-size: 30px; line-height: 1.42; font-weight: 400; color: #dfe5f2; white-space: pre-wrap; }
+      #ptxt .tag { color: #11151f; background: #d8f27f; border-radius: 10px; padding: 0 8px; font-weight: 800; }
+      #ptxt .sh { color: #d8f27f; font-weight: 800; }
+      #ptxt .hd { color: #ffffff; font-weight: 800; }
+      #bar { position: absolute; left: 60px; width: 960px; top: 1580px; height: 130px; display: flex; align-items: center; gap: 18px; }
+      .chip { height: 76px; padding: 0 28px; border-radius: 38px; background: #11151f; border: 3px solid #272f45; display: flex; align-items: center; gap: 12px; font-size: 32px; font-weight: 700; white-space: nowrap; }
+      .chip svg { width: 38px; height: 38px; }
+      #gen { margin-left: auto; height: 104px; padding: 0 44px; border-radius: 52px; background: #d8f27f; color: #11151f; display: flex; align-items: center; gap: 14px; font-size: 40px; font-weight: 900; }
+      #gen svg { width: 40px; height: 40px; }
+      #cur { position: absolute; left: 900px; top: 1670px; width: 76px; height: 76px; opacity: 0; }
+
+      /* 2 · storyboard */
+      #sbt { position: absolute; left: 0; width: 1080px; top: 150px; text-align: center; font-size: 64px; font-weight: 900; letter-spacing: -0.01em; }
+      #sbt em { font-style: normal; color: #d8f27f; }
+      .sb { position: absolute; width: 300px; height: 533px; border-radius: 34px; overflow: hidden; border: 3px solid #272f45; box-shadow: 0 30px 70px rgba(0, 0, 0, 0.5); opacity: 0; }
+      .sb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+      .sb span { position: absolute; left: 16px; top: 14px; padding: 4px 14px; border-radius: 16px; background: #d8f27f; color: #11151f; font-size: 26px; font-weight: 900; }
+
+      /* 3 · result */
+      #vc { left: 70px; top: 140px; width: 940px; height: 1672px; }
+      #vc video { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+      /* 4 · logo */
+      #glow { position: absolute; left: 90px; top: 450px; width: 900px; height: 900px; border-radius: 50%; background: radial-gradient(closest-side, rgba(40, 150, 190, 0.55), rgba(40, 150, 190, 0)); }
+      #logo { position: absolute; left: 260px; top: 720px; width: 560px; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="29.0" data-width="1080" data-height="1920">
+      <audio id="mix" src="assets/audio/mix.wav" data-start="0" data-duration="29.0" data-track-index="10" data-volume="1"></audio>
+
+      <div class="scene" id="s1">
+        <div id="hdr"><img src="assets/img/wa-logo.png" alt="WeArt" /><i></i><svg viewBox="0 0 24 24" style="width: 52px; height: 52px"><rect class="ic" x="3" y="5" width="18" height="14" rx="3"/><path class="ic" d="M10 9l5 3-5 3z"/></svg>AI Video</div>
+        <div class="card ref" id="r1" style="left: 210px"><img src="assets/img/product.jpg" alt="Product reference" /><span><b>@image1</b> Product</span></div>
+        <div class="card ref" id="r2" style="left: 570px"><img src="assets/img/woman.jpg" alt="Model reference" /><span><b>@image2</b> Model</span></div>
+        <div class="card" id="pc">
+          <div class="top">Prompt<em>15 sec · 9:16 · 8 shots</em></div>
+          <div id="pmask"><div id="ptxt">Create a 15.0-second vertical 9:16 realistic cinematic video, natural light, shot like a high-quality phone video: exactly 8 shots, instant hard cuts only between shots, no morph, no flash, no crossfade, no dissolve.
+<b class="hd">REFERENCE MAP:</b>
+<b class="tag">@image1</b> is the PRODUCT: a hand cream tube. Keep the exact shape, color, proportions, cap and the label with its lettering exactly as in <b class="tag">@image1</b>, with correct spelling, crisp and legible when it is shown large. No other text anywhere in the video.
+<b class="tag">@image2</b> is the WOMAN: keep her face exactly as in <b class="tag">@image2</b>. She wears a long dark coat and a cream scarf, no gloves.
+<b class="hd">SKIN AND FACE:</b> realistic matte skin with visible pores, fine wrinkles at the knuckles and under the eyes, fine peach fuzz on the cheeks and fine hairs on the backs of the hands, individual hairs along the hairline, no plastic or waxy look. Precise natural expressions.
+<b class="hd">CAMERA:</b> fixed on a tripod in every shot, no shake, except the two requested moves: the smooth push-in zoom in shot 5 and the smooth pull-back in shot 6.
+<b class="hd">TIMELINE:</b>
+<b class="sh">01 | 0.0–2.5 s</b>
+Wide shot of a freezing blue-gray winter city street, cold desaturated tones, light snowfall. A crowd of adults in dark coats walks hunched, hands buried in their pockets, faces down into their scarves, breath clouds in the air. The WOMAN walks toward the camera in the middle of the crowd, shivering slightly, her bare hands red and dry from the cold.
+<b class="sh">02 | 2.5–4.0 s</b>
+Medium shot. The WOMAN stops while the crowd keeps flowing around her, heads still down. She rubs her cold, dry hands together, then takes the PRODUCT out of her coat pocket.
+<b class="sh">03 | 4.0–5.5 s</b>
+Macro insert of her hands: she unscrews the cap and squeezes a small amount of cream onto the back of her hand. Dry skin, knuckle wrinkles and fine hairs visible.
+<b class="sh">04 | 5.5–7.0 s</b>
+Close-up of her hands: she starts rubbing the cream slowly into the knuckles and fingers, the dry red skin turns soft and smooth. Her face is softly blurred behind, eyes closing for a moment with relief.
+<b class="sh">05 | 7.0–9.0 s</b>
+One continuous shot: a smooth push-in zoom from her hands to the tube held in her other hand. The tube turns toward the camera, flat and steady, and the camera stops on it in sharp focus: the label with its lettering is large, crisp, perfectly legible and completely still for about one second.
+<b class="sh">06 | 9.0–12.0 s</b>
+One continuous shot: a smooth pull-back from the tube to a wide shot. As the camera pulls back, her hands glow with a soft warmth and a warm golden light spreads from her outward: the cold blue street turns warm and rich, the snowflakes become soft glowing golden particles, shop windows light up. The people stop, take their hands out of their pockets, lift their heads one by one and look at her with wonder and soft smiles. A gradual smooth change of light inside the shot, not a flash.
+<b class="sh">07 | 12.0–13.5 s</b>
+Medium close-up of the WOMAN: she presses her warm hands to her cheeks, a slow soft smile, rosy cheeks, her breath cloud fading, golden rim light on the hair, fine skin details visible.
+<b class="sh">08 | 13.5–15.0 s</b>
+Close-up: she raises the PRODUCT next to her face toward the lens, the tube held still and flat, the label sharp and legible, warm golden bokeh street behind, her smiling eyes slightly out of focus. End on this frame.
+<b class="hd">AUDIO:</b> natural sounds only: cold wind and muffled steps in the snow at the start, the rub of dry hands, the cap unscrewing, the soft squeeze of the tube, then the street sounds become warmer and brighter, a soft ambient hum, a light breeze. No voices, no music, no sound effects. Music is added in editing.
+<b class="hd">NEGATIVE:</b> misspelled, distorted or blurred letters on the tube, any text other than the label of the product, subtitles, logos, plastic skin, change of the woman&#x27;s face, a different tube shape or color, extra fingers, distorted hands, any flash or fade transition, camera shake, distorted faces in the crowd, children in the crowd.</div></div>
+        </div>
+        <div id="bar">
+          <div class="chip"><svg viewBox="0 0 24 24"><rect class="ic" x="3" y="5" width="18" height="14" rx="3"/><path class="ic" d="M10 9l5 3-5 3z"/></svg>Video</div>
+          <div class="chip">15 sec</div>
+          <div class="chip">9:16</div>
+          <div id="gen"><svg viewBox="0 0 24 24"><path d="M12 2l2.200 6.800L21 11l-6.800 2.200L12 20l-2.200-6.800L3 11l6.800-2.200z" fill="#11151f"/></svg>Generate</div>
+        </div>
+        <svg id="cur" viewBox="0 0 24 24"><path d="M5 3l14 8-6 1.500L10 19z" fill="#f5f7fa" stroke="#11151f" stroke-width="1.400" stroke-linejoin="round"/></svg>
+      </div>
+
+      <div class="scene" id="s2">
+        <div id="sbt">Storyboard</div>
+        <div class="sb" id="sb1" style="left: 60px; top: 300px"><img src="assets/img/sb1.jpg" alt="Storyboard frame 1" /><span>01</span></div><div class="sb" id="sb2" style="left: 390px; top: 300px"><img src="assets/img/sb2.jpg" alt="Storyboard frame 2" /><span>02</span></div><div class="sb" id="sb3" style="left: 720px; top: 300px"><img src="assets/img/sb3.jpg" alt="Storyboard frame 3" /><span>03</span></div><div class="sb" id="sb4" style="left: 225px; top: 863px"><img src="assets/img/sb4.jpg" alt="Storyboard frame 4" /><span>04</span></div><div class="sb" id="sb5" style="left: 555px; top: 863px"><img src="assets/img/sb5.jpg" alt="Storyboard frame 5" /><span>05</span></div>
+      </div>
+
+      <div class="scene" id="s3">
+        <div class="card" id="vc"><video id="res" class="clip" src="assets/video/result.mp4" muted playsinline data-start="11.8" data-duration="15.041667" data-media-start="0" data-track-index="1"></video></div>
+      </div>
+
+      <div class="scene" id="s4">
+        <div id="glow"></div>
+        <img id="logo" src="assets/img/wa-logo.png" alt="WeArt Studio" />
+      </div>
+    </div>
+    <script>
+      const tl = gsap.timeline({ paused: true, defaults: { immediateRender: false } });
+      const pop = (sel, t, st) => tl.fromTo(sel, { opacity: 0, scale: 0.88, y: 30 }, { opacity: 1, scale: 1, y: 0, duration: 0.4, ease: "back.out(1.6)", stagger: st || 0 }, t);
+
+      // 1 · references + prompt
+      tl.to("#s1", { opacity: 1, duration: 0.25 }, 0);
+      pop("#hdr", 0.05);
+      pop("#r1", 0.3);
+      pop("#r2", 0.55);
+      pop("#pc", 0.9);
+      pop("#bar .chip, #gen", 1.1, 0.08);
+      const ptxt = document.getElementById("ptxt");
+      const maskH = document.getElementById("pmask").clientHeight;
+      const scroll = Math.max(0, ptxt.scrollHeight - maskH + 60);
+      tl.fromTo("#ptxt", { y: 0 }, { y: -scroll, duration: 6.0, ease: "power1.inOut" }, 1.5);
+      tl.fromTo("#cur", { x: 120, y: 160, opacity: 0 }, { x: 0, y: 0, opacity: 1, duration: 0.35, ease: "power3.out" }, 7.4);
+      tl.to("#gen", { scale: 0.92, duration: 0.08, ease: "power2.in" }, 7.85);
+      tl.to("#gen", { scale: 1, duration: 0.25, ease: "back.out(3)" }, 7.93);
+      tl.to("#s1", { opacity: 0, y: -40, duration: 0.3, ease: "power2.in" }, 8.35);
+
+      // 2 · storyboard
+      tl.to("#s2", { opacity: 1, duration: 0.2 }, 8.6);
+      pop("#sbt", 8.6);
+      pop(".sb", 8.8, 0.22);
+      tl.to("#s2", { opacity: 0, scale: 1.04, duration: 0.25, ease: "power2.in" }, 11.55);
+
+      // 3 · result
+      tl.fromTo("#s3", { opacity: 0 }, { opacity: 1, duration: 0.01 }, 11.8);
+      tl.fromTo("#vc", { scale: 0.94 }, { scale: 1, duration: 0.5, ease: "power3.out" }, 11.8);
+      tl.to("#s3", { opacity: 0, duration: 0.2 }, 26.792);
+
+      // 4 · logo
+      tl.to("#s4", { opacity: 1, duration: 0.3 }, 26.9);
+      tl.fromTo("#logo", { opacity: 0, scale: 0.85 }, { opacity: 1, scale: 1, duration: 0.6, ease: "back.out(1.6)" }, 26.95);
+      tl.fromTo("#glow", { opacity: 0, scale: 0.6 }, { opacity: 1, scale: 1, duration: 0.9, ease: "power2.out" }, 26.9);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

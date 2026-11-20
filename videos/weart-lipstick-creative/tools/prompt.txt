@@ -1,0 +1,25 @@
+Create a 15.0-second vertical 9:16 realistic cinematic video, natural light, shot like a high-quality phone video: exactly 8 shots, instant hard cuts only between shots, no morph, no flash, no crossfade, no dissolve.
+REFERENCE MAP:
+@image1 is the PRODUCT: a hand cream tube. Keep the exact shape, color, proportions, cap and the label with its lettering exactly as in @image1, with correct spelling, crisp and legible when it is shown large. No other text anywhere in the video.
+@image2 is the WOMAN: keep her face exactly as in @image2. She wears a long dark coat and a cream scarf, no gloves.
+SKIN AND FACE: realistic matte skin with visible pores, fine wrinkles at the knuckles and under the eyes, fine peach fuzz on the cheeks and fine hairs on the backs of the hands, individual hairs along the hairline, no plastic or waxy look. Precise natural expressions.
+CAMERA: fixed on a tripod in every shot, no shake, except the two requested moves: the smooth push-in zoom in shot 5 and the smooth pull-back in shot 6.
+TIMELINE:
+01 | 0.0–2.5 s
+Wide shot of a freezing blue-gray winter city street, cold desaturated tones, light snowfall. A crowd of adults in dark coats walks hunched, hands buried in their pockets, faces down into their scarves, breath clouds in the air. The WOMAN walks toward the camera in the middle of the crowd, shivering slightly, her bare hands red and dry from the cold.
+02 | 2.5–4.0 s
+Medium shot. The WOMAN stops while the crowd keeps flowing around her, heads still down. She rubs her cold, dry hands together, then takes the PRODUCT out of her coat pocket.
+03 | 4.0–5.5 s
+Macro insert of her hands: she unscrews the cap and squeezes a small amount of cream onto the back of her hand. Dry skin, knuckle wrinkles and fine hairs visible.
+04 | 5.5–7.0 s
+Close-up of her hands: she starts rubbing the cream slowly into the knuckles and fingers, the dry red skin turns soft and smooth. Her face is softly blurred behind, eyes closing for a moment with relief.
+05 | 7.0–9.0 s
+One continuous shot: a smooth push-in zoom from her hands to the tube held in her other hand. The tube turns toward the camera, flat and steady, and the camera stops on it in sharp focus: the label with its lettering is large, crisp, perfectly legible and completely still for about one second.
+06 | 9.0–12.0 s
+One continuous shot: a smooth pull-back from the tube to a wide shot. As the camera pulls back, her hands glow with a soft warmth and a warm golden light spreads from her outward: the cold blue street turns warm and rich, the snowflakes become soft glowing golden particles, shop windows light up. The people stop, take their hands out of their pockets, lift their heads one by one and look at her with wonder and soft smiles. A gradual smooth change of light inside the shot, not a flash.
+07 | 12.0–13.5 s
+Medium close-up of the WOMAN: she presses her warm hands to her cheeks, a slow soft smile, rosy cheeks, her breath cloud fading, golden rim light on the hair, fine skin details visible.
+08 | 13.5–15.0 s
+Close-up: she raises the PRODUCT next to her face toward the lens, the tube held still and flat, the label sharp and legible, warm golden bokeh street behind, her smiling eyes slightly out of focus. End on this frame.
+AUDIO: natural sounds only: cold wind and muffled steps in the snow at the start, the rub of dry hands, the cap unscrewing, the soft squeeze of the tube, then the street sounds become warmer and brighter, a soft ambient hum, a light breeze. No voices, no music, no sound effects. Music is added in editing.
+NEGATIVE: misspelled, distorted or blurred letters on the tube, any text other than the label of the product, subtitles, logos, plastic skin, change of the woman's face, a different tube shape or color, extra fingers, distorted hands, any flash or fade transition, camera shake, distorted faces in the crowd, children in the crowd.
